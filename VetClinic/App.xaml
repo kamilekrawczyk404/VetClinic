@@ -1,0 +1,21 @@
+﻿<Application x:Class="VetClinic.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:VetClinic">
+    <Application.Resources>
+        <ResourceDictionary>
+            <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
+            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
+            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
+            <SolidColorBrush x:Key="White">#fffafb</SolidColorBrush>
+            <SolidColorBrush x:Key="Gray">#2b2c28</SolidColorBrush>
+            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>
+            <SolidColorBrush x:Key="Red">#e5383b</SolidColorBrush>
+            <SolidColorBrush x:Key="DarkRed">#ba181b</SolidColorBrush>
+            
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/WindowButton.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
