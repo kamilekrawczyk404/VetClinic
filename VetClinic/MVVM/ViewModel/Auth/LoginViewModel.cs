@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VetClinic.MVVM.ViewModel
+namespace VetClinic.MVVM.ViewModel.Auth
 {
-    public class AuthViewModel : ViewModel
+    public class LoginViewModel : ViewModel
     {
     }
 }

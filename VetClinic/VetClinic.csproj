@@ -9,12 +9,61 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\appointment-active.png" />
+    <None Remove="Images\appointment.png" />
+    <None Remove="Images\doctor-active.png" />
+    <None Remove="Images\doctor.png" />
+    <None Remove="Images\hamster-active.png" />
+    <None Remove="Images\hamster.png" />
+    <None Remove="Images\Hero\login.png" />
+    <None Remove="Images\Hero\register.png" />
+    <None Remove="Images\home-active.png" />
+    <None Remove="Images\home.png" />
+    <None Remove="Images\logo.png" />
+    <None Remove="Images\medical-prescription-active.png" />
+    <None Remove="Images\medical-prescription.png" />
+    <None Remove="Images\medicine-active.png" />
+    <None Remove="Images\medicine.png" />
+    <None Remove="Images\patient-active.png" />
+    <None Remove="Images\patient.png" />
+    <None Remove="Images\WindowNav\cancel-active.png" />
+    <None Remove="Images\WindowNav\cancel.png" />
+    <None Remove="Images\WindowNav\hide.png" />
+    <None Remove="Images\WindowNav\maximize.png" />
+    <None Remove="Images\WindowNav\minimize.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="MVVM\Model\" />
-    <Folder Include="MVVM\View\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\appointment-active.png" />
+    <Resource Include="Images\appointment.png" />
+    <Resource Include="Images\doctor-active.png" />
+    <Resource Include="Images\doctor.png" />
+    <Resource Include="Images\hamster-active.png" />
+    <Resource Include="Images\hamster.png" />
+    <Resource Include="Images\Hero\login.png" />
+    <Resource Include="Images\Hero\register.png" />
+    <Resource Include="Images\home-active.png" />
+    <Resource Include="Images\home.png" />
+    <Resource Include="Images\logo.png" />
+    <Resource Include="Images\medical-prescription-active.png" />
+    <Resource Include="Images\medical-prescription.png" />
+    <Resource Include="Images\medicine-active.png" />
+    <Resource Include="Images\medicine.png" />
+    <Resource Include="Images\patient-active.png" />
+    <Resource Include="Images\patient.png" />
+    <Resource Include="Images\WindowNav\cancel-active.png" />
+    <Resource Include="Images\WindowNav\cancel.png" />
+    <Resource Include="Images\WindowNav\hide.png" />
+    <Resource Include="Images\WindowNav\maximize.png" />
+    <Resource Include="Images\WindowNav\minimize.png" />
   </ItemGroup>
 
 </Project>

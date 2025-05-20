@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VetClinic"
+        xmlns:view="clr-namespace:VetClinic.MVVM.View"
         mc:Ignorable="d"
         Height="600" Width="1000"
         WindowStyle="None"
@@ -12,17 +13,22 @@
         AllowsTransparency="True"
         >
     <Border CornerRadius="20" Background="{StaticResource Turquise}" ClipToBounds="True">
-        <Grid ClipToBounds="True" Margin="10">
+        <Grid ClipToBounds="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
 
-            <Border Grid.Row="0" ClipToBounds="True">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" ClipToBounds="True">
-                    <Button x:Name="MinimizeButton" Style="{StaticResource MinimizeButtonStyle}" Command="{Binding HideCommand}"/>
-                    <Button x:Name="HideButton" Style="{StaticResource HideButtonStyle}" Command="{Binding MaximizeMinimizeCommand }"/>
-                    <Button x:Name="CloseButton" Style="{StaticResource CloseButtonStyle}" Command="{Binding CloseCommand}"/>
+            <view:NavigationView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"/>
+
+            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="{StaticResource White}" CornerRadius="12">
+                <StackPanel>
+                    <view:WindowButtons Margin="10"/>
+                    <ContentControl Content="{Binding Navigation.CurrentView}" Margin="10"/>
                 </StackPanel>
             </Border>
         </Grid>

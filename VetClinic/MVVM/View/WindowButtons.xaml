@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="VetClinic.MVVM.View.WindowButtons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VetClinic.MVVM.View"
+             xmlns:utils="clr-namespace:VetClinic.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid HorizontalAlignment="Right">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Button Margin="0,0,4,0" Style="{StaticResource WindowButton}" Command="{Binding HideCommand}" utils:ButtonAttachedProperties.ImageSource="/Images/WindowNav/hide.png" utils:ButtonAttachedProperties.ActiveImageSource="/Images/WindowNav/hide.png"/>
+        <Button Grid.Column="1" Margin="0,0,4,0" Style="{StaticResource WindowButton}" Command="{Binding MaximizeMinimizeCommand }" utils:ButtonAttachedProperties.ImageSource="/Images/WindowNav/minimize.png" utils:ButtonAttachedProperties.ActiveImageSource="/Images/WindowNav/minimize.png" />
+        <Button Grid.Column="2" Style="{StaticResource WindowButton}" Command="{Binding CloseCommand}" utils:ButtonAttachedProperties.ImageSource="/Images/WindowNav/cancel.png" utils:ButtonAttachedProperties.ActiveImageSource="/Images/WindowNav/cancel-active.png"/>
+    </Grid>
+</UserControl>
