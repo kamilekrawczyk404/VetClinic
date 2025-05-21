@@ -1,9 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using System.Data;
+using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using VetClinic.Database;
 using VetClinic.Interfaces;
+using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
 using VetClinic.MVVM.ViewModel.Auth;
 using VetClinic.Services;
@@ -17,31 +24,62 @@ namespace VetClinic;
 public partial class App : Application
 {
     private readonly ServiceProvider _serviceProvider;
+    private readonly IHost _host;
 
     public App()
     {
-        IServiceCollection _services = new ServiceCollection();
+        _host = Host.CreateDefaultBuilder()
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.SetBasePath(Directory.GetCurrentDirectory());
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            })
+            .ConfigureServices((context, services) =>
+            {
+                ConfigureServices(context.Configuration, services);
+            })
+            .Build();
+    }
 
-        _services.AddSingleton<MainWindow>(provider => new MainWindow
+    private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+    {
+        string connectionString = configuration.GetConnectionString("MySqlConnection");
+
+        // Register your services here
+        services.AddDbContext<VeterinaryClinicContext>(options =>
+            options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
+        );
+
+        services.AddSingleton<MainWindow>(provider => new MainWindow
         {
             DataContext = provider.GetRequiredService<MainViewModel>()
         });
-        _services.AddSingleton<MainViewModel>();
-        _services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<MainViewModel>();
+        services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<Func<Type, ViewModel>>(provider => viewModelType => (ViewModel)provider.GetRequiredService(viewModelType));
 
-        _services.AddTransient<LoginViewModel>();
-
-        _services.AddSingleton<Func<Type, ViewModel>>(provider => viewModelType => (ViewModel)provider.GetRequiredService(viewModelType));
-
-        _serviceProvider = _services.BuildServiceProvider();
+        services.AddScoped<LoginViewModel>();
     }
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
-        var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
+        await _host.StartAsync();
+
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
 
         base.OnStartup(e);
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        using (_host)
+        {
+            await _host.StopAsync();
+        }
+        base.OnExit(e);
     }
 }
 

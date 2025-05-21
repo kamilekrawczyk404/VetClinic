@@ -9,6 +9,7 @@
            <ResourceDictionary.MergedDictionaries>
                <ResourceDictionary Source="Themes/WindowButton.xaml"/>
                <ResourceDictionary Source="/Themes/NavigationButton.xaml"/>
+               <ResourceDictionary Source="/Themes/Header.xaml"/>
            </ResourceDictionary.MergedDictionaries>
 
            <DataTemplate DataType="{x:Type authViewModel:LoginViewModel}">
