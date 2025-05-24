@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VetClinic"
         xmlns:view="clr-namespace:VetClinic.MVVM.View"
         mc:Ignorable="d"
-        Height="600" Width="1000"
+        Height="700" Width="1100"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
@@ -25,7 +25,7 @@
 
             <view:NavigationView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"/>
 
-            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="{StaticResource White}" CornerRadius="12">
+            <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="{StaticResource White}" CornerRadius="20">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

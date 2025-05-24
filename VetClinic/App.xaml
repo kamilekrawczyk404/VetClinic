@@ -3,24 +3,41 @@
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:local="clr-namespace:VetClinic"
             xmlns:view="clr-namespace:VetClinic.MVVM.View"
-            xmlns:authViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Auth">
+            xmlns:authView="clr-namespace:VetClinic.MVVM.View.Auth"
+            xmlns:utils="clr-namespace:VetClinic.Utils"
+            xmlns:authViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Auth"
+            xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
+             >
    <Application.Resources>
        <ResourceDictionary>
            <ResourceDictionary.MergedDictionaries>
                <ResourceDictionary Source="Themes/WindowButton.xaml"/>
                <ResourceDictionary Source="/Themes/NavigationButton.xaml"/>
                <ResourceDictionary Source="/Themes/Header.xaml"/>
+               <ResourceDictionary Source="/Themes/SubmitButton.xaml"/>
+               <ResourceDictionary Source="/Themes/Link.xaml"/>
            </ResourceDictionary.MergedDictionaries>
 
-           <DataTemplate DataType="{x:Type authViewModel:LoginViewModel}">
-               <view:LoginView/>
+           <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
+
+           <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
+               <authView:RegisterView/>
            </DataTemplate>
 
-           <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
+            <DataTemplate DataType="{x:Type authViewModel:LoginViewModel}">
+                <authView:LoginView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:DashboardViewModel}">
+                <view:DashboardView/>
+            </DataTemplate>
+
+            <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
            <SolidColorBrush x:Key="White">#fffafb</SolidColorBrush>
            <SolidColorBrush x:Key="Gray">#2b2c28</SolidColorBrush>
+           <SolidColorBrush x:Key="LightGray">#afb2a9</SolidColorBrush>
            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>
            <SolidColorBrush x:Key="Red">#e5383b</SolidColorBrush>
            <SolidColorBrush x:Key="DarkRed">#ba181b</SolidColorBrush>

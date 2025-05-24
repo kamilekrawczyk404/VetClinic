@@ -58,14 +58,30 @@ public partial class App : Application
         });
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<UserService>();
         services.AddSingleton<Func<Type, ViewModel>>(provider => viewModelType => (ViewModel)provider.GetRequiredService(viewModelType));
 
-        services.AddScoped<LoginViewModel>();
+        services.AddTransient<LoginViewModel>();
+        services.AddTransient<RegisterViewModel>();
+        services.AddTransient<DashboardViewModel>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)
     {
         await _host.StartAsync();
+
+        var dbContext = _host.Services.GetRequiredService<VeterinaryClinicContext>();
+
+
+        try
+        {
+            await dbContext.Database.OpenConnectionAsync();
+            //MessageBox.Show("Database connection successful", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        } catch(Exception ex)
+        {
+            //MessageBox.Show("Database connection error: " + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Environment.Exit(1);
+        }
 
         var mainWindow = _host.Services.GetRequiredService<MainWindow>();
         mainWindow.Show();

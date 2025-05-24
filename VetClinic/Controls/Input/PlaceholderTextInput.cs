@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,26 @@ using System.Windows.Media;
 
 namespace VetClinic.Controls.Input
 {
-    public static class PlaceholderTextInput
+    public static class PlaceholderInput
     {
+        public static readonly DependencyProperty PlaceholderTextProperty =
+            DependencyProperty.RegisterAttached(
+                "Placeholder", 
+                typeof(string), 
+                typeof(PlaceholderInput), 
+                new PropertyMetadata(string.Empty));
+
+        public static string GetPlaceholder(DependencyObject obj)
+        {
+            Trace.WriteLine((string)obj.GetValue(PlaceholderTextProperty));
+            return (string)obj.GetValue(PlaceholderTextProperty);
+        }
+
+        public static void SetPlaceholder(DependencyObject obj, string value)
+        {
+            obj.SetValue(PlaceholderTextProperty, value);
+        }
+
         //public PlaceholderTextInput()
         //{
         //    InitializeComponent();

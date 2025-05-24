@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using VetClinic.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace VetClinic.Database
 {
+    // Files called clinic_data.sql and db_schema.sql are used to create the database and tables
+    // Make sure, that the database is created before running the application
     public class VeterinaryClinicContext : DbContext
     {
         public VeterinaryClinicContext(DbContextOptions<VeterinaryClinicContext> options) : base(options)
         {
         }
 
-        public DbSet<User> Users { get; set; }
-        public DbSet<Admin> Admins { get; set; }
-        public DbSet<Doctor> Doctors { get; set; }
-        public DbSet<Client> Clients { get; set; }
-        public DbSet<Pet> Pets { get; set; }
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Prescription> Prescriptions { get; set; }
-        public DbSet<Opinion> Opinions { get; set; }
-        public DbSet<Role> Roles { get; set; }
-        public DbSet<Drug> Drugs { get; set; }
-        public DbSet<Service> Services { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<Admin> Admin { get; set; }
+        public DbSet<Doctor> Doctor { get; set; }
+        public DbSet<Client> Client { get; set; }
+        public DbSet<Pet> Pet { get; set; }
+        public DbSet<Appointment> Appointment { get; set; }
+        public DbSet<Prescription> Prescription { get; set; }
+        public DbSet<Opinion> Opinion { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<Drug> Drug { get; set; }
+        public DbSet<Service> Service { get; set; }
+        public DbSet<AppointmentServices> AppointmentServices { get; set; }
+        public DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,30 +36,56 @@ namespace VetClinic.Database
 
             // User roles
             modelBuilder.Entity<Role>()
-                .HasOne(r => r.User)
-                .WithMany(u => u.Roles);
+                .HasKey(r => r.Id);
+
+            modelBuilder.Entity<Role>()
+                .HasIndex(r => r.Name)
+                .IsUnique();
+
+            // Role - users
+            modelBuilder.Entity<Role>()
+                .HasMany(r => r.Users)
+                .WithOne(u => u.Role)
+                .HasForeignKey(u => u.RoleId);
+
+            // User
+            modelBuilder.Entity<User>()
+                .HasKey(u => u.Id);
 
             modelBuilder.Entity<User>()
-                .HasMany(u => u.Roles)
-                .WithOne(r => r.User);
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
-            // Admin
-            modelBuilder.Entity<Admin>()
-                .HasOne(a => a.User)
-                .WithOne(u => u.Admin)
-                .HasForeignKey<Admin>(a => a.id);
+            // Relations between User and other entities
+            // User - Client
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Client)
+                .WithOne(c => c.User)
+                .HasForeignKey<Client>(c => c.Id);
+
+            // User - Admin
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Admin)
+                .WithOne(a => a.User)
+                .HasForeignKey<Admin>(a => a.Id);
+
+            // User - Doctor
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Doctor)
+                .WithOne(d => d.User)
+                .HasForeignKey<Doctor>(d => d.Id);
 
             // Client
             modelBuilder.Entity<Client>()
-                .HasOne(c => c.User)
-                .WithOne(u => u.Client)
-                .HasForeignKey<Client>(c => c.id);
+                .HasKey(c => c.Id);
+
+            // Admin
+            modelBuilder.Entity<Admin>()
+                .HasKey(a => a.Id);
 
             // Doctor
             modelBuilder.Entity<Doctor>()
-                .HasOne(d => d.User)
-                .WithOne(u => u.Doctor)
-                .HasForeignKey<Doctor>(d => d.id);
+                .HasKey(d => d.Id);
 
             // Pet
             modelBuilder.Entity<Pet>()

@@ -4,5 +4,12 @@
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="Foreground" Value="{DynamicResource Turquise}"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+    </Style>
+    <Style TargetType="TextBlock" x:Key="HeaderWhite">
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource White}"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
 </ResourceDictionary>
