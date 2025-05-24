@@ -14,6 +14,9 @@ namespace VetClinic.MVVM.ViewModel
 {
     public class MainViewModel : ViewModel
     {
+        private readonly NavigationViewModel _navigationViewModel;
+        public NavigationViewModel NavigationViewModel => _navigationViewModel;
+
         private INavigationService _navigation;
 
         public INavigationService Navigation
@@ -32,15 +35,16 @@ namespace VetClinic.MVVM.ViewModel
         public ICommand HideCommand { get; }
         public ICommand CloseCommand { get; }
 
-        public MainViewModel(INavigationService navigation)
+        public MainViewModel(INavigationService navigation, NavigationViewModel navigationViewModel)
         {
             MaximizeMinimizeCommand = new RelayCommand(MaximizeMinimizeWindow);
             HideCommand = new RelayCommand(HideWindow);
             CloseCommand = new RelayCommand(CloseWindow);
 
             _navigation = navigation;
-
             _navigation.NavigateTo<LoginViewModel>();
+
+            _navigationViewModel = navigationViewModel;
 
             NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
         }

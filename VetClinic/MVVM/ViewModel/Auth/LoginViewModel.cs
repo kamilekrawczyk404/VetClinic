@@ -56,15 +56,17 @@ namespace VetClinic.MVVM.ViewModel.Auth
         }
 
         private INavigationService _navigation;
+        private IUserSessionService _userSessionService;
         private UserService _userService;
 
         public RelayCommand NavigateToRegisterViewCommand { get; }
         public AsyncRelayCommand SubmitCommand { get; }
 
-        public LoginViewModel(INavigationService navigation, UserService userService)
+        public LoginViewModel(UserService userService, INavigationService navigation, IUserSessionService userSessionService)
         {
             _userService = userService;
             _navigation = navigation;
+            _userSessionService = userSessionService;
 
             PasswordErrorMessage = EmailErrorMessage = string.Empty;
 
@@ -102,6 +104,8 @@ namespace VetClinic.MVVM.ViewModel.Auth
             }
 
             // Navigate user to his dashboard
+
+            _userSessionService.SetUser(user);
             _navigation.NavigateTo<DashboardViewModel>();
         }
     }

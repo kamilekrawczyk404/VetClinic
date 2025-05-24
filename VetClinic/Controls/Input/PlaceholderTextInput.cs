@@ -21,7 +21,6 @@ namespace VetClinic.Controls.Input
 
         public static string GetPlaceholder(DependencyObject obj)
         {
-            Trace.WriteLine((string)obj.GetValue(PlaceholderTextProperty));
             return (string)obj.GetValue(PlaceholderTextProperty);
         }
 

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VetClinic"
         xmlns:view="clr-namespace:VetClinic.MVVM.View"
+        xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
         mc:Ignorable="d"
         Height="700" Width="1100"
         WindowStyle="None"
@@ -12,6 +13,11 @@
         Background="Transparent"
         AllowsTransparency="True"
         >
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:NavigationViewModel}">
+            <view:NavigationView />
+        </DataTemplate>
+    </Window.Resources>
     <Border CornerRadius="20" Background="{StaticResource Turquise}" ClipToBounds="True">
         <Grid ClipToBounds="True">
             <Grid.RowDefinitions>
@@ -23,7 +29,7 @@
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
 
-            <view:NavigationView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"/>
+            <view:NavigationView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" DataContext="{Binding NavigationViewModel}"/>
 
             <Border Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Background="{StaticResource White}" CornerRadius="20">
                 <Grid>
@@ -31,9 +37,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <view:WindowButtons Margin="10"/>
-                    
+
                     <ContentControl Grid.Row="1" Content="{Binding Navigation.CurrentView}" Margin="10"/>
                 </Grid>
             </Border>

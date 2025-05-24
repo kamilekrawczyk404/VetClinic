@@ -84,9 +84,6 @@ namespace VetClinic.MVVM.View
 
         private void UpdateErrorVisibility()
         {
-            Trace.WriteLine("error message");
-            Trace.WriteLine(ErrorMessage);
-
             if (PART_ErrorMessageTextBlock != null)
             {
                 PART_ErrorMessageTextBlock.Visibility = ErrorMessage.Length > 0 ? Visibility.Visible : Visibility.Collapsed;

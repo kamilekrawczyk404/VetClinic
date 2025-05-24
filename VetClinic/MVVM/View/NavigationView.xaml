@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.MVVM.View"
              xmlns:utils="clr-namespace:VetClinic.Utils"
+             xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="10">
@@ -31,45 +32,52 @@
         <StackPanel VerticalAlignment="Top" Grid.Row="1" Margin="0,20,0,0">
             <Button 
                 Style="{StaticResource NavigationButtonBase}"
-                Content="Overview" 
+                Content="Dashboard" 
                 utils:ButtonAttachedProperties.ImageSource="/Images/home.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/home-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/home-active.png"
+                Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
                 Content="Appointments"
                 utils:ButtonAttachedProperties.ImageSource="/Images/appointment.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/appointment-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/appointment-active.png"
+                Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
-                Content="Users"
+                Content="Clients"
                 utils:ButtonAttachedProperties.ImageSource="/Images/patient.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/patient-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/patient-active.png"
+                Visibility="{Binding AreClientsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
                 Content="Doctors"
                 utils:ButtonAttachedProperties.ImageSource="/Images/doctor.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/doctor-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/doctor-active.png"
+                Visibility="{Binding AreDoctorsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
             />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
                 Content="Pets"
                 utils:ButtonAttachedProperties.ImageSource="/Images/hamster.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/hamster-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/hamster-active.png"
+                Visibility="{Binding ArePetsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
              />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
                 Content="Prescriptions"
                 utils:ButtonAttachedProperties.ImageSource="/Images/medical-prescription.png" 
                 utils:ButtonAttachedProperties.ActiveImageSource="/Images/medical-prescription-active.png" 
+                Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
              />
             <Button 
                 Style="{StaticResource NavigationButtonBase}" 
                 Content="Drugs"
                 utils:ButtonAttachedProperties.ImageSource="/Images/medicine.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/medicine-active.png" 
+                utils:ButtonAttachedProperties.ActiveImageSource="/Images/medicine-active.png"
+                Visibility="{Binding AreDrugsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
              /> 
         </StackPanel>
     </Grid>

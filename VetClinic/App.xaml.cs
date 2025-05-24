@@ -58,12 +58,14 @@ public partial class App : Application
         });
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<INavigationService, NavigationService>();
+        services.AddSingleton<IUserSessionService, UserSessionService>();
         services.AddSingleton<UserService>();
         services.AddSingleton<Func<Type, ViewModel>>(provider => viewModelType => (ViewModel)provider.GetRequiredService(viewModelType));
 
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
         services.AddTransient<DashboardViewModel>();
+        services.AddTransient<NavigationViewModel>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)
