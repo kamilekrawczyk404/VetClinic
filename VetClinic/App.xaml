@@ -4,8 +4,10 @@
             xmlns:local="clr-namespace:VetClinic"
             xmlns:view="clr-namespace:VetClinic.MVVM.View"
             xmlns:authView="clr-namespace:VetClinic.MVVM.View.Auth"
+            xmlns:dashboardView="clr-namespace:VetClinic.MVVM.View.Dashboard"
             xmlns:utils="clr-namespace:VetClinic.Utils"
             xmlns:authViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Auth"
+            xmlns:dashboardViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Dashboard"
             xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
              >
    <Application.Resources>
@@ -16,10 +18,14 @@
                <ResourceDictionary Source="/Themes/Header.xaml"/>
                <ResourceDictionary Source="/Themes/SubmitButton.xaml"/>
                <ResourceDictionary Source="/Themes/Link.xaml"/>
-           </ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Themes/DashboardItem.xaml"/>
+                <ResourceDictionary Source="/Themes/SecondaryTextTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
            <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
            <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <utils:RatioConverter x:Key="RatioConverter"/>
+            <utils:TrendRatioToImageSourceConverter x:Key="TrendRatioToImageSourceConverter"/>
 
            <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
                <authView:RegisterView/>
@@ -29,13 +35,14 @@
                 <authView:LoginView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:DashboardViewModel}">
-                <view:DashboardView/>
+            <DataTemplate DataType="{x:Type dashboardViewModel:DoctorDashboardViewModel}">
+                <dashboardView:DoctorDashboard/>
             </DataTemplate>
 
            <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
+           <SolidColorBrush x:Key="UltraLightTurquise">#dff4f1</SolidColorBrush>
            <SolidColorBrush x:Key="White">#fffafb</SolidColorBrush>
            <SolidColorBrush x:Key="Gray">#2b2c28</SolidColorBrush>
            <SolidColorBrush x:Key="LightGray">#afb2a9</SolidColorBrush>

@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VetClinic.MVVM.View
+namespace VetClinic.MVVM.View.Dashboard
 {
     /// <summary>
-    /// Logika interakcji dla klasy DashboardView.xaml
+    /// Logika interakcji dla klasy DoctorDashboard.xaml
     /// </summary>
-    public partial class DashboardView : UserControl
+    public partial class DoctorDashboard : UserControl
     {
-        public DashboardView()
+        public DoctorDashboard()
         {
             InitializeComponent();
         }

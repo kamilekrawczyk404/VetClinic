@@ -9,12 +9,16 @@ using System.Windows.Navigation;
 using VetClinic.MVVM.ViewModel.Auth;
 using VetClinic.Services;
 using VetClinic.Utils;
+using VetClinic.Database;
+using VetClinic.Models;
+using VetClinic.MVVM.ViewModel.Dashboard;
 
 namespace VetClinic.MVVM.ViewModel
 {
     public class MainViewModel : ViewModel
     {
         private readonly NavigationViewModel _navigationViewModel;
+        private readonly IUserSessionService _userSessionService;
         public NavigationViewModel NavigationViewModel => _navigationViewModel;
 
         private INavigationService _navigation;
@@ -35,14 +39,23 @@ namespace VetClinic.MVVM.ViewModel
         public ICommand HideCommand { get; }
         public ICommand CloseCommand { get; }
 
-        public MainViewModel(INavigationService navigation, NavigationViewModel navigationViewModel)
+        public MainViewModel(INavigationService navigation, IUserSessionService userSessionService, VeterinaryClinicContext context, NavigationViewModel navigationViewModel)
         {
             MaximizeMinimizeCommand = new RelayCommand(MaximizeMinimizeWindow);
             HideCommand = new RelayCommand(HideWindow);
             CloseCommand = new RelayCommand(CloseWindow);
 
             _navigation = navigation;
-            _navigation.NavigateTo<LoginViewModel>();
+            _userSessionService = userSessionService;
+
+            _navigation.NavigateTo<DoctorDashboardViewModel>();
+
+            //_navigation.NavigateTo<LoginViewModel>();
+
+            // get the user
+            User logged = context.User.FirstOrDefault(u => u.Email == "dr.smith@vetclinic.com");
+            _userSessionService.SetUser(logged);
+
 
             _navigationViewModel = navigationViewModel;
 

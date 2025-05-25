@@ -257,7 +257,7 @@ CREATE TABLE `Prescription` (
   `appointment_id` int NOT NULL,
   `instructions` varchar(255) COLLATE utf8mb3_polish_ci NOT NULL,
   `expiry_date` datetime NOT NULL,
-  `created_ad` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_prescription_appointment` (`appointment_id`),
   CONSTRAINT `fk_prescription_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `Appointment` (`id`)

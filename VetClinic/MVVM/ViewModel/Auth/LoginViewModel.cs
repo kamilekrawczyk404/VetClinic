@@ -106,7 +106,8 @@ namespace VetClinic.MVVM.ViewModel.Auth
             // Navigate user to his dashboard
 
             _userSessionService.SetUser(user);
-            _navigation.NavigateTo<DashboardViewModel>();
+            // there are 3 dashboards, navigate them properly based on user role
+            //_navigation.NavigateTo<DashboardViewModel>();
         }
     }
 }

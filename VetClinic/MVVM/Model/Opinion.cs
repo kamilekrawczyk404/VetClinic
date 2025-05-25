@@ -1,21 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
+    [Table("opinion")]
     public class Opinion
     {
-        public int id { get; set; }
-        public int client_id { get; set; }
-        public int doctor_id { get; set; }
-        public string comment { get; set; }
-        public int rating { get; set; }
-        public DateTime created_at { get; set; }
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
 
-        public ICollection<Opinion> Opinions { get; set; }
+        [Column("client_id")]
+        public int ClientId { get; set; }
+
+        [Column("doctor_id")]
+        public int DoctorId { get; set; }
+
+        [Column("commnet")]
+        public string Comment { get; set; }
+
+        [Column("rating")]
+        public int Rating { get; set; }
+
+        [Column("created_at")]  
+        public DateTime CreatedAt { get; set; }
+
         public Client Client { get; set; }
         public Doctor Doctor { get; set; }
     }

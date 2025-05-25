@@ -43,7 +43,5 @@ namespace VetClinic.Models
         public virtual Doctor Doctor { get; set; }
         public virtual Client Client { get; set; }
         public virtual Role Role { get; set; }
-
-        public virtual ICollection<Pet> Pets { get; set; }
     }
 }

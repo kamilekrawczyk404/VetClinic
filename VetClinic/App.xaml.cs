@@ -13,6 +13,7 @@ using VetClinic.Interfaces;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
 using VetClinic.MVVM.ViewModel.Auth;
+using VetClinic.MVVM.ViewModel.Dashboard;
 using VetClinic.Services;
 using NavigationService = VetClinic.Services.NavigationService;
 
@@ -64,8 +65,9 @@ public partial class App : Application
 
         services.AddTransient<LoginViewModel>();
         services.AddTransient<RegisterViewModel>();
-        services.AddTransient<DashboardViewModel>();
         services.AddTransient<NavigationViewModel>();
+
+        services.AddTransient<DoctorDashboardViewModel>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)

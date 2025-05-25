@@ -1,26 +1,46 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
+    [Table("pet")]
     public class Pet
     {
-        public int id { get; set; }
-        public int client_id { get; set; }
-        public string name { get; set; }
-        public string species { get; set; }
-        public string breed { get; set; }
-        public double weight { get; set; }
-        public string gender { get; set; }
-        public DateTime date_of_birth { get; set; }
-        public DateTime created_at { get; set; }
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
 
-        public Client Client { get; set; }
-        public ICollection<Pet> Pets { get; set; }
-        public ICollection<Appointment> Appointments { get; set; }
-        public ICollection<Prescription> Prescriptions { get; set; }
+        [Column("client_id")]
+        public int ClientId { get; set; }
+
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("species")]
+        public string Species { get; set; }
+
+        [Column("breed")]
+        public string Breed { get; set; }
+
+        [Column("weight")]
+        public double Weight { get; set; }
+
+        [Column("gender")]
+        public string Gender { get; set; }
+
+        [Column("date_of_birth")]
+        public DateTime DateOfBirth { get; set; }
+
+        [Column("created_at")]
+        public DateTime CreatedAt { get; set; }
+
+        public virtual Client Client { get; set; }
+        public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Prescription> Prescriptions { get; set; }
     }
 }

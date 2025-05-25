@@ -7,7 +7,7 @@
         xmlns:view="clr-namespace:VetClinic.MVVM.View"
         xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
         mc:Ignorable="d"
-        Height="700" Width="1100"
+        Height="700" Width="1200"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="Transparent"
@@ -26,7 +26,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
 
             <view:NavigationView Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" DataContext="{Binding NavigationViewModel}"/>

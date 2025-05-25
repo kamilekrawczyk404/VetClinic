@@ -79,6 +79,11 @@ namespace VetClinic.Database
             modelBuilder.Entity<Client>()
                 .HasKey(c => c.Id);
 
+            modelBuilder.Entity<Client>()
+                .HasMany(c => c.Pets)
+                .WithOne(p => p.Client)
+                .HasForeignKey(p => p.ClientId);
+
             // Admin
             modelBuilder.Entity<Admin>()
                 .HasKey(a => a.Id);
@@ -87,27 +92,21 @@ namespace VetClinic.Database
             modelBuilder.Entity<Doctor>()
                 .HasKey(d => d.Id);
 
-            // Pet
-            modelBuilder.Entity<Pet>()
-                .HasOne(p => p.Client)
-                .WithMany(c => c.Pets)
-                .HasForeignKey(p => p.client_id);
-
             // Appointment (has one pet and one doctore, many prescriptions and services)
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Pet)
                 .WithMany(p => p.Appointments)
-                .HasForeignKey(a => a.pet_id);
+                .HasForeignKey(a => a.PetId);
 
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.Appointments)
-                .HasForeignKey(a => a.doctor_id);
+                .HasForeignKey(a => a.DoctorId);
 
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.Prescriptions)
                 .WithOne(p => p.Appointment)
-                .HasForeignKey(p => p.appointment_id);
+                .HasForeignKey(p => p.AppointmentId);
 
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.AppointmentServices)
@@ -124,7 +123,7 @@ namespace VetClinic.Database
             modelBuilder.Entity<Prescription>()
                 .HasOne(p => p.Appointment)
                 .WithMany(a => a.Prescriptions)
-                .HasForeignKey(p => p.appointment_id);
+                .HasForeignKey(p => p.AppointmentId);
 
             modelBuilder.Entity<Prescription>()
                 .HasMany(p => p.PrescriptionDrugs)
@@ -135,12 +134,12 @@ namespace VetClinic.Database
             modelBuilder.Entity<Opinion>()
                 .HasOne(o => o.Client)
                 .WithMany(c => c.Opinions)
-                .HasForeignKey(o => o.client_id);
+                .HasForeignKey(o => o.ClientId);
 
             modelBuilder.Entity<Opinion>()
                 .HasOne(o => o.Doctor)
                 .WithMany(d => d.Opinions)
-                .HasForeignKey(o => o.doctor_id);
+                .HasForeignKey(o => o.DoctorId);
 
             // Drug
             modelBuilder.Entity<Drug>()

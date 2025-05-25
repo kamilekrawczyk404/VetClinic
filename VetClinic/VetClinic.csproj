@@ -11,6 +11,12 @@
   <ItemGroup>
     <None Remove="Images\appointment-active.png" />
     <None Remove="Images\appointment.png" />
+    <None Remove="Images\DashboardItem\appointment-item.png" />
+    <None Remove="Images\DashboardItem\pet-item.png" />
+    <None Remove="Images\DashboardItem\prescription-item.png" />
+    <None Remove="Images\DashboardItem\trend-down.png" />
+    <None Remove="Images\DashboardItem\trend-flat.png" />
+    <None Remove="Images\DashboardItem\trend-up.png" />
     <None Remove="Images\doctor-active.png" />
     <None Remove="Images\doctor.png" />
     <None Remove="Images\hamster-active.png" />
@@ -45,6 +51,13 @@
   <ItemGroup>
     <Resource Include="Images\appointment-active.png" />
     <Resource Include="Images\appointment.png" />
+    <Resource Include="Images\DashboardItem\appointment-item.png" />
+    <Resource Include="Images\DashboardItem\opinion-item.png" />
+    <Resource Include="Images\DashboardItem\pet-item.png" />
+    <Resource Include="Images\DashboardItem\prescription-item.png" />
+    <Resource Include="Images\DashboardItem\trend-down.png" />
+    <Resource Include="Images\DashboardItem\trend-flat.png" />
+    <Resource Include="Images\DashboardItem\trend-up.png" />
     <Resource Include="Images\doctor-active.png" />
     <Resource Include="Images\doctor.png" />
     <Resource Include="Images\hamster-active.png" />

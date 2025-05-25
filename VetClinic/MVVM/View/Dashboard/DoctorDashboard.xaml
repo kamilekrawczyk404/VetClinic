@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="VetClinic.MVVM.View.Dashboard.DoctorDashboard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VetClinic.MVVM.View.Dashboard"
+             xmlns:controls="clr-namespace:VetClinic.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Style="{StaticResource Header}" Text="Hello, dr. "/>
+            <TextBlock Style="{StaticResource Header}" Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <TextBlock Grid.Column="1" Margin="10,0,0,10" Text="Upcoming Appointments" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
+
+        <controls:NextAppointmentsListView Margin="10,0,0,0" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" ItemsSource="{Binding NextAppointments, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch"/>
+
+        <Grid Margin="0,0,0,10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <controls:DashboardItem Title="Appointments" Value="{Binding AppointmentsCount}" Ratio="{Binding AppointmentsRatio}" ImageSource="/Images/DashboardItem/appointment-item.png"/>
+            <controls:DashboardItem Margin="10,0,0,0" Grid.Column="1" Title="Prescriptions" Value="{Binding PrescriptionsCount}" Ratio="{Binding PrescriptionsRatio}" ImageSource="/Images/DashboardItem/prescription-item.png"/>
+            <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Grid.Column="0" Background="Gray" Orientation="Horizontal">
+            <TextBlock Text="Transcripions"/>
+            <TextBlock Text="Calendar"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
