@@ -32,6 +32,18 @@
     <None Remove="Images\medicine.png" />
     <None Remove="Images\patient-active.png" />
     <None Remove="Images\patient.png" />
+    <None Remove="Images\PetInformation\breed.png" />
+    <None Remove="Images\PetInformation\created_at.png" />
+    <None Remove="Images\PetInformation\date_of_birth.png" />
+    <None Remove="Images\PetInformation\gender.png" />
+    <None Remove="Images\PetInformation\species.png" />
+    <None Remove="Images\PetInformation\weight.png" />
+    <None Remove="Images\Species\bird.png" />
+    <None Remove="Images\Species\cat.png" />
+    <None Remove="Images\Species\dog.png" />
+    <None Remove="Images\Species\rabbit.png" />
+    <None Remove="Images\Species\rat.png" />
+    <None Remove="Images\Species\turtle.png" />
     <None Remove="Images\WindowNav\cancel-active.png" />
     <None Remove="Images\WindowNav\cancel.png" />
     <None Remove="Images\WindowNav\hide.png" />
@@ -45,6 +57,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
   </ItemGroup>
 
@@ -73,6 +86,19 @@
     <Resource Include="Images\medicine.png" />
     <Resource Include="Images\patient-active.png" />
     <Resource Include="Images\patient.png" />
+    <Resource Include="Images\PetInformation\breed.png" />
+    <Resource Include="Images\PetInformation\created_at.png" />
+    <Resource Include="Images\PetInformation\date_of_birth.png" />
+    <Resource Include="Images\PetInformation\gender.png" />
+    <Resource Include="Images\PetInformation\species.png" />
+    <Resource Include="Images\PetInformation\weight.png" />
+    <Resource Include="Images\Species\bird.png" />
+    <Resource Include="Images\Species\cat.png" />
+    <Resource Include="Images\Species\dog.png" />
+    <Resource Include="Images\Species\hamster.png" />
+    <Resource Include="Images\Species\rabbit.png" />
+    <Resource Include="Images\Species\rat.png" />
+    <Resource Include="Images\Species\turtle.png" />
     <Resource Include="Images\WindowNav\cancel-active.png" />
     <Resource Include="Images\WindowNav\cancel.png" />
     <Resource Include="Images\WindowNav\hide.png" />

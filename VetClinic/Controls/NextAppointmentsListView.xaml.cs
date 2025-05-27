@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VetClinic.Controls.Calendar;
 
 namespace VetClinic.Controls
 {
@@ -36,6 +37,18 @@ namespace VetClinic.Controls
         {
             get => GetValue(ItemsSourceProperty);
             set => SetValue(ItemsSourceProperty, value);
+        }
+
+        public static readonly DependencyProperty OnAppoinmentClickedProperty =
+            DependencyProperty.Register(
+                nameof(OnAppointmentClicked),
+                typeof(ICommand),
+                typeof(NextAppointmentsListView));
+
+        public ICommand OnAppointmentClicked
+        {
+            get => (ICommand)GetValue(OnAppoinmentClickedProperty);
+            set => SetValue(OnAppoinmentClickedProperty, value);
         }
     }
 }

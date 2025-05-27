@@ -20,14 +20,18 @@
                <ResourceDictionary Source="/Themes/Link.xaml"/>
                 <ResourceDictionary Source="/Themes/DashboardItem.xaml"/>
                 <ResourceDictionary Source="/Themes/SecondaryTextTheme.xaml"/>
+                <ResourceDictionary Source="/Themes/BorderTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-           <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
-           <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
+            <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <utils:RatioConverter x:Key="RatioConverter"/>
             <utils:TrendRatioToImageSourceConverter x:Key="TrendRatioToImageSourceConverter"/>
+            <utils:DayOfWeekToShortNameConverter x:Key="DayOfWeekToShortNameConverter"/>
+            <utils:DateToStringConverter x:Key="DateToStringConverter"/>
+            <utils:SpeciesToImageSourceConverter x:Key="SpeciesToImageSourceConverter"/>
 
-           <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
+            <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
                <authView:RegisterView/>
            </DataTemplate>
 

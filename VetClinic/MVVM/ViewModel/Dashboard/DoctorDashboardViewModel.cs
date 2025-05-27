@@ -10,6 +10,7 @@ using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.Model;
 using VetClinic.Services;
+using VetClinic.Utils;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
 {
@@ -97,24 +98,90 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private ObservableCollection<DetailedAppointment> _nextAppointments;
-        public ObservableCollection<DetailedAppointment> NextAppointments
+        public ObservableCollection<DetailedAppointment> _doctorAppointments = new ObservableCollection<DetailedAppointment>();
+        public ObservableCollection<DetailedAppointment> DoctorAppointments
         {
-            get => _nextAppointments;
+            get => _doctorAppointments;
             set
             {
-                _nextAppointments = value;
+                _doctorAppointments = value;
                 OnPropertyChanged();
             }
         }
+
+        private ObservableCollection<DetailedAppointment> _selectedDayAppointments = new ObservableCollection<DetailedAppointment>();
+        public ObservableCollection<DetailedAppointment> SelectedDayAppointments
+        {
+            get => _selectedDayAppointments;
+            set
+            {
+                _selectedDayAppointments = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<CalendarDay> _calendarDays = new ObservableCollection<CalendarDay>();
+        public ObservableCollection<CalendarDay> CalendarDays
+        {
+            get => _calendarDays;
+            set
+            {
+                _calendarDays = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private AppointmentViewModel _appointmentViewModel = new AppointmentViewModel();
+
+        public AppointmentViewModel AppointmentViewModel
+        {
+            get => _appointmentViewModel;
+            set
+            {
+                _appointmentViewModel = value;
+                OnPropertyChanged();
+            }
+        }   
+
+        public RelayCommand SetSelectedDayCommand { get; }
+        public RelayCommand SetCurrentAppointmentCommand { get; }
         public DoctorDashboardViewModel(VeterinaryClinicContext context, IUserSessionService userSessionService)
         {
             _context = context;
             _userSessionService = userSessionService;
 
-            NextAppointments = new ObservableCollection<DetailedAppointment>();
+            SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
+            SetCurrentAppointmentCommand = new RelayCommand(SetCurrentAppointment);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
+        }
+
+        private void SetSelectedDay(object obj)
+        {
+            if (obj is CalendarDay day)
+            {
+                // select clicked appointment
+                foreach (var calendarDay in CalendarDays)
+                {
+                    calendarDay.IsSelected = calendarDay.Date.Date == day.Date.Date;
+                }
+
+                // filter only appointments for the selected day
+                SelectedDayAppointments.Clear();
+                foreach (var appointment in DoctorAppointments.Where(a => a.Appointment.AppointmentDate.Date == day.Date.Date))
+                {
+                    SelectedDayAppointments.Add(appointment);
+                }
+            }
+        }
+
+        private void SetCurrentAppointment(object obj)
+        {
+            if (obj is DetailedAppointment appointment)
+            {
+                Trace.WriteLine("new view model" + appointment.Appointment.Id);
+                AppointmentViewModel.Appointment = appointment;
+            }
         }
 
         private async Task OnUserChanged()
@@ -138,7 +205,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 await GetOpinionsCount(prev7Start, prev7End, last7Start, today);
                 await GetAppointsmentCount(prev7Start, prev7End, last7Start, today);
                 await GetPrescriptionsCount(prev7Start, prev7End, last7Start, today);
-                await GetNextAppointments();
+                await GetDoctorsAppointments();
+                FillCalendar();
             }
             else
             {
@@ -146,14 +214,33 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private async Task GetNextAppointments()
+        private void FillCalendar()
+        {
+            // Get the first day of the week for the calender
+            DateTime today = DateTime.Today;
+            DateTime firstDayOfWeek = today.AddDays(-(int)today.DayOfWeek + 1);
+            DateTime lastDayOfWeek = firstDayOfWeek.AddDays(6);
+
+            for(int i = 0; i < 7; i++)
+            {
+                DateTime date = firstDayOfWeek.AddDays(i);
+                CalendarDays.Add(new CalendarDay
+                {
+                    Date = date,
+                    IsSelected = i == 0,
+                    //IsSelected = date == today
+                });
+            }
+        }
+        private async Task GetDoctorsAppointments()
         {
             DateTime today = DateTime.Today;
             DateTime nextWeek = today.AddDays(7);
 
             // feed database with new values...
-            var nextAppointments = await _context.Appointment
-                .Where(a => a.DoctorId == _doctor.Id && a.AppointmentDate <= nextWeek && a.AppointmentDate >= today)
+            var appointments = await _context.Appointment
+                //.Where(a => a.DoctorId == _doctor.Id && a.AppointmentDate <= nextWeek && a.AppointmentDate >= today)
+                .Where(a => a.DoctorId == _doctor.Id)
                 .Include(a => a.Pet)
                 .ThenInclude(p => p.Client)
                 .ThenInclude(c => c.User)
@@ -163,18 +250,31 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .ToListAsync();
 
 
-            foreach (var nextAppointment in nextAppointments)
+            foreach (var appointment in appointments)
             {
-                NextAppointments.Add(new DetailedAppointment
+                DoctorAppointments.Add(new DetailedAppointment
                 {
-                    Appointment = nextAppointment,
-                    Pet = nextAppointment.Pet,
-                    Client = nextAppointment.Pet.Client,
-                    Doctor = nextAppointment.Doctor,
+                    Appointment = appointment,
+                    Pet = appointment.Pet,
+                    Client = appointment.Pet.Client,
+                    Doctor = appointment.Doctor,
                 });
             }
 
-            Trace.WriteLine("Length: " + NextAppointments.Count());
+            // for testing only
+            // get first date and assign appointments to the state
+            if (DoctorAppointments.Count > 0)
+            {
+                var firstAppointmentDate = DoctorAppointments.First().Appointment.AppointmentDate.Date;
+                SelectedDayAppointments.Clear();
+
+                // get only appointems for the first date in the list of
+
+                foreach (var appointment in DoctorAppointments.Where(a => a.Appointment.AppointmentDate.Date == firstAppointmentDate))
+                {
+                    SelectedDayAppointments.Add(appointment);
+                }
+            }
         }
 
         private async Task GetOpinionsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)

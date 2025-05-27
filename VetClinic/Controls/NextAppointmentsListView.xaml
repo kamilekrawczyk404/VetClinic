@@ -4,9 +4,18 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <ListView ItemsSource="{Binding Path=ItemsSource, RelativeSource={RelativeSource AncestorType={x:Type local:NextAppointmentsListView}}}">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="SelectionChanged">
+                <i:InvokeCommandAction 
+                    Command="{Binding Path=OnAppointmentClicked, RelativeSource={RelativeSource AncestorType={x:Type local:NextAppointmentsListView}}}" 
+                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListView}}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        
         <ListView.Template>
             <ControlTemplate TargetType="ListView">
                 <Border 
@@ -70,7 +79,7 @@
                                 <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" min"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Button Style="{StaticResource ListViewButton}" Content="View Appointment"/>
+                                <Button  Style="{StaticResource ListViewButton}" Content="Cancel appointment"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

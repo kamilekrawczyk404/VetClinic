@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.MVVM.View.Dashboard"
              xmlns:controls="clr-namespace:VetClinic.Controls"
+             xmlns:calendar="clr-namespace:VetClinic.Controls.Calendar"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -26,7 +27,15 @@
 
         <TextBlock Grid.Column="1" Margin="10,0,0,10" Text="Upcoming Appointments" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
 
-        <controls:NextAppointmentsListView Margin="10,0,0,0" Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" ItemsSource="{Binding NextAppointments, UpdateSourceTrigger=PropertyChanged}"  HorizontalAlignment="Stretch"/>
+        <controls:NextAppointmentsListView 
+            Margin="10,0,0,0" 
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Grid.RowSpan="3" 
+            ItemsSource="{Binding SelectedDayAppointments, UpdateSourceTrigger=PropertyChanged}"  
+            HorizontalAlignment="Stretch"
+            OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"
+            />
 
         <Grid Margin="0,0,0,10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
@@ -40,9 +49,24 @@
             <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
         </Grid>
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Background="Gray" Orientation="Horizontal">
-            <TextBlock Text="Transcripions"/>
-            <TextBlock Text="Calendar"/>
-        </StackPanel>
+
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <local:AppointmentDetails DataContext="{Binding AppointmentViewModel}" Margin="0,0,0,10" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBlock Text="Transcripions"/>
+                <calendar:CalendarWeek Grid.Column="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
