@@ -18,7 +18,7 @@
             <view:NavigationView />
         </DataTemplate>
     </Window.Resources>
-    <Border CornerRadius="20" Background="{StaticResource Turquise}" ClipToBounds="True">
+    <Border CornerRadius="20" Background="{StaticResource Turquise}" ClipToBounds="True" MouseDown="Border_MouseDown">
         <Grid ClipToBounds="True">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

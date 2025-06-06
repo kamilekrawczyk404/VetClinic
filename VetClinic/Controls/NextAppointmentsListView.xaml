@@ -79,7 +79,8 @@
                                 <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" min"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Button  Style="{StaticResource ListViewButton}" Content="Cancel appointment"/>
+                                <local:AppointmentStatusComboBox Status="{Binding Appointment.AppointmentStatus, Mode=TwoWay}" Statuses="{Binding Statuses}" IsEnabled="True" Margin="0,0,5,0"/>
+                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

@@ -21,15 +21,19 @@
                 <ResourceDictionary Source="/Themes/DashboardItem.xaml"/>
                 <ResourceDictionary Source="/Themes/SecondaryTextTheme.xaml"/>
                 <ResourceDictionary Source="/Themes/BorderTheme.xaml"/>
+                <ResourceDictionary Source="/Themes/TextBoxTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <utils:TextToVisibilityConverter x:Key="TextToVisibilityConverter"/>
             <utils:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+            <utils:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
             <utils:RatioConverter x:Key="RatioConverter"/>
             <utils:TrendRatioToImageSourceConverter x:Key="TrendRatioToImageSourceConverter"/>
             <utils:DayOfWeekToShortNameConverter x:Key="DayOfWeekToShortNameConverter"/>
             <utils:DateToStringConverter x:Key="DateToStringConverter"/>
             <utils:SpeciesToImageSourceConverter x:Key="SpeciesToImageSourceConverter"/>
+            <utils:AppointmentStatusToBackgroundConverter x:Key="AppointmentStatusToBackgroundConverter"/>
+            <utils:AppointmentStatusToBrushColorConventer x:Key="AppointmentStatusToBrushColorConventer"/>
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
                <authView:RegisterView/>
@@ -53,6 +57,18 @@
            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>
            <SolidColorBrush x:Key="Red">#e5383b</SolidColorBrush>
            <SolidColorBrush x:Key="DarkRed">#ba181b</SolidColorBrush>
-       </ResourceDictionary>
+
+            <SolidColorBrush x:Key="BackgroundStatusScheduled">#E0F2F7</SolidColorBrush>
+            <SolidColorBrush x:Key="BorderStatusScheduled">#81D4FA</SolidColorBrush>
+
+            <SolidColorBrush x:Key="BackgroundStatusInProgress">#FFF3E0</SolidColorBrush>
+            <SolidColorBrush x:Key="BorderStatusInProgress">#FFB74D</SolidColorBrush>
+
+            <SolidColorBrush x:Key="BackgroundStatusCompleted">#E8F5E9</SolidColorBrush>
+            <SolidColorBrush x:Key="BorderStatusCompleted">#81C784</SolidColorBrush>
+
+            <SolidColorBrush x:Key="BackgroundStatusCanceled">#FFEBEE</SolidColorBrush>
+            <SolidColorBrush x:Key="BorderStatusCanceled">#E57373</SolidColorBrush>
+        </ResourceDictionary>
    </Application.Resources>
 </Application>

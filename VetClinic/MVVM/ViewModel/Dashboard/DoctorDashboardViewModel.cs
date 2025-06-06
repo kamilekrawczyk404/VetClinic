@@ -16,10 +16,21 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 {
     public class DoctorDashboardViewModel : ViewModel
     {
-        private readonly VeterinaryClinicContext _context;
+        private VeterinaryClinicContext _context;
         private readonly IUserSessionService _userSessionService;
 
         private Doctor _doctor;
+
+        private bool _isAppointmentDisplayed;
+        public bool IsAppointmentDisplayed
+        {
+            get => _isAppointmentDisplayed;
+            set
+            {
+                _isAppointmentDisplayed = value;
+                OnPropertyChanged();
+            }
+        }
 
         private int _appointmentsCount;
         public int AppointmentsCount
@@ -131,7 +142,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private AppointmentViewModel _appointmentViewModel = new AppointmentViewModel();
+        private AppointmentViewModel _appointmentViewModel;
 
         public AppointmentViewModel AppointmentViewModel
         {
@@ -144,16 +155,39 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         }   
 
         public RelayCommand SetSelectedDayCommand { get; }
-        public RelayCommand SetCurrentAppointmentCommand { get; }
-        public DoctorDashboardViewModel(VeterinaryClinicContext context, IUserSessionService userSessionService)
+        public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
+
+        private ObservableCollection<AppointmentStatus> _statuses;
+        public ObservableCollection<AppointmentStatus> Statuses
+        {
+            get => _statuses;
+            set
+            {
+                _statuses = value;
+                OnPropertyChanged();
+            }
+        }
+        public DoctorDashboardViewModel(VeterinaryClinicContext context, INavigationService navigation, IUserSessionService userSessionService)
         {
             _context = context;
             _userSessionService = userSessionService;
 
+            AppointmentViewModel = new AppointmentViewModel(context, ExitAppointment, GetDoctorsAppointments);
+
             SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
-            SetCurrentAppointmentCommand = new RelayCommand(SetCurrentAppointment);
+            SetCurrentAppointmentCommand = new AsyncRelayCommand(SetCurrentAppointment);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
+
+            IsAppointmentDisplayed = false;
+        }
+
+        private Task ExitAppointment()
+        {
+            IsAppointmentDisplayed = false;
+            AppointmentViewModel.Appointment = null;
+
+            return Task.CompletedTask;
         }
 
         private void SetSelectedDay(object obj)
@@ -175,11 +209,25 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private void SetCurrentAppointment(object obj)
+        private async Task SetCurrentAppointment(object obj)
         {
             if (obj is DetailedAppointment appointment)
             {
-                Trace.WriteLine("new view model" + appointment.Appointment.Id);
+                var inProgressStatus = Statuses.FirstOrDefault(s => s.Id == 2);
+
+                // Change appointment status to In Progress
+                if (inProgressStatus != null)
+                {
+                    appointment.Appointment.AppointmentStatus = inProgressStatus;
+
+                    // Update record in the database and fetch actual data
+
+                    _context.Appointment.Update(appointment.Appointment);
+                    await _context.SaveChangesAsync();
+                    await GetDoctorsAppointments();
+                }
+
+                IsAppointmentDisplayed = true;
                 AppointmentViewModel.Appointment = appointment;
             }
         }
@@ -187,6 +235,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private async Task OnUserChanged()
         {
             var user = _userSessionService.LoggedInUser;
+
+            // Initialize appointment's statuses
+
+            var appointmentStatuses = await GetAppointmentStatuses();
+            Statuses = new ObservableCollection<AppointmentStatus>(appointmentStatuses);
 
             _doctor = await _context.Doctor
                 .Include(d => d.User)
@@ -232,6 +285,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 });
             }
         }
+
+        private async Task<List<AppointmentStatus>> GetAppointmentStatuses()
+        {
+            return await _context.AppointmentStatus.ToListAsync();
+        }
+
         private async Task GetDoctorsAppointments()
         {
             DateTime today = DateTime.Today;
@@ -241,6 +300,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             var appointments = await _context.Appointment
                 //.Where(a => a.DoctorId == _doctor.Id && a.AppointmentDate <= nextWeek && a.AppointmentDate >= today)
                 .Where(a => a.DoctorId == _doctor.Id)
+                .Include(a => a.AppointmentStatus)
                 .Include(a => a.Pet)
                 .ThenInclude(p => p.Client)
                 .ThenInclude(c => c.User)
@@ -249,6 +309,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
 
+            DoctorAppointments.Clear();
 
             foreach (var appointment in appointments)
             {
@@ -258,6 +319,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     Pet = appointment.Pet,
                     Client = appointment.Pet.Client,
                     Doctor = appointment.Doctor,
+                    Statuses = Statuses
                 });
             }
 
@@ -269,7 +331,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 SelectedDayAppointments.Clear();
 
                 // get only appointems for the first date in the list of
-
                 foreach (var appointment in DoctorAppointments.Where(a => a.Appointment.AppointmentDate.Date == firstAppointmentDate))
                 {
                     SelectedDayAppointments.Add(appointment);

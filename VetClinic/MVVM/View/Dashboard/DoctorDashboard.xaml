@@ -33,6 +33,7 @@
             Grid.Column="1" 
             Grid.RowSpan="3" 
             ItemsSource="{Binding SelectedDayAppointments, UpdateSourceTrigger=PropertyChanged}"  
+            Statuses="{Binding Statuses}"
             HorizontalAlignment="Stretch"
             OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"
             />
@@ -51,21 +52,18 @@
 
 
         <Grid Grid.Row="2" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+            <StackPanel Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10">
+                <local:AppointmentDetails DataContext="{Binding AppointmentViewModel}"/>
+            </StackPanel>
 
-            <local:AppointmentDetails DataContext="{Binding AppointmentViewModel}" Margin="0,0,0,10" />
-
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <Grid Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 
                 <TextBlock Text="Transcripions"/>
-                <calendar:CalendarWeek Grid.Column="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
+                <calendar:CalendarWeek Grid.Row="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
             </Grid>
         </Grid>
     </Grid>

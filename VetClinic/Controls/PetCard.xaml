@@ -25,7 +25,7 @@
         </Border>
 
         <Border Grid.Column="1" Style="{StaticResource BorderDefault}" Margin="0,5,5,5">
-            <Grid Margin="10">
+            <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -34,17 +34,14 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBlock Style="{StaticResource MediumHeader}" Text="Pet information" Grid.ColumnSpan="2"/>
-
-                <local:PetInformation Margin="0,5" Grid.Row="1" ImageSource="/Images/PetInformation/species.png" Title="Species" Value="{Binding Path=Pet.Species, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
-                <local:PetInformation Grid.Row="2" ImageSource="/Images/PetInformation/breed.png" Title="Breed" Value="{Binding Path=Pet.Breed, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
-                <local:PetInformation Margin="0,5,0,0" Grid.Row="3" ImageSource="/Images/PetInformation/weight.png" Title="Weight" Value="{Binding Path=Pet.Weight, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
+                <local:PetInformation Margin="0,0,0,5" ImageSource="/Images/PetInformation/species.png" Title="Species" Value="{Binding Path=Pet.Species, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
+                <local:PetInformation Grid.Row="1" ImageSource="/Images/PetInformation/breed.png" Title="Breed" Value="{Binding Path=Pet.Breed, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
+                <local:PetInformation Margin="0,5,0,0" Grid.Row="2" ImageSource="/Images/PetInformation/weight.png" Title="Weight" Value="{Binding Path=Pet.Weight, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
                 
-                <local:PetInformation Margin="5,5,0,5"  Grid.Column="1" Grid.Row="1" ImageSource="/Images/PetInformation/gender.png" Title="Gender" Value="{Binding Path=Pet.Gender, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
-                <local:PetInformation Margin="5,0,0,0" Grid.Column="1" Grid.Row="2"  ImageSource="/Images/PetInformation/date_of_birth.png" Title="Birthday" Value="{Binding Path=Pet.DateOfBirth, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}, Converter={StaticResource DateToStringConverter}}"/>
-                <local:PetInformation Margin="5,5,0,0"  Grid.Column="1" Grid.Row="3" ImageSource="/Images/PetInformation/created_at.png" Title="With us since" Value="{Binding Path=Pet.CreatedAt, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}, Converter={StaticResource DateToStringConverter}}"/>
+                <local:PetInformation Margin="5,0,0,5"  Grid.Column="1" ImageSource="/Images/PetInformation/gender.png" Title="Gender" Value="{Binding Path=Pet.Gender, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}}"/>
+                <local:PetInformation Margin="5,0,0,0" Grid.Column="1" Grid.Row="1"  ImageSource="/Images/PetInformation/date_of_birth.png" Title="Birthday" Value="{Binding Path=Pet.DateOfBirth, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}, Converter={StaticResource DateToStringConverter}}"/>
+                <local:PetInformation Margin="5,5,0,0"  Grid.Column="1" Grid.Row="2" ImageSource="/Images/PetInformation/created_at.png" Title="With us since" Value="{Binding Path=Pet.CreatedAt, RelativeSource={RelativeSource AncestorType={x:Type local:PetCard}}, Converter={StaticResource DateToStringConverter}}"/>
             </Grid>
         </Border>
     </Grid>

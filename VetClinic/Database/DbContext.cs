@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VetClinic.Models;
 using Microsoft.EntityFrameworkCore;
+using VetClinic.MVVM.Model;
 
 namespace VetClinic.Database
 {
@@ -29,6 +30,7 @@ namespace VetClinic.Database
         public DbSet<Service> Service { get; set; }
         public DbSet<AppointmentServices> AppointmentServices { get; set; }
         public DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        public DbSet<AppointmentStatus> AppointmentStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -102,6 +104,11 @@ namespace VetClinic.Database
                 .HasOne(a => a.Doctor)
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.AppointmentStatus)
+                .WithMany(appStat => appStat.Appointments)
+                .HasForeignKey(a => a.StatusId);
 
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.Prescriptions)

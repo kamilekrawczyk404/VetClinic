@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VetClinic.MVVM.Model;
 
 namespace VetClinic.Models
 {
@@ -21,8 +22,8 @@ namespace VetClinic.Models
         [Column("doctor_id")]
         public int DoctorId { get; set; }
 
-        [Column("is_completed")]
-        public bool IsCompleted { get; set; }
+        [Column("status_id")]
+        public int StatusId { get; set; }
 
         [Column("appointment_date")]
         public DateTime AppointmentDate { get; set; }
@@ -41,6 +42,7 @@ namespace VetClinic.Models
 
         public Pet Pet { get; set; }
         public Doctor Doctor { get; set; }
+        public AppointmentStatus AppointmentStatus { get; set; }
         public ICollection<Prescription> Prescriptions { get; set; }
         public ICollection<AppointmentServices> AppointmentServices { get; set; }
     }
