@@ -9,6 +9,7 @@
             xmlns:authViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Auth"
             xmlns:dashboardViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Dashboard"
             xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
+            xmlns:controls="clr-namespace:VetClinic.Controls"
              >
    <Application.Resources>
        <ResourceDictionary>
@@ -47,7 +48,7 @@
                 <dashboardView:DoctorDashboard/>
             </DataTemplate>
 
-           <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
+            <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
            <SolidColorBrush x:Key="UltraLightTurquise">#dff4f1</SolidColorBrush>

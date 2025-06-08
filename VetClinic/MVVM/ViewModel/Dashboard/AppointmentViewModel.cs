@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using VetClinic.Database;
-using VetClinic.Models;
 using VetClinic.MVVM.Model;
 using VetClinic.Utils;
 
@@ -14,7 +7,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 {
     public class AppointmentViewModel : ViewModel
     {
-        private readonly VeterinaryClinicContext _database;
+        private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
 
         private DetailedAppointment _appointment;
         public DetailedAppointment Appointment
@@ -34,9 +27,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private Func<Task> _exitAppointment;
 
         private readonly Func<Task> _refreshAppointments;
-        public AppointmentViewModel(VeterinaryClinicContext database, Func<Task> exitAppointment, Func<Task> refreshAppointments)
+        public AppointmentViewModel(Func<Task> exitAppointment, Func<Task> refreshAppointments, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
-            _database = database;
+            _contextFactory = contextFactory;
 
             _exitAppointment = exitAppointment;
             _refreshAppointments = refreshAppointments;
@@ -59,11 +52,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
             Appointment.Appointment.StatusId = 3; // 3 = completed
 
-            _database.Appointment.Update(Appointment.Appointment);
-            await _database.SaveChangesAsync();
+            //_database.Appointment.Update(Appointment.Appointment);
+            //await _database.SaveChangesAsync();
 
-            _refreshAppointments?.Invoke();
-            _exitAppointment?.Invoke();
+            //_refreshAppointments?.Invoke();
+            //_exitAppointment?.Invoke();
         }
 
         private void AddPrescription(object obj)

@@ -118,13 +118,13 @@ namespace VetClinic.Database
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.AppointmentServices)
                 .WithOne(s => s.Appointment)
-                .HasForeignKey(s => s.appointment_id);
+                .HasForeignKey(s => s.AppointmentId);
 
             // Service
             modelBuilder.Entity<Service>()
                 .HasMany(s => s.AppointmentServices)
                 .WithOne(a => a.Service)
-                .HasForeignKey(a => a.service_id);
+                .HasForeignKey(a => a.ServiceId);
 
             // Prescription
             modelBuilder.Entity<Prescription>()

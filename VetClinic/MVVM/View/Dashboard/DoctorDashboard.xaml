@@ -32,8 +32,8 @@
             Grid.Row="1" 
             Grid.Column="1" 
             Grid.RowSpan="3" 
-            ItemsSource="{Binding SelectedDayAppointments, UpdateSourceTrigger=PropertyChanged}"  
-            Statuses="{Binding Statuses}"
+            ItemsSource="{Binding SelectedDayAppointments, Mode=TwoWay}"  
+            Statuses="{Binding Statuses, Mode=TwoWay}"
             HorizontalAlignment="Stretch"
             OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"
             />
@@ -58,12 +58,13 @@
 
             <Grid Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
+
+                <controls:MostPopularServices DataContext="{Binding MostPopularServicesViewModel}"/>
                 
-                <TextBlock Text="Transcripions"/>
-                <calendar:CalendarWeek Grid.Row="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
+                <calendar:CalendarWeek Margin="0,10,0,0"  Grid.Row="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
             </Grid>
         </Grid>
     </Grid>

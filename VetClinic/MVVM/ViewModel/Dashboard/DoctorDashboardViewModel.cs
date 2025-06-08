@@ -16,7 +16,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 {
     public class DoctorDashboardViewModel : ViewModel
     {
-        private VeterinaryClinicContext _context;
+        private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
         private readonly IUserSessionService _userSessionService;
 
         private Doctor _doctor;
@@ -142,21 +142,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private AppointmentViewModel _appointmentViewModel;
-
-        public AppointmentViewModel AppointmentViewModel
-        {
-            get => _appointmentViewModel;
-            set
-            {
-                _appointmentViewModel = value;
-                OnPropertyChanged();
-            }
-        }   
-
-        public RelayCommand SetSelectedDayCommand { get; }
-        public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
-
         private ObservableCollection<AppointmentStatus> _statuses;
         public ObservableCollection<AppointmentStatus> Statuses
         {
@@ -167,12 +152,42 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 OnPropertyChanged();
             }
         }
-        public DoctorDashboardViewModel(VeterinaryClinicContext context, INavigationService navigation, IUserSessionService userSessionService)
+
+        // View model for single appointment
+        private AppointmentViewModel _appointmentViewModel;
+        public AppointmentViewModel AppointmentViewModel
         {
-            _context = context;
+            get => _appointmentViewModel;
+            set
+            {
+                _appointmentViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // View model for the main chart
+        private MostPopularServicesViewModel _mostPopularServicesViewModel;
+        public MostPopularServicesViewModel MostPopularServicesViewModel
+        {
+            get => _mostPopularServicesViewModel;
+            set
+            {
+                _mostPopularServicesViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RelayCommand SetSelectedDayCommand { get; }
+        public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
+
+
+        public DoctorDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
+        {
+            _contextFactory = contextFactory;
             _userSessionService = userSessionService;
 
-            AppointmentViewModel = new AppointmentViewModel(context, ExitAppointment, GetDoctorsAppointments);
+            AppointmentViewModel = new AppointmentViewModel(ExitAppointment, GetDoctorsAppointments, contextFactory);
+            MostPopularServicesViewModel = new MostPopularServicesViewModel(contextFactory, userSessionService);
 
             SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
             SetCurrentAppointmentCommand = new AsyncRelayCommand(SetCurrentAppointment);
@@ -213,6 +228,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (obj is DetailedAppointment appointment)
             {
+                using var context = _contextFactory.CreateDbContext();
+
                 var inProgressStatus = Statuses.FirstOrDefault(s => s.Id == 2);
 
                 // Change appointment status to In Progress
@@ -222,8 +239,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
                     // Update record in the database and fetch actual data
 
-                    _context.Appointment.Update(appointment.Appointment);
-                    await _context.SaveChangesAsync();
+                    context.Appointment.Update(appointment.Appointment);
+                    await context.SaveChangesAsync();
                     await GetDoctorsAppointments();
                 }
 
@@ -235,13 +252,14 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private async Task OnUserChanged()
         {
             var user = _userSessionService.LoggedInUser;
+            using var context = _contextFactory.CreateDbContext();
 
             // Initialize appointment's statuses
 
             var appointmentStatuses = await GetAppointmentStatuses();
             Statuses = new ObservableCollection<AppointmentStatus>(appointmentStatuses);
 
-            _doctor = await _context.Doctor
+            _doctor = await context.Doctor
                 .Include(d => d.User)
                 .FirstOrDefaultAsync(d => d.User == user);
 
@@ -259,6 +277,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 await GetAppointsmentCount(prev7Start, prev7End, last7Start, today);
                 await GetPrescriptionsCount(prev7Start, prev7End, last7Start, today);
                 await GetDoctorsAppointments();
+
                 FillCalendar();
             }
             else
@@ -288,16 +307,19 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task<List<AppointmentStatus>> GetAppointmentStatuses()
         {
-            return await _context.AppointmentStatus.ToListAsync();
+            using var context = _contextFactory.CreateDbContext();
+            return await context.AppointmentStatus.ToListAsync();
         }
 
         private async Task GetDoctorsAppointments()
         {
+            using var context = _contextFactory.CreateDbContext();
+
             DateTime today = DateTime.Today;
             DateTime nextWeek = today.AddDays(7);
 
             // feed database with new values...
-            var appointments = await _context.Appointment
+            var appointments = await context.Appointment
                 //.Where(a => a.DoctorId == _doctor.Id && a.AppointmentDate <= nextWeek && a.AppointmentDate >= today)
                 .Where(a => a.DoctorId == _doctor.Id)
                 .Include(a => a.AppointmentStatus)
@@ -321,6 +343,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     Doctor = appointment.Doctor,
                     Statuses = Statuses
                 });
+
+                Trace.WriteLine("Status " + appointment.AppointmentStatus.Status);
             }
 
             // for testing only
@@ -340,10 +364,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task GetOpinionsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
         {
-            int last7Count = await _context.Opinion
+            using var context = _contextFactory.CreateDbContext();
+
+            int last7Count = await context.Opinion
                 .CountAsync(o => o.DoctorId == _doctor.Id && o.CreatedAt >= last7Start && o.CreatedAt <= today);
 
-            int prev7Count = await _context.Opinion
+            int prev7Count = await context.Opinion
                 .CountAsync(o => o.DoctorId == _doctor.Id && o.CreatedAt >= prev7Start && o.CreatedAt <= prev7End);
 
             OpinionsCount = last7Count;
@@ -360,10 +386,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task GetPrescriptionsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
         {
-            int last7Count = await _context.Prescription
+            using var context = _contextFactory.CreateDbContext();
+
+            int last7Count = await context.Prescription
                 .CountAsync(p => p.Appointment.DoctorId == _doctor.Id && p.CreatedAt >= last7Start && p.CreatedAt <= today);
 
-            int prev7Count = await _context.Prescription
+            int prev7Count = await context.Prescription
                 .CountAsync(p => p.Appointment.DoctorId == _doctor.Id && p.CreatedAt >= prev7Start && p.CreatedAt <= prev7End);
 
             PrescriptionsCount = last7Count;
@@ -380,10 +408,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         public async Task GetAppointsmentCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
         {
-            int last7Count = await _context.Appointment
+            using var context = _contextFactory.CreateDbContext();
+
+            int last7Count = await context.Appointment
                 .CountAsync(a => a.DoctorId == _doctor.Id && a.AppointmentDate >= last7Start && a.AppointmentDate <= today);
 
-            int prev7Count = await _context.Appointment
+            int prev7Count = await context.Appointment
                 .CountAsync(a => a.DoctorId == _doctor.Id && a.AppointmentDate >= prev7Start && a.AppointmentDate <= prev7End);
 
             AppointmentsCount = last7Count;

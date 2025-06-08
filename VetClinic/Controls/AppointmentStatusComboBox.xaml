@@ -82,7 +82,7 @@
 
     <ComboBox
         ItemsSource="{Binding Statuses, ElementName=Root}"
-        SelectedItem="{Binding Status, ElementName=Root, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+        SelectedItem="{Binding Status, ElementName=Root, Mode=TwoWay}"
         IsEnabled="{Binding IsEditable, ElementName=Root}"
         Background="Transparent"
         BorderThickness="0"
@@ -119,7 +119,7 @@
                         <ContentPresenter
                             Name="ContentSite"
                             IsHitTestVisible="False"
-                            Content="{TemplateBinding SelectionBoxItem}"
+                            Content="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
                             ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                             ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                             Margin="2,0,2,0" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"

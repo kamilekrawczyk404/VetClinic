@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
+    [Table("service")]
     public class Service
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public decimal price { get; set; }
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
 
-        public ICollection<Service> Services { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("description")]
+        public string Description { get; set; }
+
+        [Column("price")]
+        public decimal Price { get; set; }
+
         public ICollection<AppointmentServices> AppointmentServices { get; set; }
     }
 }

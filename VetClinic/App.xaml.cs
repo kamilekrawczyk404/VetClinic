@@ -47,7 +47,7 @@ public partial class App : Application
         string connectionString = configuration.GetConnectionString("MySqlConnection");
 
         // Register your services here
-        services.AddDbContext<VeterinaryClinicContext>(options =>
+        services.AddDbContextFactory<VeterinaryClinicContext>(options =>
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors()
@@ -69,6 +69,7 @@ public partial class App : Application
 
         services.AddTransient<DoctorDashboardViewModel>();
         services.AddTransient<AppointmentViewModel>();
+        services.AddTransient<MostPopularServicesViewModel>();
     }
 
     protected override async void OnStartup(StartupEventArgs e)
