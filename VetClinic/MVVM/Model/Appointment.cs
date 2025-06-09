@@ -43,7 +43,7 @@ namespace VetClinic.Models
         public Pet Pet { get; set; }
         public Doctor Doctor { get; set; }
         public AppointmentStatus AppointmentStatus { get; set; }
-        public ICollection<Prescription> Prescriptions { get; set; }
-        public ICollection<AppointmentServices> AppointmentServices { get; set; }
+        public virtual ICollection<Prescription> Prescriptions { get; set; }
+        public virtual ICollection<AppointmentServices> AppointmentServices { get; set; }
     }
 }

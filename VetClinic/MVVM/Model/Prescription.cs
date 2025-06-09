@@ -29,7 +29,9 @@ namespace VetClinic.Models
         public DateTime CreatedAt { get; set; }
 
         public Appointment Appointment { get; set; }
-        public ICollection<Prescription> Prescriptions { get; set; }
-        public ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+        public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
+
+        [NotMapped]
+        public int DrugsCount => PrescriptionDrugs?.Count ?? 0;
     }
 }

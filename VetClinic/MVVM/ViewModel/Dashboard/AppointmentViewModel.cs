@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+using System.Windows.Controls;
 using VetClinic.Database;
+using VetClinic.Models;
 using VetClinic.MVVM.Model;
+using VetClinic.MVVM.View.Window;
 using VetClinic.Utils;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
@@ -20,7 +24,20 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+
+        private Prescription _selectedPrescription;
+        public Prescription SelectedPrescription 
+        {
+            get => _selectedPrescription;
+            set
+            {
+                _selectedPrescription = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand AddPrescriptionCommand { get; }
+        public RelayCommand EditPrescriptionCommand { get; }
         public RelayCommand ExitAppointmentCommand { get; }
         public AsyncRelayCommand CompleteAppointmentCommand { get; }
 
@@ -37,6 +54,16 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             AddPrescriptionCommand = new RelayCommand(AddPrescription);
             ExitAppointmentCommand = new RelayCommand(Exit);
             CompleteAppointmentCommand = new AsyncRelayCommand(CompleteAppointment);
+            EditPrescriptionCommand = new RelayCommand(EditPrescription);
+        }
+
+        private void EditPrescription(object obj)
+        {
+            if (SelectedPrescription != null)
+            {
+                var window = new PrescriptionDetailsWindow(SelectedPrescription, _contextFactory);
+                window.ShowDialog();
+            }
         }
 
         private void Exit(object obj)
@@ -46,17 +73,20 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task CompleteAppointment(object obj)
         {
+            using var context = _contextFactory.CreateDbContext();
+
             if (Appointment?.Appointment == null)
             {
                 return;
             }
+            Appointment.Appointment.AppointmentStatus = null;
             Appointment.Appointment.StatusId = 3; // 3 = completed
 
-            //_database.Appointment.Update(Appointment.Appointment);
-            //await _database.SaveChangesAsync();
+            context.Appointment.Update(Appointment.Appointment);
+            await context.SaveChangesAsync();
 
-            //_refreshAppointments?.Invoke();
-            //_exitAppointment?.Invoke();
+            _refreshAppointments?.Invoke();
+            _exitAppointment?.Invoke();
         }
 
         private void AddPrescription(object obj)

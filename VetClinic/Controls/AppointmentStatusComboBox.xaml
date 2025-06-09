@@ -81,7 +81,7 @@
     </UserControl.Resources>
 
     <ComboBox
-        ItemsSource="{Binding Statuses, ElementName=Root}"
+        ItemsSource="{Binding Statuses, ElementName=Root, Mode=TwoWay}"
         SelectedItem="{Binding Status, ElementName=Root, Mode=TwoWay}"
         IsEnabled="{Binding IsEditable, ElementName=Root}"
         Background="Transparent"
@@ -135,7 +135,7 @@
                         ClickMode="Press"
                         Width="22"
                         Visibility="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type local:AppointmentStatusComboBox}}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Height="22"
+                        Height="15"
                         Style="{StaticResource ComboBoxArrowButtonStyle}"/>
 
                     <Popup

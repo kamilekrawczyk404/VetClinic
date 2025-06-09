@@ -35,6 +35,7 @@
             <utils:SpeciesToImageSourceConverter x:Key="SpeciesToImageSourceConverter"/>
             <utils:AppointmentStatusToBackgroundConverter x:Key="AppointmentStatusToBackgroundConverter"/>
             <utils:AppointmentStatusToBrushColorConventer x:Key="AppointmentStatusToBrushColorConventer"/>
+            <utils:FullNameConverter x:Key="FullNameConverter"/>
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
                <authView:RegisterView/>

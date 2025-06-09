@@ -1,0 +1,74 @@
+﻿<Window x:Class="VetClinic.MVVM.View.Window.PrescriptionDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VetClinic.MVVM.View.Window"
+        xmlns:input="clr-namespace:VetClinic.Controls.Input"
+        mc:Ignorable="d"
+        Title="PrescriptionDetailsWindow" Height="450" Width="800">
+    <Border Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Creating prescription" Style="{StaticResource Header}" Visibility="{Binding IsEditing, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                    <TextBlock Text="Editing prescription" Style="{StaticResource Header}" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Button Style="{StaticResource SubmitButton}" Content="Save prescription"  HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+            
+
+            <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" Margin="0,10,5,0" CornerRadius="8">
+                <StackPanel>
+                    <Border>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.ColumnSpan="2" Text="Basic information" Style="{StaticResource MediumHeader}"/>
+                            <input:InputControl Grid.Row="1" Text="{Binding Prescription.Appointment.Pet.Client, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                            <input:InputControl Grid.Row="2" Text="{Binding Prescription.Appointment.Doctor, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                            <DatePicker Grid.Row="3"/>
+                            <input:TextArea Grid.Row="4" Title="Instructions" Placeholder="Enter instructions..."/>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Grid Grid.Column="1" Grid.Row="1" Margin="5,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Border Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8">
+                    <TextBlock Text="Selected Drugs" Style="{StaticResource MediumHeader}"/>
+                </Border>
+
+                <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8" Margin="0,10,0,0">
+                    <TextBlock Text="List of drugs" Style="{StaticResource MediumHeader}"/>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

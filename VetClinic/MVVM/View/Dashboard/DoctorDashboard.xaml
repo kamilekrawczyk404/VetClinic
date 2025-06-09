@@ -52,9 +52,9 @@
 
 
         <Grid Grid.Row="2" Grid.Column="0">
-            <StackPanel Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10">
-                <local:AppointmentDetails DataContext="{Binding AppointmentViewModel}"/>
-            </StackPanel>
+            <DockPanel Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <local:AppointmentDetails VerticalAlignment="Stretch" DataContext="{Binding AppointmentViewModel}"/>
+            </DockPanel>
 
             <Grid Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <Grid.RowDefinitions>

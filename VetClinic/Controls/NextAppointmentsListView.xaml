@@ -79,8 +79,15 @@
                                 <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" min"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <TextBlock Text="{Binding Appointment.AppointmentStatus.Status}"/>
-                                <local:AppointmentStatusComboBox Status="{Binding Appointment.AppointmentStatus, Mode=TwoWay}" Statuses="{Binding Statuses, Mode=TwoWay}" IsEnabled="True" Margin="0,0,5,0"/>
+                                <Border 
+                                    Margin="0,0,5,0" 
+                                    BorderThickness="1"
+                                    CornerRadius="4"
+                                    Padding="4,2"
+                                    BorderBrush="{Binding Appointment.AppointmentStatus.Status, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
+                                    Background="{Binding Appointment.AppointmentStatus.Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
+                                    <TextBlock Text="{Binding Appointment.AppointmentStatus.Status}" Foreground="{DynamicResource Gray}"/>
+                                </Border>
                                 <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment"/>
                             </StackPanel>
                         </StackPanel>

@@ -15,11 +15,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace VetClinic.MVVM.View
+namespace VetClinic.Controls.Input
 {
-    public partial class Input : UserControl
+    public partial class InputControl : UserControl
     {
-        public Input()
+        public InputControl()
         {
             InitializeComponent();
         }
@@ -28,7 +28,7 @@ namespace VetClinic.MVVM.View
             DependencyProperty.Register(
                 "Placeholder",
                 typeof(string),
-                typeof(Input),
+                typeof(InputControl),
                 new PropertyMetadata(string.Empty, OnPlaceholderChanged));
 
         public string Placeholder
@@ -41,7 +41,7 @@ namespace VetClinic.MVVM.View
             DependencyProperty.Register(
                 "Text",
                 typeof(string),
-                typeof(Input),
+                typeof(InputControl),
                 new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnTextChanged));
 
         public string Text
@@ -54,7 +54,7 @@ namespace VetClinic.MVVM.View
             DependencyProperty.Register(
                 "ErrorMessage",
                 typeof(string),
-                typeof(Input),
+                typeof(InputControl),
                 new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnErrorMessageChanged));
 
         public string ErrorMessage
@@ -65,14 +65,14 @@ namespace VetClinic.MVVM.View
 
         private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Input control = (Input)d;
+            InputControl control = (InputControl)d;
             control.UpdatePlaceholderVisibility();
             control.PART_TextBox.Text = (string)e.NewValue;
         }
 
         private static void OnErrorMessageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = (Input)d;
+            var control = (InputControl)d;
             control.UpdateErrorVisibility();
             control.PART_ErrorMessageTextBlock.Text = (string)e.NewValue;
         }

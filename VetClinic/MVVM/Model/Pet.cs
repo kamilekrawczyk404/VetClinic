@@ -41,6 +41,5 @@ namespace VetClinic.Models
 
         public virtual Client Client { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }
-        public virtual ICollection<Prescription> Prescriptions { get; set; }
     }
 }

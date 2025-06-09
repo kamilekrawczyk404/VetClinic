@@ -4,62 +4,117 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:controls="clr-namespace:VetClinic.Controls"
+             xmlns:input="clr-namespace:VetClinic.Controls.Input"
              xmlns:local="clr-namespace:VetClinic.MVVM.View.Dashboard"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Border Style="{StaticResource BorderDefault}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-
-            <Grid Margin="5,5,5,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="Pet Information" Style="{StaticResource MediumHeader}"/>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <controls:AppointmentStatusComboBox Status="{Binding Appointment.Appointment.AppointmentStatus, Mode=TwoWay}" IsEditable="True" Statuses="{Binding Appointment.Statuses}"/>
-                    <Button Margin="5,0" Style="{StaticResource ListViewButton}" Command="{Binding ExitAppointmentCommand}">Back to dashboard</Button>
-                    <Button Style="{StaticResource ListViewButton}" Command="{Binding CompleteAppointmentCommand}">Complete appointment</Button>
-                </StackPanel>
-            </Grid>
-            
-            <controls:PetCard Grid.Row="1" Pet="{Binding Appointment.Pet}"/>
-
-            <Grid Grid.Row="2" Margin="5">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+                <Grid Margin="5,5,5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Pet Information" Style="{StaticResource MediumHeader}"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Margin="0,0,5,0" Style="{StaticResource ListViewButton}" Command="{Binding ExitAppointmentCommand}">Back to dashboard</Button>
+                        <Button Style="{StaticResource ListViewButton}" Command="{Binding CompleteAppointmentCommand}">Complete appointment</Button>
+                    </StackPanel>
+                </Grid>
 
-                <TextBlock Style="{StaticResource MediumHeader}" Text="Appointment Information" Grid.ColumnSpan="2" Margin="0,0,0,10"/>
-                
-                <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" Margin="0,0,2.5,0" VerticalAlignment="Top">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Reason for visit: " FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding Appointment.Appointment.ReasonForVisit}"/>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Row="1" Grid.Column="1" Padding="5" Margin="2.5,0,0,0" Style="{StaticResource BorderDefault}">
-                    <StackPanel>
-                        <TextBlock Text="Observation" Margin="0,0,0,5"/>
-                        <TextBox Style="{StaticResource TextBoxTheme}"/>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Row="2" Grid.ColumnSpan="2">
-                    <TextBlock Text="Diagnosis"/>
-                </Border>
+                <controls:PetCard Grid.Row="1" Pet="{Binding Appointment.Pet}"/>
+
+                <Grid Grid.Row="2" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Style="{StaticResource MediumHeader}" Text="Appointment Information" Grid.ColumnSpan="2" Margin="0,0,0,10"/>
+
+                    <Border Grid.Row="1" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10,5" Margin="0,0,2.5,0" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Reason for visit: " FontWeight="SemiBold" Foreground="{DynamicResource Gray}"/>
+                            <TextBlock Text="{Binding Appointment.Appointment.ReasonForVisit}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10,5" Margin="2.5,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Appointment status" FontWeight="SemiBold" Foreground="{DynamicResource Gray}"/>
+                            <controls:AppointmentStatusComboBox Status="{Binding Appointment.Appointment.AppointmentStatus, Mode=TwoWay}" IsEditable="True" Statuses="{Binding Appointment.Statuses}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <input:TextArea Grid.Row="2" Margin="0,5,2.5,0" Title="Diagnosis" Placeholder="Enter diagnosis..." />
+
+                    <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,5,0,0" Placeholder="Enter notes..." />
+
+                    <Border Grid.Row="4" Grid.ColumnSpan="2" Height="200" Style="{StaticResource BorderDefault}" Padding="10" CornerRadius="8" Margin="0,5,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Prescriptions " FontWeight="SemiBold"/>
+                                <TextBlock Text="(x)"/>
+                            </StackPanel>
+
+                            <Button Grid.Column="1" Style="{StaticResource ListViewButton}" Content="Add new prescription" HorizontalAlignment="Right"/>
+
+                            <DataGrid 
+                                Grid.Row="1" 
+                                Grid.ColumnSpan="2" 
+                                Margin="0,5,0,0" 
+                                ItemsSource="{Binding Appointment.Prescriptions}" 
+                                SelectedItem="{Binding SelectedPrescription}"
+                                SelectionMode="Single"
+                                AutoGenerateColumns="False"
+                                >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction 
+                                            Command="{Binding EditPrescriptionCommand}" />         
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Instructions" Binding="{Binding Instructions}" Width="*"/>
+                                    <DataGridTextColumn Header="Date Added" Binding="{Binding CreatedAt, StringFormat='d'}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Expiry Date" Binding="{Binding ExpiryDate, StringFormat='d'}" Width="Auto"/>
+                                    <DataGridTextColumn Header="Drugs quantity" Binding="{Binding DrugsCount}" Width="Auto"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="5" Grid.Column="1">
+                        <TextBlock Text="Services"/>
+                    </Border>
+                </Grid>
             </Grid>
-        </Grid>
+        </ScrollViewer>
     </Border>
 </UserControl>

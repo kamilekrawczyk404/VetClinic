@@ -180,7 +180,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         public RelayCommand SetSelectedDayCommand { get; }
         public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
 
-
         public DoctorDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
         {
             _contextFactory = contextFactory;
@@ -240,8 +239,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     // Update record in the database and fetch actual data
 
                     context.Appointment.Update(appointment.Appointment);
-                    await context.SaveChangesAsync();
-                    await GetDoctorsAppointments();
+                    //await context.SaveChangesAsync();
+                    //await GetDoctorsAppointments();
                 }
 
                 IsAppointmentDisplayed = true;
@@ -324,12 +323,14 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .Where(a => a.DoctorId == _doctor.Id)
                 .Include(a => a.AppointmentStatus)
                 .Include(a => a.Pet)
-                .ThenInclude(p => p.Client)
-                .ThenInclude(c => c.User)
+                    .ThenInclude(p => p.Client)
+                        .ThenInclude(c => c.User)
                 .Include(c => c.Doctor)
-                //.Include(a => a.Prescriptions)
+                .Include(a => a.Prescriptions)
+                    .ThenInclude(p => p.PrescriptionDrugs)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
+
 
             DoctorAppointments.Clear();
 
@@ -341,25 +342,24 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     Pet = appointment.Pet,
                     Client = appointment.Pet.Client,
                     Doctor = appointment.Doctor,
-                    Statuses = Statuses
+                    Statuses = Statuses,
+                    Prescriptions = new(appointment.Prescriptions ?? Enumerable.Empty<Prescription>()),
                 });
-
-                Trace.WriteLine("Status " + appointment.AppointmentStatus.Status);
             }
 
             // for testing only
             // get first date and assign appointments to the state
-            if (DoctorAppointments.Count > 0)
-            {
-                var firstAppointmentDate = DoctorAppointments.First().Appointment.AppointmentDate.Date;
-                SelectedDayAppointments.Clear();
+            //if (DoctorAppointments.Count > 0)
+            //{
+            //    var firstAppointmentDate = DoctorAppointments.First().Appointment.AppointmentDate.Date;
+            //    SelectedDayAppointments.Clear();
 
-                // get only appointems for the first date in the list of
-                foreach (var appointment in DoctorAppointments.Where(a => a.Appointment.AppointmentDate.Date == firstAppointmentDate))
-                {
-                    SelectedDayAppointments.Add(appointment);
-                }
-            }
+            //    // get only appointems for the first date in the list of
+            //    foreach (var appointment in DoctorAppointments.Where(a => a.Appointment.AppointmentDate.Date == firstAppointmentDate))
+            //    {
+            //        SelectedDayAppointments.Add(appointment);
+            //    }
+            //}
         }
 
         private async Task GetOpinionsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)

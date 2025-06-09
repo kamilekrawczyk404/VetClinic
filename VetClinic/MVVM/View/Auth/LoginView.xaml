@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.MVVM.View"
+             xmlns:input="clr-namespace:VetClinic.Controls.Input"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid VerticalAlignment="Stretch" Margin="10">
@@ -22,8 +23,8 @@
             <StackPanel  HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,10,0,0" >
                 <TextBlock Margin="0,0,0,10" Style="{StaticResource HeaderWhite}" Text="Sign in to VetClinic" HorizontalAlignment="Center"/>
 
-                <local:Input Placeholder="Email" Text="{Binding Email}" ErrorMessage="{Binding EmailErrorMessage}"/>
-                <local:Input Placeholder="Password" Text="{Binding Password}" ErrorMessage="{Binding PasswordErrorMessage}"/>
+                <input:InputControl Placeholder="Email" Text="{Binding Email}" ErrorMessage="{Binding EmailErrorMessage}"/>
+                <input:InputControl Placeholder="Password" Text="{Binding Password}" ErrorMessage="{Binding PasswordErrorMessage}"/>
                 
                 <Button Margin="0,12,0,0" Style="{StaticResource SubmitButton}" Content="Login" Command="{Binding SubmitCommand}"/>
 
