@@ -45,5 +45,8 @@ namespace VetClinic.Models
         public AppointmentStatus AppointmentStatus { get; set; }
         public virtual ICollection<Prescription> Prescriptions { get; set; }
         public virtual ICollection<AppointmentServices> AppointmentServices { get; set; }
+
+        [NotMapped]
+        public int PrescriptionsCount => Prescriptions?.Count ?? 0;
     }
 }
