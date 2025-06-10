@@ -68,6 +68,7 @@ public partial class App : Application
         services.AddTransient<NavigationViewModel>();
 
         services.AddTransient<DoctorDashboardViewModel>();
+        services.AddTransient<AdminDashboardViewModel>();
         services.AddTransient<AppointmentViewModel>();
         services.AddTransient<MostPopularServicesViewModel>();
     }
