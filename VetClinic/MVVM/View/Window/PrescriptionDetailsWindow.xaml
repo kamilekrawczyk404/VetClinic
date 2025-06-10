@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VetClinic.MVVM.View.Window"
         xmlns:input="clr-namespace:VetClinic.Controls.Input"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="PrescriptionDetailsWindow" Height="450" Width="800">
+        Title="PrescriptionDetailsWindow" Height="600" Width="900">
     <Border Padding="10">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -33,7 +34,7 @@
             </Grid>
 
 
-            <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" Margin="0,10,5,0" CornerRadius="8">
+            <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="10" Margin="0,10,5,0" CornerRadius="8">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -58,11 +59,52 @@
                 </Grid.RowDefinitions>
 
                 <Border Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8">
-                    <TextBlock Text="Selected Drugs" Style="{StaticResource MediumHeader}"/>
+                    <StackPanel>
+                        <TextBlock Text="Selected Drugs" Style="{StaticResource MediumHeader}" Margin="0,0,0,5"/>
+
+                        <DataGrid
+                            ItemsSource="{Binding PrescriptionDrugs, Mode=TwoWay}"
+                            SelectionMode="Single"
+                            AutoGenerateColumns="False"
+                            Style="{StaticResource CustomDataGridStyle}" 
+                            RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                            CellStyle="{StaticResource CustomDataGridCellStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                                <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}"/>
+                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}"/>
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                                <DataGridTextColumn Header="Dosage Instructions" Binding="{Binding DosageInstructions}" Width="*"/>
+                                <DataGridTextColumn Header="Actions"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
                 </Border>
 
                 <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8" Margin="0,10,0,0">
-                    <TextBlock Text="List of drugs" Style="{StaticResource MediumHeader}"/>
+                    <StackPanel>
+                        <TextBlock Text="List of drugs" Style="{StaticResource MediumHeader}"/>
+                        <DataGrid 
+                             ItemsSource="{Binding Drugs, Mode=TwoWay}"
+                             SelectedItem="{Binding SelectedDrug}"
+                             SelectionMode="Single"
+                             AutoGenerateColumns="False"
+                             Style="{StaticResource CustomDataGridStyle}" 
+                             RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                             CellStyle="{StaticResource CustomDataGridCellStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding AddDrugToPrescriptionCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}"/>
+                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}"/>
+                                <DataGridTextColumn Header="Stock Quantity" Binding="{Binding Quantity}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
                 </Border>
             </Grid>
         </Grid>

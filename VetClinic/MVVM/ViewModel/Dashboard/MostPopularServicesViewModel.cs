@@ -143,10 +143,10 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
             ServicesCount = new ObservableCollection<int>()
             {
+                2,
                 4,
                 6,
                 8,
-                10
             };
 
             SelectedServicesCount = ServicesCount.Last();

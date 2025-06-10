@@ -134,8 +134,8 @@ namespace VetClinic.Database
 
             modelBuilder.Entity<Prescription>()
                 .HasMany(p => p.PrescriptionDrugs)
-                .WithOne(d => d.Prescription)
-                .HasForeignKey(d => d.prescription_id);
+                .WithOne(pd => pd.Prescription)
+                .HasForeignKey(pd => pd.PrescriptionId);
 
             // Opinion
             modelBuilder.Entity<Opinion>()
@@ -151,8 +151,8 @@ namespace VetClinic.Database
             // Drug
             modelBuilder.Entity<Drug>()
                 .HasMany(d => d.PrescriptionDrugs)
-                .WithOne(p => p.Drug)
-                .HasForeignKey(p => p.drug_id);
+                .WithOne(pd => pd.Drug)
+                .HasForeignKey(pd => pd.DrugId);
         }
     }
 }

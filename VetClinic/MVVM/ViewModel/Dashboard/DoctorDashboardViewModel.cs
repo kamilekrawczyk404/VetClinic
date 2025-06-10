@@ -328,6 +328,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .Include(c => c.Doctor)
                 .Include(a => a.Prescriptions)
                     .ThenInclude(p => p.PrescriptionDrugs)
+                        .ThenInclude(pd => pd.Drug)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
 

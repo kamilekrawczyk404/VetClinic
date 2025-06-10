@@ -48,7 +48,6 @@
                     Foreground="{DynamicResource LightGray}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
-                    Margin="4,0,0,0"
                     />
                 <TextBox
                     x:Name="PART_TextBox"
