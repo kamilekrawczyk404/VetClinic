@@ -13,39 +13,39 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border 
+        <Border
+            x:Name="PART_BorderInfo"
             Grid.Row="0" 
             Background="{DynamicResource White}" 
-            CornerRadius="5,5,0,0" 
+            CornerRadius="4,4,0,0" 
             HorizontalAlignment="Left" 
-            Padding="12,2"
-            BorderBrush="{DynamicResource Red}"
-            BorderThickness="1"
-            Visibility="{Binding Path=ErrorMessage, ElementName=Root, Converter={StaticResource TextToVisibilityConverter}}"
-            >
-            <TextBlock
-                x:Name="PART_ErrorMessageTextBlock"
-                Text="{Binding Path=ErrorMessage, Mode=TwoWay, ElementName=Root, UpdateSourceTrigger=PropertyChanged}"
-                Foreground="{DynamicResource Red}"
-                FontWeight="SemiBold"
-                HorizontalAlignment="Left"
-            />
+            Padding="8,4"
+            BorderThickness="1,1,1,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock
+                    x:Name="PART_TextBlockTitle"
+                    Text="{Binding Path=Title, ElementName=Root}"/>
+                <TextBlock
+                    x:Name="PART_ErrorMessageTextBlock"
+                    Text="{Binding Path=ErrorMessage, Mode=TwoWay, ElementName=Root, UpdateSourceTrigger=PropertyChanged}"
+                    Foreground="{DynamicResource Red}"
+                    Margin="5,0,0,0"/>
+            </StackPanel>
         </Border>
         
         <Border 
             Grid.Row="1" 
             x:Name="PART_Border"
             Background="{DynamicResource White}"
-            BorderBrush="{DynamicResource LightGray}"
             BorderThickness="1"
-            Padding="10"
+            CornerRadius="0,4,4,4"
+            Padding="5"
         >
             <Grid>
                 <TextBlock
                     x:Name="PART_Placeholder"
                     Text="{Binding Path=Placeholder, ElementName=Root}" 
                     IsHitTestVisible="False"
-                    Foreground="{DynamicResource LightGray}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
                     />
@@ -55,12 +55,12 @@
                                    ElementName=Root,
                                    UpdateSourceTrigger=PropertyChanged}"
                     Background="Transparent"
-                    Foreground="{DynamicResource Gray}"
                     BorderThickness="0"
                     Padding="0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
-                    TextChanged="PART_TextBox_TextChanged"  Loaded="PART_TextBox_Loaded" /> 
+                    TextChanged="PART_TextBox_TextChanged"  
+                    Loaded="PART_TextBox_Loaded" /> 
             </Grid>
         </Border>
     </Grid>

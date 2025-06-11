@@ -29,12 +29,25 @@ namespace VetClinic.Controls.Input
                 "Placeholder",
                 typeof(string),
                 typeof(InputControl),
-                new PropertyMetadata(string.Empty, OnPlaceholderChanged));
+                new PropertyMetadata(string.Empty));
 
         public string Placeholder
         {
             get { return (string)GetValue(PlaceholderProperty); }
             set { SetValue(PlaceholderProperty, value); }
+        }
+
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(
+                "Title",
+                typeof(string),
+                typeof(InputControl),
+                new PropertyMetadata(string.Empty));
+
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
         public static readonly DependencyProperty TextProperty =
@@ -76,11 +89,6 @@ namespace VetClinic.Controls.Input
             control.UpdateErrorVisibility();
             control.PART_ErrorMessageTextBlock.Text = (string)e.NewValue;
         }
-        private static void OnPlaceholderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) 
-        { 
-            // Input control = (Input)d;
-            // control.PART_Placeholder.Text = (string)e.NewValue; // Not strictly needed with binding
-        }
 
         private void UpdateErrorVisibility()
         {
@@ -90,16 +98,26 @@ namespace VetClinic.Controls.Input
             }
 
             System.Windows.Media.Brush color = (System.Windows.Media.Brush)Application.Current.FindResource(ErrorMessage.Length > 0 ? "Red" : "LightGray");
+            System.Windows.Media.Brush foreground = (System.Windows.Media.Brush)Application.Current.FindResource(ErrorMessage.Length > 0 ? "Red" : "Gray");
+
+            if (PART_BorderInfo != null)
+            {
+                PART_BorderInfo.BorderBrush = color;
+            }
 
             if (PART_Border != null)
             {
                 PART_Border.BorderBrush = color;
-                PART_Border.CornerRadius = new CornerRadius(ErrorMessage.Length == 0 ? 5 : 0,5,5,5);
             }
-            if(PART_Placeholder != null)
+
+            if (PART_TextBlockTitle != null)
+            {
+                PART_TextBlockTitle.Foreground = foreground;
+            }
+
+            if (PART_Placeholder != null)
             {
                 PART_Placeholder.Foreground = color;
-
             }
         }
 
@@ -114,6 +132,10 @@ namespace VetClinic.Controls.Input
         private void PART_TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             UpdatePlaceholderVisibility();
+            if (ErrorMessage.Length > 0)
+            {
+                UpdateErrorVisibility();
+            }
         }
 
         private void PART_TextBox_Loaded(object sender, RoutedEventArgs e)

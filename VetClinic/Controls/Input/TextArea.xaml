@@ -12,32 +12,27 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Border 
+        <Border
+            x:Name="PART_InfoBorder"
             Grid.Row="0" 
             Background="{DynamicResource White}" 
-            CornerRadius="5,5,0,0" 
+            CornerRadius="4,4,0,0" 
             HorizontalAlignment="Left" 
-            Padding="12,2"
-            BorderBrush="{DynamicResource Red}"
-            BorderThickness="1,1,1,0"
-            Visibility="{Binding Path=ErrorMessage, ElementName=Root, Converter={StaticResource TextToVisibilityConverter}}">
+            Padding="8,4"
+            BorderThickness="1,1,1,0">
             <StackPanel Orientation="Horizontal">
                 <TextBlock
                     x:Name="PART_TextAreaTitle"
                     Text="{Binding Path=Title, ElementName=Root}"
-                    FontWeight="SemiBold"
-                    Foreground="{DynamicResource Red}"
                     />
                 <TextBlock
                     x:Name="PART_ErrorMessageTextBlock"
                     Margin="5,0,0,0"
                     Text="{Binding Path=ErrorMessage, ElementName=Root, UpdateSourceTrigger=PropertyChanged}"
                     Foreground="{DynamicResource Red}"
-                    FontWeight="SemiBold"
                     HorizontalAlignment="Left"
-                />      
+                />
             </StackPanel>
-            
         </Border>
 
         <Border 
@@ -46,7 +41,8 @@
             Background="{DynamicResource White}"
             BorderBrush="{DynamicResource LightGray}"
             BorderThickness="1"
-            Padding="10"
+            CornerRadius="0,4,4,4"
+            Padding="5"
         >
             <Grid MinHeight="100">
                 <TextBlock
@@ -56,8 +52,7 @@
                     Foreground="{DynamicResource LightGray}"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
-                    TextWrapping="WrapWithOverflow"
-            
+                    Margin="2,0,0,0"
                     />
                 <TextBox
                     x:Name="PART_TextArea"
@@ -70,7 +65,10 @@
                     BorderThickness="0"
                     Padding="0"
                     HorizontalAlignment="Stretch"
-                    TextChanged="PART_TextArea_TextChanged"  Loaded="PART_TextArea_Loaded" 
+                    TextChanged="PART_TextArea_TextChanged"
+                    Loaded="PART_TextArea_Loaded"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
                 />
             </Grid>
         </Border>

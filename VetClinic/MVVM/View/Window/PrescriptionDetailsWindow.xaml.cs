@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,10 +24,18 @@ namespace VetClinic.MVVM.View.Window
     /// </summary>
     public partial class PrescriptionDetailsWindow : System.Windows.Window
     {
-        public PrescriptionDetailsWindow(Prescription prescription, IDbContextFactory<VeterinaryClinicContext> context)
+        public PrescriptionDetailsWindow(Prescription prescription, Action<Prescription> prescriptionUpdated, IDbContextFactory<VeterinaryClinicContext> context)
         {
             InitializeComponent();
-            DataContext = new PrescriptionDetailsWindowViewModel(prescription, context);
+            var vm =  new PrescriptionDetailsWindowViewModel(prescription, prescriptionUpdated, context);
+            
+            DataContext = vm;
+            vm.PrescriptionUpdated += OnPrescriptionUpdated;
+        }
+
+        private void OnPrescriptionUpdated(Prescription _)
+        {
+            this.Close();
         }
     }
 }
