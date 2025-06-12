@@ -65,6 +65,7 @@
            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>
            <SolidColorBrush x:Key="Red">#e5383b</SolidColorBrush>
            <SolidColorBrush x:Key="DarkRed">#ba181b</SolidColorBrush>
+            <SolidColorBrush x:Key="LightRed">#f06a63</SolidColorBrush>
 
             <SolidColorBrush x:Key="BackgroundStatusScheduled">#E0F2F7</SolidColorBrush>
             <SolidColorBrush x:Key="BorderStatusScheduled">#81D4FA</SolidColorBrush>

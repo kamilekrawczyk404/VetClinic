@@ -16,21 +16,24 @@ using System.Windows.Shapes;
 namespace VetClinic.Controls.Input
 {
     /// <summary>
-    /// Logika interakcji dla klasy TextArea.xaml
+    /// Logika interakcji dla klasy CustomDatePicker.xaml
     /// </summary>
-    public partial class TextArea : UserControl
+    public partial class CustomDatePicker : UserControl
     {
-        public TextArea()
+        public CustomDatePicker()
         {
             InitializeComponent();
         }
 
         public static readonly DependencyProperty TitleProperty =
+        DependencyProperty.Register(nameof(Title), typeof(string), typeof(CustomDatePicker), new PropertyMetadata(string.Empty));
+
+        public static readonly DependencyProperty SelectedDateProperty =
             DependencyProperty.Register(
-                "Title",
-                typeof(string),
-                typeof(TextArea),
-                new PropertyMetadata(string.Empty));
+                nameof(SelectedDate), 
+                typeof(DateTime?), 
+                typeof(CustomDatePicker),
+                new FrameworkPropertyMetadata(DateTime.MinValue, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectedDateChanged));
 
         public string Title
         {
@@ -38,37 +41,17 @@ namespace VetClinic.Controls.Input
             set => SetValue(TitleProperty, value);
         }
 
-        public static readonly DependencyProperty PlaceholderProperty =
-            DependencyProperty.Register(
-                "Placeholder",
-                typeof(string),
-                typeof(TextArea),
-                new PropertyMetadata(string.Empty));
-
-        public string Placeholder
+        public DateTime? SelectedDate
         {
-            get { return (string)GetValue(PlaceholderProperty); }
-            set { SetValue(PlaceholderProperty, value); }
-        }
-
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register(
-                "Text",
-                typeof(string),
-                typeof(TextArea),
-                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnTextChanged));
-
-        public string Text
-        {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (DateTime?)GetValue(SelectedDateProperty);
+            set => SetValue(SelectedDateProperty, value);
         }
 
         public static readonly DependencyProperty ErrorMessageProperty =
             DependencyProperty.Register(
                 "ErrorMessage",
                 typeof(string),
-                typeof(TextArea),
+                typeof(CustomDatePicker),
                 new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnErrorMessageChanged));
 
         public string ErrorMessage
@@ -76,21 +59,19 @@ namespace VetClinic.Controls.Input
             get { return (string)GetValue(ErrorMessageProperty); }
             set { SetValue(ErrorMessageProperty, value); }
         }
-
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            TextArea control = (TextArea)d;
-            control.UpdatePlaceholderVisibility();
-            control.PART_TextArea.Text = (string)e.NewValue;
-        }
-
         private static void OnErrorMessageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            TextArea control = (TextArea)d;
+            var control = (CustomDatePicker)d;
             control.UpdateErrorVisibility();
             control.PART_ErrorMessageTextBlock.Text = (string)e.NewValue;
         }
 
+        private static void OnSelectedDateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var control = (CustomDatePicker)d;
+            control.UpdateErrorVisibility();
+            control.PART_DatePicker.SelectedDate = (DateTime)e.NewValue;
+        }
         private void UpdateErrorVisibility()
         {
             if (PART_ErrorMessageTextBlock != null)
@@ -101,43 +82,42 @@ namespace VetClinic.Controls.Input
             System.Windows.Media.Brush color = (System.Windows.Media.Brush)Application.Current.FindResource(ErrorMessage.Length > 0 ? "Red" : "LightGray");
             System.Windows.Media.Brush foreground = (System.Windows.Media.Brush)Application.Current.FindResource(ErrorMessage.Length > 0 ? "Red" : "Gray");
 
+            // Change upper container border color
             if (PART_InfoBorder != null)
             {
                 PART_InfoBorder.BorderBrush = color;
-            } 
-
-            if (PART_TextAreaBorder != null)
-            {
-                PART_TextAreaBorder.BorderBrush = color;
             }
 
-            if (PART_TextAreaPlaceholder != null)
+            // Change title foreground color
+            if (PART_TextBlockTitle != null) 
             {
-                PART_TextAreaPlaceholder.Foreground = PART_TextAreaTitle.Foreground =  foreground;
+                PART_TextBlockTitle.Foreground = foreground;
+            }
+
+            // Change main container border color
+            if (PART_Border != null)
+            {
+                PART_Border.BorderBrush = color;
+            }
+
+            // Change placeholder foreground color
+            if (PART_DatePicker != null)
+            {
+                PART_DatePicker.Foreground = foreground;
             }
         }
 
-        private void UpdatePlaceholderVisibility()
+        private void PART_DatePicker_Loaded(object sender, RoutedEventArgs e)
         {
-            if (PART_TextAreaPlaceholder != null && PART_TextArea != null)
-            {
-                PART_TextAreaPlaceholder.Visibility = string.IsNullOrEmpty(PART_TextArea.Text) ? Visibility.Visible : Visibility.Collapsed;
-            }
+            UpdateErrorVisibility();
         }
 
-        private void PART_TextArea_TextChanged(object sender, TextChangedEventArgs e)
+        private void PART_DatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdatePlaceholderVisibility();
             if (ErrorMessage.Length > 0)
             {
                 UpdateErrorVisibility();
             }
-        }
-
-        private void PART_TextArea_Loaded(object sender, RoutedEventArgs e)
-        {
-            UpdatePlaceholderVisibility();
-            UpdateErrorVisibility();
         }
     }
 }

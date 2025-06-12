@@ -65,7 +65,7 @@
 
                     <input:TextArea Grid.Row="2" Margin="0,5,2.5,0" Title="Diagnosis" Placeholder="Enter diagnosis..." />
 
-                    <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,5,0,0" Placeholder="Enter notes..." />
+                    <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,5,0,0" Title="Notes"  Placeholder="Enter notes..." />
 
                     <Grid Grid.Row="4" Grid.ColumnSpan="2" Height="200" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
@@ -94,7 +94,7 @@
                                 CornerRadius="4"
                                 >
                             <DataGrid 
-                                    ItemsSource="{Binding Appointment.Prescriptions}" 
+                                    ItemsSource="{Binding Prescriptions}" 
                                     SelectedItem="{Binding SelectedPrescription}"
                                     SelectionMode="Single"
                                     AutoGenerateColumns="False"

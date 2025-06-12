@@ -245,6 +245,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
                 IsAppointmentDisplayed = true;
                 AppointmentViewModel.Appointment = appointment;
+                AppointmentViewModel.Services = appointment.Services;
+                AppointmentViewModel.Prescriptions = appointment.Prescriptions;
             }
         }
 

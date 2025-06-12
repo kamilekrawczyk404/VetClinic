@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Controls;
 using VetClinic.Database;
@@ -25,6 +26,28 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         }
 
 
+        private ObservableCollection<Prescription> _prescriptions;
+        public ObservableCollection<Prescription> Prescriptions
+        {
+            get => _prescriptions;
+            set
+            {
+                _prescriptions = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<Service> _services;
+        public ObservableCollection<Service> Services
+        {
+            get => _services;
+            set
+            {
+                _services = value;
+                OnPropertyChanged();
+            }
+        }
+
         private Prescription _selectedPrescription;
         public Prescription SelectedPrescription 
         {
@@ -36,14 +59,28 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private Prescription _selectedService;
+        public Prescription SelectedService
+        {
+            get => _selectedService;
+            set
+            {
+                _selectedService = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand AddPrescriptionCommand { get; }
         public RelayCommand EditPrescriptionCommand { get; }
         public RelayCommand ExitAppointmentCommand { get; }
         public AsyncRelayCommand CompleteAppointmentCommand { get; }
 
+
         private Func<Task> _exitAppointment;
 
         private readonly Func<Task> _refreshAppointments;
+
+        public event Action<Prescription> PrescriptionUpdated;
         public AppointmentViewModel(Func<Task> exitAppointment, Func<Task> refreshAppointments, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
             _contextFactory = contextFactory;
@@ -51,17 +88,37 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             _exitAppointment = exitAppointment;
             _refreshAppointments = refreshAppointments;
 
+            PrescriptionUpdated += OnPrescriptionUpdate;
+
             AddPrescriptionCommand = new RelayCommand(AddPrescription);
             ExitAppointmentCommand = new RelayCommand(Exit);
             CompleteAppointmentCommand = new AsyncRelayCommand(CompleteAppointment);
             EditPrescriptionCommand = new RelayCommand(EditPrescription);
         }
 
+        private void OnPrescriptionUpdate(Prescription updatedPrescription)
+        {
+            if (updatedPrescription == null)
+                return;
+
+            Prescription seeking = Prescriptions.FirstOrDefault(p => p.Id == updatedPrescription.Id);
+
+            if (seeking == null)
+            {
+                Trace.WriteLine("Cannot find the prescription in the list");
+                return;
+            }
+
+            Prescriptions[Prescriptions.IndexOf(seeking)] = updatedPrescription;
+
+            SelectedPrescription = null;
+        }
+
         private void EditPrescription(object obj)
         {
             if (SelectedPrescription != null)
             {
-                var window = new PrescriptionDetailsWindow(SelectedPrescription, _contextFactory);
+                var window = new PrescriptionDetailsWindow(SelectedPrescription, PrescriptionUpdated, _contextFactory);
                 window.ShowDialog();
             }
         }

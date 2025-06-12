@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VetClinic.MVVM.View.Window"
         xmlns:input="clr-namespace:VetClinic.Controls.Input"
+        xmlns:controls="clr-namespace:VetClinic.Controls"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="PrescriptionDetailsWindow" Height="600" Width="900">
@@ -29,7 +30,7 @@
                     <TextBlock Text="Editing prescription" Style="{StaticResource Header}" Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1">
-                    <Button Style="{StaticResource SubmitButton}" Content="Save prescription"  HorizontalAlignment="Right"/>
+                    <Button Style="{StaticResource SubmitButton}" Command="{Binding SavePrescriptionCommand}" Content="Save prescription"  HorizontalAlignment="Right"/>
                 </StackPanel>
             </Grid>
 
@@ -45,10 +46,10 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.ColumnSpan="2" Text="Basic information" Style="{StaticResource MediumHeader}"/>
-                    <input:InputControl Grid.Row="1" Text="{Binding Prescription.Appointment.Pet.Client, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
-                    <input:InputControl Grid.Row="2" Text="{Binding Prescription.Appointment.Doctor, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
-                    <DatePicker Grid.Row="3"/>
-                    <input:TextArea Grid.Row="4" Title="Instructions" Placeholder="Enter instructions..." Margin="0,5,0,0"/>
+                    <input:InputControl Title="Client name"  Grid.Row="1" Text="{Binding Prescription.Appointment.Pet.Client, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                    <input:InputControl Title="Doctor name" Grid.Row="2" Text="{Binding Prescription.Appointment.Doctor, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                    <input:CustomDatePicker Grid.Row="3" ErrorMessage="{Binding ExpiryDateErrorMessage}" Title="Expiry date" SelectedDate="{Binding ExpiryDate}"/>
+                    <input:TextArea Grid.Row="4" ErrorMessage="{Binding InstructionsErrorMessage}" Title="Instructions" Placeholder="Enter instructions..." Text="{Binding Instructions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </Border>
 
@@ -58,7 +59,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
 
-                <Border Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8">
+                <Border Style="{StaticResource BorderDefault}" Padding="10" CornerRadius="8">
                     <StackPanel>
                         <TextBlock Text="Selected Drugs" Style="{StaticResource MediumHeader}" Margin="0,0,0,5"/>
 
@@ -75,13 +76,21 @@
                                 <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}"/>
                                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
                                 <DataGridTextColumn Header="Dosage Instructions" Binding="{Binding DosageInstructions}" Width="*"/>
-                                <DataGridTextColumn Header="Actions"/>
+                                <DataGridTemplateColumn Header="Actions">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:RemoveButton
+                                                Command="{Binding DataContext.RemoveDrugFromPrescriptionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
                 </Border>
 
-                <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="5" CornerRadius="8" Margin="0,10,0,0">
+                <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Padding="10" CornerRadius="8" Margin="0,10,0,0">
                     <StackPanel>
                         <TextBlock Text="List of drugs" Style="{StaticResource MediumHeader}"/>
                         <DataGrid 
