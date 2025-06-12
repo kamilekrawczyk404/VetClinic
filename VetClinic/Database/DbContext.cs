@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using VetClinic.Models;
 using Microsoft.EntityFrameworkCore;
-using VetClinic.MVVM.Model;
+using VetClinic.MVVM.Model; // Assuming PrescriptionDrugs and AppointmentServices are here
+using System.Diagnostics;
 
 namespace VetClinic.Database
 {
@@ -18,83 +19,72 @@ namespace VetClinic.Database
         }
 
         public DbSet<User> User { get; set; }
-        public DbSet<Admin> Admin { get; set; }
         public DbSet<Doctor> Doctor { get; set; }
-        public DbSet<Client> Client { get; set; }
         public DbSet<Pet> Pet { get; set; }
         public DbSet<Appointment> Appointment { get; set; }
         public DbSet<Prescription> Prescription { get; set; }
         public DbSet<Opinion> Opinion { get; set; }
-        public DbSet<Role> Role { get; set; }
         public DbSet<Drug> Drug { get; set; }
         public DbSet<Service> Service { get; set; }
         public DbSet<AppointmentServices> AppointmentServices { get; set; }
         public DbSet<PrescriptionDrugs> PrescriptionDrugs { get; set; }
-        public DbSet<AppointmentStatus> AppointmentStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // User roles
-            modelBuilder.Entity<Role>()
-                .HasKey(r => r.Id);
-
-            modelBuilder.Entity<Role>()
-                .HasIndex(r => r.Name)
-                .IsUnique();
-
-            // Role - users
-            modelBuilder.Entity<Role>()
-                .HasMany(r => r.Users)
-                .WithOne(u => u.Role)
-                .HasForeignKey(u => u.RoleId);
+            // --- 1. Define Primary Keys for all entities first ---
 
             // User
             modelBuilder.Entity<User>()
                 .HasKey(u => u.Id);
-
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
 
-            // Relations between User and other entities
-            // User - Client
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Client)
-                .WithOne(c => c.User)
-                .HasForeignKey<Client>(c => c.Id);
-
-            // User - Admin
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Admin)
-                .WithOne(a => a.User)
-                .HasForeignKey<Admin>(a => a.Id);
-
-            // User - Doctor
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Doctor)
-                .WithOne(d => d.User)
-                .HasForeignKey<Doctor>(d => d.Id);
-
-            // Client
-            modelBuilder.Entity<Client>()
-                .HasKey(c => c.Id);
-
-            modelBuilder.Entity<Client>()
-                .HasMany(c => c.Pets)
-                .WithOne(p => p.Client)
-                .HasForeignKey(p => p.ClientId);
-
-            // Admin
-            modelBuilder.Entity<Admin>()
-                .HasKey(a => a.Id);
-
             // Doctor
             modelBuilder.Entity<Doctor>()
                 .HasKey(d => d.Id);
+            modelBuilder.Entity<Doctor>()
+               .HasIndex(d => d.Email)
+               .IsUnique();
 
-            // Appointment (has one pet and one doctore, many prescriptions and services)
+            // Pet (Assuming Pet has an 'Id' primary key)
+            modelBuilder.Entity<Pet>()
+                .HasKey(p => p.Id);
+
+            // Appointment (Assuming Appointment has an 'Id' primary key)
+            modelBuilder.Entity<Appointment>()
+                .HasKey(a => a.Id);
+
+            // Prescription (Assuming Prescription has an 'Id' primary key, despite being one-to-one with Appointment)
+            modelBuilder.Entity<Prescription>()
+                .HasKey(p => p.Id);
+
+            // Opinion (Assuming Opinion has an 'Id' primary key)
+            modelBuilder.Entity<Opinion>()
+                .HasKey(o => o.Id);
+
+            // Drug (Assuming Drug has an 'Id' primary key)
+            modelBuilder.Entity<Drug>()
+                .HasKey(d => d.Id);
+
+            // Service (Assuming Service has an 'Id' primary key)
+            modelBuilder.Entity<Service>()
+                .HasKey(s => s.Id);
+
+            // Define Composite Primary Keys for junction tables.
+            // This is crucial to ensure EF Core knows they have keys before relationships are mapped.
+            modelBuilder.Entity<AppointmentServices>()
+                .HasKey(asv => new { asv.AppointmentId, asv.ServiceId });
+
+            modelBuilder.Entity<PrescriptionDrugs>()
+                .HasKey(pd => new { pd.PrescriptionId, pd.DrugId });
+
+
+            // --- 2. Define Relationships after all keys are established ---
+
+            // Appointment relationships
             modelBuilder.Entity<Appointment>()
                 .HasOne(a => a.Pet)
                 .WithMany(p => p.Appointments)
@@ -105,41 +95,37 @@ namespace VetClinic.Database
                 .WithMany(d => d.Appointments)
                 .HasForeignKey(a => a.DoctorId);
 
+            // One-to-one relationship between Appointment and Prescription
             modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.AppointmentStatus)
-                .WithMany(appStat => appStat.Appointments)
-                .HasForeignKey(a => a.StatusId);
-
-            modelBuilder.Entity<Appointment>()
-                .HasMany(a => a.Prescriptions)
+                .HasOne(a => a.Prescription)
                 .WithOne(p => p.Appointment)
-                .HasForeignKey(p => p.AppointmentId);
+                .HasForeignKey<Prescription>(p => p.AppointmentId);
 
+            // Many-to-many relationship via AppointmentServices
             modelBuilder.Entity<Appointment>()
                 .HasMany(a => a.AppointmentServices)
-                .WithOne(s => s.Appointment)
-                .HasForeignKey(s => s.AppointmentId);
+                .WithOne(asv => asv.Appointment)
+                .HasForeignKey(asv => asv.AppointmentId);
 
-            // Service
             modelBuilder.Entity<Service>()
                 .HasMany(s => s.AppointmentServices)
-                .WithOne(a => a.Service)
-                .HasForeignKey(a => a.ServiceId);
+                .WithOne(asv => asv.Service)
+                .HasForeignKey(asv => asv.ServiceId);
 
-            // Prescription
-            modelBuilder.Entity<Prescription>()
-                .HasOne(p => p.Appointment)
-                .WithMany(a => a.Prescriptions)
-                .HasForeignKey(p => p.AppointmentId);
-
+            // Many-to-many relationship via PrescriptionDrugs
             modelBuilder.Entity<Prescription>()
                 .HasMany(p => p.PrescriptionDrugs)
                 .WithOne(pd => pd.Prescription)
                 .HasForeignKey(pd => pd.PrescriptionId);
 
-            // Opinion
+            modelBuilder.Entity<Drug>()
+                .HasMany(d => d.PrescriptionDrugs)
+                .WithOne(pd => pd.Drug)
+                .HasForeignKey(pd => pd.DrugId);
+
+            // Opinion relationships
             modelBuilder.Entity<Opinion>()
-                .HasOne(o => o.Client)
+                .HasOne(o => o.User)
                 .WithMany(c => c.Opinions)
                 .HasForeignKey(o => o.ClientId);
 
@@ -147,12 +133,6 @@ namespace VetClinic.Database
                 .HasOne(o => o.Doctor)
                 .WithMany(d => d.Opinions)
                 .HasForeignKey(o => o.DoctorId);
-
-            // Drug
-            modelBuilder.Entity<Drug>()
-                .HasMany(d => d.PrescriptionDrugs)
-                .WithOne(pd => pd.Drug)
-                .HasForeignKey(pd => pd.DrugId);
         }
     }
 }

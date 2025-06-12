@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Controls;
@@ -14,25 +15,30 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
     {
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
 
-        private DetailedAppointment _appointment;
-        public DetailedAppointment Appointment
+        private DetailedAppointment _detailedAppointment;
+        public DetailedAppointment DetailedAppointment
         {
-            get => _appointment;
+            get => _detailedAppointment;
             set
             {
-                _appointment = value;
-                OnPropertyChanged();
+                if (value != null)
+                {
+                    _detailedAppointment = value;
+                    PrescriptionFormViewModel = new PrescriptionFormViewModel(_detailedAppointment.Prescription, PrescriptionUpdated, _contextFactory);
+                    ServicesFormViewModel = new ServicesFormViewModel(_detailedAppointment.Services, _contextFactory);
+                    OnPropertyChanged();
+                }
             }
         }
 
 
-        private ObservableCollection<Prescription> _prescriptions;
-        public ObservableCollection<Prescription> Prescriptions
+        private Prescription _prescription;
+        public Prescription Prescription
         {
-            get => _prescriptions;
+            get => _prescription;
             set
             {
-                _prescriptions = value;
+                _prescription = value;
                 OnPropertyChanged();
             }
         }
@@ -48,19 +54,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private Prescription _selectedPrescription;
-        public Prescription SelectedPrescription 
-        {
-            get => _selectedPrescription;
-            set
-            {
-                _selectedPrescription = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Prescription _selectedService;
-        public Prescription SelectedService
+        private Service _selectedService;
+        public Service SelectedService
         {
             get => _selectedService;
             set
@@ -70,8 +65,29 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private PrescriptionFormViewModel _prescriptionFormViewModel;
+        public PrescriptionFormViewModel PrescriptionFormViewModel
+        {
+            get => _prescriptionFormViewModel;
+            set
+            {
+                _prescriptionFormViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ServicesFormViewModel _servicesFormViewModel;
+        public ServicesFormViewModel ServicesFormViewModel
+        {
+            get => _servicesFormViewModel;
+            set
+            {
+                _servicesFormViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand AddPrescriptionCommand { get; }
-        public RelayCommand EditPrescriptionCommand { get; }
         public RelayCommand ExitAppointmentCommand { get; }
         public AsyncRelayCommand CompleteAppointmentCommand { get; }
 
@@ -81,6 +97,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private readonly Func<Task> _refreshAppointments;
 
         public event Action<Prescription> PrescriptionUpdated;
+
         public AppointmentViewModel(Func<Task> exitAppointment, Func<Task> refreshAppointments, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
             _contextFactory = contextFactory;
@@ -93,7 +110,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             AddPrescriptionCommand = new RelayCommand(AddPrescription);
             ExitAppointmentCommand = new RelayCommand(Exit);
             CompleteAppointmentCommand = new AsyncRelayCommand(CompleteAppointment);
-            EditPrescriptionCommand = new RelayCommand(EditPrescription);
         }
 
         private void OnPrescriptionUpdate(Prescription updatedPrescription)
@@ -101,45 +117,22 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             if (updatedPrescription == null)
                 return;
 
-            Prescription seeking = Prescriptions.FirstOrDefault(p => p.Id == updatedPrescription.Id);
-
-            if (seeking == null)
-            {
-                Trace.WriteLine("Cannot find the prescription in the list");
-                return;
-            }
-
-            Prescriptions[Prescriptions.IndexOf(seeking)] = updatedPrescription;
-
-            SelectedPrescription = null;
-        }
-
-        private void EditPrescription(object obj)
-        {
-            if (SelectedPrescription != null)
-            {
-                var window = new PrescriptionDetailsWindow(SelectedPrescription, PrescriptionUpdated, _contextFactory);
-                window.ShowDialog();
-            }
-        }
-
-        private void Exit(object obj)
-        {
-            _exitAppointment?.Invoke();
+            Prescription = updatedPrescription;
         }
 
         private async Task CompleteAppointment(object obj)
         {
             using var context = _contextFactory.CreateDbContext();
 
-            if (Appointment?.Appointment == null)
+            if (DetailedAppointment?.Appointment == null)
             {
                 return;
             }
-            Appointment.Appointment.AppointmentStatus = null;
-            Appointment.Appointment.StatusId = 3; // 3 = completed
+            DetailedAppointment.Appointment.Status = "Completed";
 
-            context.Appointment.Update(Appointment.Appointment);
+            context.Appointment.Update(DetailedAppointment.Appointment);
+
+            // validate fielsd, prescription and services 
             await context.SaveChangesAsync();
 
             _refreshAppointments?.Invoke();
@@ -152,6 +145,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             // This could involve opening a dialog or navigating to a different view
             // For now, we will just simulate this with a console message
             //Console.WriteLine("Add Prescription command executed for appointment: " + Appointment?.Id);
+        }
+
+        private void Exit(object obj)
+        {
+            _exitAppointment?.Invoke();
         }
     }
 }

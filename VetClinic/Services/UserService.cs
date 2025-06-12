@@ -16,21 +16,18 @@ namespace VetClinic.Services
             _context = context;
         }
 
-        public async Task<User> CreateClientAsync(string name, string surname, string email, string phoneNumber, string password)
+        public async Task<User> CreateClientAsync(string name, string surname, string email, string phoneNumber, string password, string gender, DateTime dateOfBirth)
         {
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
             User newUser = new()
             {
-                RoleId = 2, // Client Role
+                Role = "Client",
                 Email = email,
                 PasswordHash = passwordHash,
-                Telephone = phoneNumber,
-            };
-
-            Client client = new()
-            {
-                User = newUser,
+                TelephoneNumber = int.Parse(phoneNumber),
+                DateOfBirth = dateOfBirth,
+                Gender = gender,
                 Name = name,
                 Surname = surname,
             };
@@ -38,7 +35,6 @@ namespace VetClinic.Services
             try
             {
                 await _context.User.AddAsync(newUser);
-                await _context.Client.AddAsync(client);
                 await _context.SaveChangesAsync();
 
                 return newUser;
@@ -63,6 +59,38 @@ namespace VetClinic.Services
             }
         }
 
+        public async Task<Doctor> LoginDoctorAsync(string email, string password)
+        {
+            try
+            {
+                var doctor = await _context.Doctor
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+                //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                if (doctor == null)
+                {
+                    return null; // Invalid email or password
+                }
+                else
+                {
+                    doctor.LastLogin = DateTime.Now;
+                    await _context.SaveChangesAsync();
+
+                    return doctor;
+                }
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                Console.WriteLine($"Database error during login: {ex.Message}");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred during login: {ex.Message}");
+                throw;
+            }
+        }
+
         public async Task<User> LoginUserAsync(string email, string password)
         {
             try
@@ -70,7 +98,8 @@ namespace VetClinic.Services
                 var user = await _context.User
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-                if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+                if (user == null)
                 {
                     return null; // Invalid email or password
                 }
@@ -94,9 +123,14 @@ namespace VetClinic.Services
             }
         }
 
-        public async Task<bool> IsEmailUniqueAsync(string email)
+        public async Task<bool> IsUserEmailUniqueAsync(string email)
         {
             return !await _context.User.AnyAsync(u => u.Email == email);
+        }
+
+        public async Task<bool> IsDoctorEmailUniqueAsync(string email)
+        {
+            return !await _context.Doctor.AnyAsync(u => u.Email == email);
         }
     }
 }

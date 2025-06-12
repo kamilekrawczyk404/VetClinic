@@ -28,20 +28,20 @@ namespace VetClinic.Controls
         }
 
         public static readonly DependencyProperty StatusesProperty =
-        DependencyProperty.Register(nameof(Statuses), typeof(IEnumerable<AppointmentStatus>), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
+        DependencyProperty.Register(nameof(Statuses), typeof(IEnumerable<string>), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
 
-        public IEnumerable<AppointmentStatus> Statuses
+        public IEnumerable<string> Statuses
         {
-            get => (IEnumerable<AppointmentStatus>)GetValue(StatusesProperty); 
+            get => (IEnumerable<string>)GetValue(StatusesProperty); 
             set => SetValue(StatusesProperty, value);
         }
 
         public static readonly DependencyProperty StatusProperty =
-            DependencyProperty.Register(nameof(Status), typeof(AppointmentStatus), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Status), typeof(string), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
 
-        public AppointmentStatus Status
+        public string Status
         {
-            get => (AppointmentStatus)GetValue(StatusProperty);
+            get => (string)GetValue(StatusProperty);
             set => SetValue(StatusProperty, value);
         }
 

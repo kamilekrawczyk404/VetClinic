@@ -18,6 +18,12 @@
         <Setter Property="Foreground" Value="{DynamicResource Turquise}"/>
         <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
     </Style>
+    <Style TargetType="TextBlock" x:Key="SmallHeader">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Foreground" Value="{DynamicResource Turquise}"/>
+        <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+    </Style>
     <Style TargetType="TextBlock" x:Key="Label">
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Foreground" Value="{DynamicResource Gray}"/>

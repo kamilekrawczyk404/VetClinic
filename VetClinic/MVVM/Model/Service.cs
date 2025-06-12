@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
-    [Table("service")]
+    [Table("services")]
     public class Service
     {
         [Key]

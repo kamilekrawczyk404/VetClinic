@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,13 @@ namespace VetClinic.Services
     public interface IUserSessionService
     {
         User LoggedInUser { get; }
+        Doctor LoggedInDoctor { get; }
 
         event Action UserChanged;
         void SetUser(User user);
+        void SetDoctor(Doctor doctor);
         void ClearUser();
+
         bool IsClient { get; }
         bool IsDoctor { get; }
         bool IsAdmin { get; }
@@ -29,6 +33,17 @@ namespace VetClinic.Services
             private set
             {
                 _loggedInUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Doctor _loggedInDoctor;
+        public Doctor LoggedInDoctor
+        {
+            get => _loggedInDoctor;
+            private set
+            {
+                _loggedInDoctor = value;
                 OnPropertyChanged();
             }
         }
@@ -67,32 +82,50 @@ namespace VetClinic.Services
         }
 
         public event Action UserChanged;
-
         public void SetUser(User user)
         {
             LoggedInUser = user;
             CheckUserRole();
             UserChanged?.Invoke();
         }
+
+        public void SetDoctor(Doctor doctor)
+        {
+            LoggedInDoctor = doctor;
+            CheckUserRole();
+            UserChanged?.Invoke();
+            Trace.WriteLine("Doctor " + doctor.Name);
+        }
         public void ClearUser()
         {
-            LoggedInUser = null;
+            if (LoggedInDoctor != null)
+            {
+                LoggedInDoctor = null;
+            } else if (LoggedInUser != null)
+            {
+                LoggedInUser = null;
+            }
+
             CheckUserRole();
             UserChanged?.Invoke();
         }
 
         void CheckUserRole()
         {
-            if (LoggedInUser == null)
+            if (LoggedInUser == null && LoggedInDoctor == null)
             {
-                IsClient = false;
-                IsDoctor = false;
-                IsAdmin = false;
                 return;
             }
-            IsClient = LoggedInUser.RoleId == 2;
-            IsDoctor = LoggedInUser.RoleId == 3;
-            IsAdmin = LoggedInUser.RoleId == 1;
+
+            Trace.WriteLine("roles");
+            if (LoggedInUser != null)
+            {
+                IsClient = LoggedInUser.Role.ToLower() == "client";
+                IsAdmin = LoggedInUser.Role.ToLower() == "admin";
+            } else
+            {
+                IsDoctor = LoggedInDoctor != null;
+            }
         }
     }
 }

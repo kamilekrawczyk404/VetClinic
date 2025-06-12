@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
-    [Table("pet")]
+    [Table("pets")]
     public class Pet
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("client_id")]
-        public int ClientId { get; set; }
+        [Column("user_id")]
+        public int UserId { get; set; }
 
         [Column("name")]
         public string Name { get; set; }
@@ -39,7 +39,7 @@ namespace VetClinic.Models
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
 
-        public virtual Client Client { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }
     }
 }

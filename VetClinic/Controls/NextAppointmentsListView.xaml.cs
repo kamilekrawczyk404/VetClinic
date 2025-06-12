@@ -56,12 +56,12 @@ namespace VetClinic.Controls
         public static readonly DependencyProperty StatusesProperty =
             DependencyProperty.Register(
                 nameof(Statuses),
-                typeof(ICollection<AppointmentStatus>),
+                typeof(ICollection<string>),
                 typeof(NextAppointmentsListView));
 
-        public ICollection<AppointmentStatus> Statuses
+        public ICollection<string> Statuses
         {
-            get => (ICollection<AppointmentStatus>)GetValue(StatusesProperty);
+            get => (ICollection<string>)GetValue(StatusesProperty);
             set => SetValue(StatusesProperty, value);
         }
     }
