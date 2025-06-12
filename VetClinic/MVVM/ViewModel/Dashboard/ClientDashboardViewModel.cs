@@ -173,7 +173,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (obj is DetailedPet pet)
             {
-                // Navigate to pet details or perform action
                 Debug.WriteLine($"Selected pet: {pet.Pet.Name}");
             }
         }
@@ -182,7 +181,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (obj is DetailedAppointment appointment)
             {
-                // Navigate to appointment details or perform action
                 Debug.WriteLine($"Selected appointment: {appointment.Appointment.AppointmentDate}");
             }
         }
@@ -191,7 +189,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (obj is DetailedOpinion opinion)
             {
-                // Navigate to opinion details or perform action
                 Debug.WriteLine($"Viewing opinion for doctor: {opinion.DoctorName}");
             }
         }
@@ -201,7 +198,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             var user = _userSessionService.LoggedInUser;
             using var context = _contextFactory.CreateDbContext();
 
-            // Initialize appointment's statuses
             var appointmentStatuses = await GetAppointmentStatuses();
             Statuses = new ObservableCollection<AppointmentStatus>(appointmentStatuses);
 
@@ -213,7 +209,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             {
                 FullName = $"{_client.Name} {_client.Surname}";
 
-                // Calculate ratios based on the last 7 days and the previous 7 days
                 DateTime today = DateTime.Today;
                 DateTime last7Start = today.AddDays(-6);
                 DateTime prev7Start = today.AddDays(-13);
@@ -294,14 +289,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             using var context = _contextFactory.CreateDbContext();
 
-            // Count currently active prescriptions (not expired)
             int currentCount = await context.Prescription
                 .CountAsync(p => p.Appointment.Pet.ClientId == _client.Id && p.ExpiryDate >= today);
 
             ActivePrescriptionsCount = currentCount;
 
-            // Set ratio to null to hide it in the UI
-            ActivePrescriptionsRatio = double.NaN; // lub możesz użyć 0 jeśli kontrolka obsługuje to inaczej
+            ActivePrescriptionsRatio = double.NaN; 
         }
 
         private async Task GetLastOpinions()
@@ -313,7 +306,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .Include(o => o.Doctor)
                 .ThenInclude(d => d.User)
                 .OrderByDescending(o => o.CreatedAt)
-                .Take(2) // Pobierz 2 ostatnie opinie
+                .Take(2) 
                 .ToListAsync();
 
             LastOpinions.Clear();
