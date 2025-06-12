@@ -98,13 +98,13 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private DetailedOpinion _lastOpinion;
-        public DetailedOpinion LastOpinion
+        private ObservableCollection<DetailedOpinion> _lastOpinions = new ObservableCollection<DetailedOpinion>();
+        public ObservableCollection<DetailedOpinion> LastOpinions
         {
-            get => _lastOpinion;
+            get => _lastOpinions;
             set
             {
-                _lastOpinion = value;
+                _lastOpinions = value;
                 OnPropertyChanged();
             }
         }
@@ -189,10 +189,10 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private void ViewOpinion(object obj)
         {
-            if (LastOpinion != null)
+            if (obj is DetailedOpinion opinion)
             {
                 // Navigate to opinion details or perform action
-                Debug.WriteLine($"Viewing opinion for doctor: {LastOpinion.DoctorName}");
+                Debug.WriteLine($"Viewing opinion for doctor: {opinion.DoctorName}");
             }
         }
 
@@ -222,7 +222,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 await GetPetsCount(prev7Start, prev7End, last7Start, today);
                 await GetUpcomingAppointmentsCount(prev7Start, prev7End, last7Start, today);
                 await GetActivePrescriptionsCount(prev7Start, prev7End, last7Start, today);
-                await GetLastOpinion();
+                await GetLastOpinions();
                 await GetClientPets();
                 await GetUpcomingAppointments();
             }
@@ -304,29 +304,34 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             ActivePrescriptionsRatio = double.NaN; // lub możesz użyć 0 jeśli kontrolka obsługuje to inaczej
         }
 
-        private async Task GetLastOpinion()
+        private async Task GetLastOpinions()
         {
             using var context = _contextFactory.CreateDbContext();
 
-            var lastOpinion = await context.Opinion
+            var lastOpinions = await context.Opinion
                 .Where(o => o.ClientId == _client.Id)
                 .Include(o => o.Doctor)
                 .ThenInclude(d => d.User)
                 .OrderByDescending(o => o.CreatedAt)
-                .FirstOrDefaultAsync();
+                .Take(2) // Pobierz 2 ostatnie opinie
+                .ToListAsync();
 
-            if (lastOpinion != null)
+            LastOpinions.Clear();
+
+            if (lastOpinions.Any())
             {
-                LastOpinion = new DetailedOpinion
+                foreach (var opinion in lastOpinions)
                 {
-                    Opinion = lastOpinion,
-                    DoctorName = $"Dr {lastOpinion.Doctor.Name} {lastOpinion.Doctor.Surname}"
-                };
+                    LastOpinions.Add(new DetailedOpinion
+                    {
+                        Opinion = opinion,
+                        DoctorName = $"Dr {opinion.Doctor.Name} {opinion.Doctor.Surname}"
+                    });
+                }
                 HasOpinions = true;
             }
             else
             {
-                LastOpinion = null;
                 HasOpinions = false;
             }
         }
