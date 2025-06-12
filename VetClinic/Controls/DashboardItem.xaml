@@ -16,7 +16,9 @@
             <StackPanel Margin="20">
                 <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" Foreground="{StaticResource Gray}" Text="{Binding Path=Title, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Grid.Row="1" FontSize="20" Foreground="{StaticResource DarkTurquise}" Text="{Binding Path=Value, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
-                <local:TrendLine Grid.Row="2" Ratio="{Binding Path=Ratio, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
+                <local:TrendLine Grid.Row="2" 
+                                Ratio="{Binding Path=Ratio, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"
+                                Visibility="{Binding Path=ShowTrendLine, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </StackPanel>
 
             <Image Style="{StaticResource DashboardItemImage}" Grid.Column="1" Source="{Binding Path=ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}}"/>

@@ -76,24 +76,24 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private int _daysSinceLastVisit;
-        public int DaysSinceLastVisit
+        private int _activePrescriptionsCount;
+        public int ActivePrescriptionsCount
         {
-            get => _daysSinceLastVisit;
+            get => _activePrescriptionsCount;
             set
             {
-                _daysSinceLastVisit = value;
+                _activePrescriptionsCount = value;
                 OnPropertyChanged();
             }
         }
 
-        private double _lastVisitRatio;
-        public double LastVisitRatio
+        private double _activePrescriptionsRatio;
+        public double ActivePrescriptionsRatio
         {
-            get => _lastVisitRatio;
+            get => _activePrescriptionsRatio;
             set
             {
-                _lastVisitRatio = value;
+                _activePrescriptionsRatio = value;
                 OnPropertyChanged();
             }
         }
@@ -221,7 +221,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
                 await GetPetsCount(prev7Start, prev7End, last7Start, today);
                 await GetUpcomingAppointmentsCount(prev7Start, prev7End, last7Start, today);
-                await GetLastVisitInfo(prev7Start, prev7End, last7Start, today);
+                await GetActivePrescriptionsCount(prev7Start, prev7End, last7Start, today);
                 await GetLastOpinion();
                 await GetClientPets();
                 await GetUpcomingAppointments();
@@ -290,44 +290,18 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private async Task GetLastVisitInfo(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
+        private async Task GetActivePrescriptionsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
         {
             using var context = _contextFactory.CreateDbContext();
 
-            var lastAppointment = await context.Appointment
-                .Where(a => a.Pet.ClientId == _client.Id && a.AppointmentDate < today)
-                .OrderByDescending(a => a.AppointmentDate)
-                .FirstOrDefaultAsync();
+            // Count currently active prescriptions (not expired)
+            int currentCount = await context.Prescription
+                .CountAsync(p => p.Appointment.Pet.ClientId == _client.Id && p.ExpiryDate >= today);
 
-            if (lastAppointment != null)
-            {
-                DaysSinceLastVisit = (int)(today - lastAppointment.AppointmentDate).TotalDays;
-            }
-            else
-            {
-                DaysSinceLastVisit = 0;
-            }
+            ActivePrescriptionsCount = currentCount;
 
-            // Calculate ratio based on comparison with previous period
-            var prevLastAppointment = await context.Appointment
-                .Where(a => a.Pet.ClientId == _client.Id && a.AppointmentDate < prev7End)
-                .OrderByDescending(a => a.AppointmentDate)
-                .FirstOrDefaultAsync();
-
-            int prevDaysSinceLastVisit = 0;
-            if (prevLastAppointment != null)
-            {
-                prevDaysSinceLastVisit = (int)(prev7End - prevLastAppointment.AppointmentDate).TotalDays;
-            }
-
-            if (prevDaysSinceLastVisit == 0)
-            {
-                LastVisitRatio = DaysSinceLastVisit > 0 ? -100 : 0; // Negative because more days = worse
-            }
-            else
-            {
-                LastVisitRatio = ((double)(prevDaysSinceLastVisit - DaysSinceLastVisit) / prevDaysSinceLastVisit) * 100;
-            }
+            // Set ratio to null to hide it in the UI
+            ActivePrescriptionsRatio = double.NaN; // lub możesz użyć 0 jeśli kontrolka obsługuje to inaczej
         }
 
         private async Task GetLastOpinion()
