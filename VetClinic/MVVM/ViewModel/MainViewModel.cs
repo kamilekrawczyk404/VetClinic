@@ -48,12 +48,13 @@ namespace VetClinic.MVVM.ViewModel
             _navigation = navigation;
             _userSessionService = userSessionService;
 
-            _navigation.NavigateTo<DoctorDashboardViewModel>();
+            //_navigation.NavigateTo<DoctorDashboardViewModel>();
+            _navigation.NavigateTo<ClientDashboardViewModel>();
 
             //_navigation.NavigateTo<LoginViewModel>();
 
             // get the user
-            User logged = context.User.FirstOrDefault(u => u.Email == "dr.smith@vetclinic.com");
+            User logged = context.User.FirstOrDefault(u => u.Email == "jan.kowalski@email.com");
             _userSessionService.SetUser(logged);
 
 
