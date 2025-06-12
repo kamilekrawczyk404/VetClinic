@@ -98,6 +98,28 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private DetailedOpinion _lastOpinion;
+        public DetailedOpinion LastOpinion
+        {
+            get => _lastOpinion;
+            set
+            {
+                _lastOpinion = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _hasOpinions;
+        public bool HasOpinions
+        {
+            get => _hasOpinions;
+            set
+            {
+                _hasOpinions = value;
+                OnPropertyChanged();
+            }
+        }
+
         private ObservableCollection<DetailedPet> _clientPets = new ObservableCollection<DetailedPet>();
         public ObservableCollection<DetailedPet> ClientPets
         {
@@ -133,6 +155,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         public RelayCommand SelectPetCommand { get; }
         public RelayCommand SelectAppointmentCommand { get; }
+        public RelayCommand ViewOpinionCommand { get; }
 
         public ClientDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
         {
@@ -141,6 +164,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
             SelectPetCommand = new RelayCommand(SelectPet);
             SelectAppointmentCommand = new RelayCommand(SelectAppointment);
+            ViewOpinionCommand = new RelayCommand(ViewOpinion);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
         }
@@ -160,6 +184,15 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             {
                 // Navigate to appointment details or perform action
                 Debug.WriteLine($"Selected appointment: {appointment.Appointment.AppointmentDate}");
+            }
+        }
+
+        private void ViewOpinion(object obj)
+        {
+            if (LastOpinion != null)
+            {
+                // Navigate to opinion details or perform action
+                Debug.WriteLine($"Viewing opinion for doctor: {LastOpinion.DoctorName}");
             }
         }
 
@@ -189,6 +222,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 await GetPetsCount(prev7Start, prev7End, last7Start, today);
                 await GetUpcomingAppointmentsCount(prev7Start, prev7End, last7Start, today);
                 await GetLastVisitInfo(prev7Start, prev7End, last7Start, today);
+                await GetLastOpinion();
                 await GetClientPets();
                 await GetUpcomingAppointments();
             }
@@ -296,6 +330,33 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private async Task GetLastOpinion()
+        {
+            using var context = _contextFactory.CreateDbContext();
+
+            var lastOpinion = await context.Opinion
+                .Where(o => o.ClientId == _client.Id)
+                .Include(o => o.Doctor)
+                .ThenInclude(d => d.User)
+                .OrderByDescending(o => o.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            if (lastOpinion != null)
+            {
+                LastOpinion = new DetailedOpinion
+                {
+                    Opinion = lastOpinion,
+                    DoctorName = $"Dr {lastOpinion.Doctor.Name} {lastOpinion.Doctor.Surname}"
+                };
+                HasOpinions = true;
+            }
+            else
+            {
+                LastOpinion = null;
+                HasOpinions = false;
+            }
+        }
+
         private async Task GetClientPets()
         {
             using var context = _contextFactory.CreateDbContext();
@@ -376,5 +437,43 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         }
         public string AgeText => Age == 1 ? "1 rok" : Age < 5 ? $"{Age} lata" : $"{Age} lat";
         public string WeightText => Pet?.Weight > 0 ? $"{Pet.Weight:F1} kg" : "Brak danych";
+    }
+
+    // Helper class for detailed opinion information
+    public class DetailedOpinion
+    {
+        public Opinion Opinion { get; set; }
+        public string DoctorName { get; set; }
+
+        public string CommentPreview
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Opinion?.Comment))
+                    return "Brak komentarza";
+
+                return Opinion.Comment.Length > 100
+                    ? Opinion.Comment.Substring(0, 100) + "..."
+                    : Opinion.Comment;
+            }
+        }
+
+        public string RatingText => Opinion?.Rating.ToString() ?? "0";
+        public string DateText => Opinion?.CreatedAt.ToString("dd.MM.yyyy") ?? "";
+        public string TimeAgoText
+        {
+            get
+            {
+                if (Opinion?.CreatedAt == null) return "";
+
+                var timeSpan = DateTime.Now - Opinion.CreatedAt;
+                if (timeSpan.Days > 0)
+                    return $"{timeSpan.Days} dni temu";
+                else if (timeSpan.Hours > 0)
+                    return $"{timeSpan.Hours} godzin temu";
+                else
+                    return $"{timeSpan.Minutes} minut temu";
+            }
+        }
     }
 }

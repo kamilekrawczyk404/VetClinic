@@ -5,11 +5,12 @@
             xmlns:view="clr-namespace:VetClinic.MVVM.View"
             xmlns:authView="clr-namespace:VetClinic.MVVM.View.Auth"
             xmlns:dashboardView="clr-namespace:VetClinic.MVVM.View.Dashboard"
-            xmlns:utils="clr-namespace:VetClinic.Utils"
             xmlns:authViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Auth"
             xmlns:dashboardViewModel="clr-namespace:VetClinic.MVVM.ViewModel.Dashboard"
             xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
             xmlns:controls="clr-namespace:VetClinic.Controls"
+            xmlns:utils="clr-namespace:VetClinic.Utils"
+
              >
    <Application.Resources>
        <ResourceDictionary>
@@ -38,6 +39,8 @@
             <utils:AppointmentStatusToBackgroundConverter x:Key="AppointmentStatusToBackgroundConverter"/>
             <utils:AppointmentStatusToBrushColorConventer x:Key="AppointmentStatusToBrushColorConventer"/>
             <utils:FullNameConverter x:Key="FullNameConverter"/>
+            <utils:StarRatingConverter x:Key="StarRatingConverter"/>
+
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
                <authView:RegisterView/>
@@ -46,7 +49,6 @@
             <DataTemplate DataType="{x:Type authViewModel:LoginViewModel}">
                 <authView:LoginView/>
             </DataTemplate>
-
             <DataTemplate DataType="{x:Type dashboardViewModel:DoctorDashboardViewModel}">
                 <dashboardView:DoctorDashboard/>
             </DataTemplate>
