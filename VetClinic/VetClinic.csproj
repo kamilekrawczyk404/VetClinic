@@ -11,6 +11,9 @@
   <ItemGroup>
     <None Remove="Images\appointment-active.png" />
     <None Remove="Images\appointment.png" />
+    <None Remove="Images\Buttons\arrow.png" />
+    <None Remove="Images\Buttons\checkbox.png" />
+    <None Remove="Images\Buttons\save.png" />
     <None Remove="Images\DashboardItem\appointment-item.png" />
     <None Remove="Images\DashboardItem\pet-item.png" />
     <None Remove="Images\DashboardItem\prescription-item.png" />
@@ -51,6 +54,12 @@
     <None Remove="Images\WindowNav\hide.png" />
     <None Remove="Images\WindowNav\maximize.png" />
     <None Remove="Images\WindowNav\minimize.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Buttons\arrow.png" />
+    <Resource Include="Images\Buttons\checkbox.png" />
+    <Resource Include="Images\Buttons\save.png" />
   </ItemGroup>
 
   <ItemGroup>
