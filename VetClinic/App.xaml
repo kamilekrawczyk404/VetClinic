@@ -41,6 +41,7 @@
             <utils:FullNameConverter x:Key="FullNameConverter"/>
             <utils:StarRatingConverter x:Key="StarRatingConverter"/>
             <utils:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+            <utils:IntToBoolConverter  x:Key="IntToBoolConverter"/>
 
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
@@ -58,6 +59,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:DoctorListViewModel}">
                 <view:DoctorList/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:ViewOpinionsViewModel}">
+                <view:ViewOpinions/>
             </DataTemplate>
             <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>

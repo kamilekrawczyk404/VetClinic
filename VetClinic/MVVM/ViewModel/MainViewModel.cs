@@ -54,7 +54,7 @@ namespace VetClinic.MVVM.ViewModel
             //_navigation.NavigateTo<LoginViewModel>();
 
             // get the user
-            User logged = context.User.FirstOrDefault(u => u.Email == "admin@vetclinic.com");
+            User logged = context.User.FirstOrDefault(u => u.Email == "jan.kowalski@email.com");
             _userSessionService.SetUser(logged);
 
 

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Navigation;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
@@ -16,24 +17,28 @@ namespace VetClinic.MVVM.ViewModel
     {
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
         private readonly IUserSessionService _userSessionService;
+        private readonly INavigationService _navigationService;
 
-        public DoctorListViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, IUserSessionService userSessionService)
+
+        public DoctorListViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, IUserSessionService userSessionService, INavigationService navigationService)
         {
             _contextFactory = contextFactory;
             _userSessionService = userSessionService;
+            _navigationService = navigationService;
+
 
             Doctors = new ObservableCollection<Doctor>();
 
             AddDoctorCommand = new RelayCommand(AddDoctor, _ => IsAdmin);
             EditDoctorCommand = new RelayCommand(EditDoctor, _ => IsAdmin);
             DeleteDoctorCommand = new RelayCommand(DeleteDoctor, _ => IsAdmin);
-            AddOpinionCommand = new RelayCommand(AddOpinion, _ => IsClient);
             ViewOpinionsCommand = new RelayCommand(ViewOpinions);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
 
             _ = LoadDoctorsAsync();
         }
+
 
         private ObservableCollection<Doctor> _doctors;
         public ObservableCollection<Doctor> Doctors
@@ -72,20 +77,6 @@ namespace VetClinic.MVVM.ViewModel
                     .ThenBy(d => d.Name)
                     .ToListAsync();
 
-                // Sprawdzamy czy klient już wystawił opinie dla każdego lekarza
-                if (IsClient && _userSessionService.LoggedInUser != null)
-                {
-                    var clientOpinions = await context.Opinion
-                        .Where(o => o.ClientId == _userSessionService.LoggedInUser.Id)
-                        .Select(o => o.DoctorId)
-                        .ToListAsync();
-
-                    foreach (var doctor in doctors)
-                    {
-                        doctor.HasClientOpinion = clientOpinions.Contains(doctor.Id);
-                    }
-                }
-
                 if (doctors.Count > 0)
                 {
                     Doctors = new ObservableCollection<Doctor>(doctors);
@@ -106,7 +97,6 @@ namespace VetClinic.MVVM.ViewModel
         {
             if (!IsAdmin) return;
 
-            Trace.WriteLine("Opening Add Doctor window");
         }
 
         private void EditDoctor(object obj)
@@ -121,16 +111,15 @@ namespace VetClinic.MVVM.ViewModel
 
         }
 
-        private void AddOpinion(object obj)
-        {
-            if (!(obj is Doctor doctor)) return;
-
-        }
 
         private void ViewOpinions(object obj)
         {
-            if (!(obj is Doctor doctor)) return;
+            if (!(obj is Doctor doctor))
+            {
+                return;
+            }
 
+            _navigationService.NavigateTo<ViewOpinionsViewModel>(doctor);
         }
 
         public async Task RefreshDoctorsAsync()

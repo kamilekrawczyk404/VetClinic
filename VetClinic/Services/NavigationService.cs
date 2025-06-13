@@ -32,6 +32,10 @@ namespace VetClinic.Services
         public void NavigateTo<TViewModel>(params object[] parameters) where TViewModel : ViewModel
         {
             ViewModel viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
+            if (viewModel is ViewOpinionsViewModel opinionsViewModel && parameters.Length > 0 && parameters[0] is Models.Doctor doctor)
+            {
+                opinionsViewModel.SelectedDoctor = doctor;
+            }
             CurrentView = viewModel;
         }
 

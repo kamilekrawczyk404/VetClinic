@@ -81,15 +81,7 @@
                                             VerticalAlignment="Center">
 
                                     <StackPanel Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-
-                                        <!-- Przycisk "Dodaj opinię" - pokazuje się tylko gdy klient nie ma jeszcze opinii -->
-                                        <Button Content="Dodaj opinię"
-                                                Command="{Binding DataContext.AddOpinionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"      
-                                                Style="{StaticResource SubmitButton}"
-                                                Margin="2,2,2,2"
-                                                Visibility="{Binding HasClientOpinion, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                                        </Button>
+                                     
 
                                         <!-- Przycisk "Zobacz opinie" - zawsze widoczny dla klientów -->
                                         <Button Content="Zobacz opinie"
@@ -99,15 +91,6 @@
                                                 Cursor="Hand"
                                                 Margin="2,2,2,2">
                                         </Button>
-
-                                        <!-- Informacja o istniejącej opinii -->
-                                        <TextBlock Text="Twoja opinia została już dodana"
-                                                   FontSize="10"
-                                                   Foreground="{StaticResource Gray}"
-                                                   TextWrapping="Wrap"
-                                                   HorizontalAlignment="Center"
-                                                   Margin="2,5,2,2"
-                                                   Visibility="{Binding HasClientOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                                     </StackPanel>
 
