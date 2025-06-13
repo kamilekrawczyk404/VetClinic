@@ -66,6 +66,7 @@
             <!--  First Row  -->
             <controls:DashboardItem
                 Title="Appointments"
+                ImageSource="/Images/DashboardItem/appointment-item.png"
                 Ratio="{Binding AppointmentsRatio}"
                 Value="{Binding AppointmentsCount}" />
 
@@ -73,6 +74,7 @@
                 Title="New Clients"
                 Grid.Column="1"
                 Margin="10,0,0,0"
+                ImageSource="/Images/patient-active.png"
                 Ratio="{Binding ClientsRatio}"
                 Value="{Binding ClientsCount}" />
 
@@ -81,6 +83,7 @@
                 Title="New Pets"
                 Grid.Row="1"
                 Margin="0,10,0,0"
+                ImageSource="/Images/DashboardItem/pet-item.png"
                 Ratio="{Binding PetsRatio}"
                 Value="{Binding PetsCount}" />
 
@@ -89,6 +92,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Margin="10,10,0,0"
+                ImageSource="/Images/DashboardItem/trend-up.png"
                 Ratio="{Binding RevenueRatio}"
                 Value="{Binding RevenueAmount, StringFormat=C}" />
         </Grid>
@@ -107,7 +111,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Charts and Statistics  -->
+                <!--  Sekcja z wykresami i statystykami  -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*" />
@@ -117,35 +121,11 @@
                     <!--  Most Popular Services Chart  -->
                     <controls:MostPopularServices DataContext="{Binding MostPopularServicesViewModel}" />
 
-                    <!--  Doctors Summary  -->
-                    <Border
+                    <!--  Active Doctors Control  -->
+                    <controls:ActiveDoctors
                         Grid.Column="1"
                         Margin="10,0,0,0"
-                        Padding="15"
-                        CornerRadius="10">
-                        <StackPanel>
-                            <TextBlock
-                                Margin="0,0,0,10"
-                                Style="{StaticResource MediumHeader}"
-                                Text="Active Doctors" />
-                            <ItemsControl ItemsSource="{Binding Doctors}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Margin="0,0,0,5"
-                                            Padding="10"
-                                            CornerRadius="5">
-                                            <StackPanel>
-                                                <TextBlock FontWeight="SemiBold" Text="{Binding Name}" />
-                                                <TextBlock Text="{Binding Surname}" />
-                                                <TextBlock FontStyle="Italic" Text="{Binding Specialization}" />
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
+                        DataContext="{Binding ActiveDoctorsViewModel}" />
                 </Grid>
 
                 <!--  Calendar Week  -->

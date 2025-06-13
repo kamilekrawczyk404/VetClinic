@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using System.Windows.Media;
 using System.Windows;
+using VetClinic.Models;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
 {
@@ -184,17 +185,38 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     break;
             }
 
-            var doctor = _userSessionService.LoggedInUser;
-
-            if (doctor == null)
+            var loggedUser = _userSessionService.LoggedInUser;
+            if (loggedUser == null)
                 return;
 
+            List<Appointment> appointments;
+
             // ...existing code...
-            var appointments = await context.Appointment
-                .Where(a => a.DoctorId == doctor.Id && a.AppointmentDate >= startingDate)
-                .Include(a => a.AppointmentServices)
-                .ThenInclude(asv => asv.Service)
-                .ToListAsync();
+            if (_userSessionService.IsAdmin)
+            {
+                // Admin sees all appointments from all doctors
+                appointments = await context.Appointment
+                    .Where(a => a.AppointmentDate >= startingDate)
+                    .Include(a => a.AppointmentServices)
+                    .ThenInclude(asv => asv.Service)
+                    .ToListAsync();
+            }
+            else if (_userSessionService.IsDoctor)
+            {
+                // Doctor sees only their own appointments
+                appointments = await context.Appointment
+                    .Where(a => a.DoctorId == loggedUser.Id && a.AppointmentDate >= startingDate)
+                    .Include(a => a.AppointmentServices)
+                    .ThenInclude(asv => asv.Service)
+                    .ToListAsync();
+            }
+            else
+            {
+                // If user is neither admin nor doctor, return empty result
+                _allServicesCount = new List<ServiceCount>();
+                FitGraphData();
+                return;
+            }
 
 
             _allServicesCount = appointments

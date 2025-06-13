@@ -220,6 +220,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
             AppointmentViewModel = new AppointmentViewModel(ExitAppointment, GetAllAppointments, contextFactory);
             MostPopularServicesViewModel = new MostPopularServicesViewModel(contextFactory, userSessionService);
+            ActiveDoctorsViewModel = new ActiveDoctorsViewModel(contextFactory);
 
             SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
             SetCurrentAppointmentCommand = new AsyncRelayCommand(SetCurrentAppointment);
@@ -314,6 +315,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 await GetAppointmentsCount(prev7Start, prev7End, last7Start, today);
                 await GetClientsCount(prev7Start, prev7End, last7Start, today);
                 await GetPetsCount(prev7Start, prev7End, last7Start, today);
+                await ActiveDoctorsViewModel.RefreshAsync();
                 //await GetRevenueAmount(prev7Start, prev7End, last7Start, today);
                 await GetAllAppointments();
                 await LoadDoctors();
@@ -467,6 +469,17 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             else
             {
                 PetsRatio = ((double)(last7Count - prev7Count) / prev7Count) * 100;
+            }
+        }
+
+        private ActiveDoctorsViewModel _activeDoctorsViewModel;
+        public ActiveDoctorsViewModel ActiveDoctorsViewModel
+        {
+            get => _activeDoctorsViewModel;
+            set
+            {
+                _activeDoctorsViewModel = value;
+                OnPropertyChanged();
             }
         }
 
