@@ -22,6 +22,8 @@ namespace VetClinic.Models
         [Column("description")]
         public string? Description { get; set; }
 
+        [NotMapped]
+        public bool HasClientOpinion { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<Opinion> Opinions { get; set; }

@@ -40,6 +40,7 @@
             <utils:AppointmentStatusToBrushColorConventer x:Key="AppointmentStatusToBrushColorConventer"/>
             <utils:FullNameConverter x:Key="FullNameConverter"/>
             <utils:StarRatingConverter x:Key="StarRatingConverter"/>
+            <utils:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
 
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
@@ -54,6 +55,9 @@
             </DataTemplate>
             <DataTemplate DataType="{x:Type dashboardViewModel:ClientDashboardViewModel}">
                 <dashboardView:ClientDashboard/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:DoctorListViewModel}">
+                <view:DoctorList/>
             </DataTemplate>
             <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
