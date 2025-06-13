@@ -28,7 +28,6 @@ namespace VetClinic.MVVM.ViewModel
 
         public ViewOpinionsViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, IUserSessionService userSessionService, INavigationService navigationService)
         {
-     
             _contextFactory = contextFactory;
             _userSessionService = userSessionService;
             _navigationService = navigationService;
@@ -127,6 +126,7 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
+        // Sprawdzenie czy zalogowany użytkownik to klient (role != admin, itp.)
         public bool IsClient => _userSessionService.IsClient;
 
         public bool CanAddOpinion => IsClient && !HasUserOpinion && IsNotAddingOrEditingOpinion;
@@ -141,7 +141,6 @@ namespace VetClinic.MVVM.ViewModel
         public RelayCommand CancelOpinionCommand { get; }
         public RelayCommand DeleteOpinionCommand { get; }
 
-      
         public async Task LoadOpinionsAsync()
         {
             if (SelectedDoctor == null)
@@ -153,47 +152,37 @@ namespace VetClinic.MVVM.ViewModel
 
             try
             {
-                var totalOpinionsCount = await context.Opinion.CountAsync();
-
-                var doctorIdsInOpinions = await context.Opinion
-                    .Select(o => o.DoctorId)
-                    .Distinct()
-                    .ToListAsync();
-
-                var opinionsForThisDoctor = await context.Opinion
-                    .Where(o => o.DoctorId == SelectedDoctor.Id)
-                    .CountAsync();
-
+                // Ładowanie opinii dla wybranego lekarza z dołączeniem danych użytkownika (klienta)
                 var opinions = await context.Opinion
-                    .Include(o => o.Client)
+                    .Include(o => o.User) // Zamiast o.Client teraz o.User
                     .Where(o => o.DoctorId == SelectedDoctor.Id)
                     .OrderByDescending(o => o.CreatedAt)
-                    .ToListAsync(); 
+                    .ToListAsync();
 
                 var detailedOpinions = opinions.Select(o => new DetailedOpinion
                 {
                     Opinion = o,
-                    ClientName = $"{o.Client.Name} {o.Client.Surname}",
+                    ClientName = $"{o.User.Name} {o.User.Surname}", // Zmiana z o.Client na o.User
                     DoctorName = $"{SelectedDoctor.Name} {SelectedDoctor.Surname}",
                     CommentPreview = o.Comment.Length > 100 ? o.Comment.Substring(0, 100) + "..." : o.Comment,
                     TimeAgoText = GetTimeAgoText(o.CreatedAt)
                 }).ToList();
 
-            
                 Opinions = new ObservableCollection<DetailedOpinion>(detailedOpinions);
 
+                // Znajdowanie opinii zalogowanego użytkownika
                 if (IsClient && _userSessionService.LoggedInUser != null)
                 {
-                    UserOpinion = detailedOpinions.FirstOrDefault(o => o.Opinion.ClientId == _userSessionService.LoggedInUser.Id);  
+                    UserOpinion = detailedOpinions.FirstOrDefault(o => o.Opinion.ClientId == _userSessionService.LoggedInUser.Id); 
                 }
-              
+
                 OnPropertyChanged(nameof(CanAddOpinion));
                 OnPropertyChanged(nameof(CanEditOpinion));
                 OnPropertyChanged(nameof(CanDeleteOpinion));
             }
             catch (Exception ex)
             {
-           
+                Trace.TraceError($"Error loading opinions: {ex.Message}");
                 Opinions = new ObservableCollection<DetailedOpinion>();
             }
         }
@@ -234,13 +223,13 @@ namespace VetClinic.MVVM.ViewModel
                     var newOpinion = new Opinion
                     {
                         DoctorId = SelectedDoctor.Id,
-                        ClientId = _userSessionService.LoggedInUser.Id,
+                        ClientId = _userSessionService.LoggedInUser.Id, // Zmiana z ClientId na UserId
                         Comment = NewOpinionComment.Trim(),
                         Rating = NewOpinionRating,
                         CreatedAt = DateTime.Now
                     };
 
-                    context.Opinion.Add(newOpinion);
+                    context.Opinion.Add(newOpinion); // Zmiana z Opinion na Opinions (nazwa tabeli)
                 }
                 else if (IsEditingOpinion && UserOpinion != null)
                 {

@@ -19,7 +19,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
         private readonly IUserSessionService _userSessionService;
 
-        private Client _client;
+        private User _client; 
 
         private string _fullName;
         public string FullName
@@ -142,16 +142,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private ObservableCollection<AppointmentStatus> _statuses;
-        public ObservableCollection<AppointmentStatus> Statuses
-        {
-            get => _statuses;
-            set
-            {
-                _statuses = value;
-                OnPropertyChanged();
-            }
-        }
 
         public RelayCommand SelectPetCommand { get; }
         public RelayCommand SelectAppointmentCommand { get; }
@@ -196,17 +186,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private async Task OnUserChanged()
         {
             var user = _userSessionService.LoggedInUser;
-            using var context = _contextFactory.CreateDbContext();
 
-            var appointmentStatuses = await GetAppointmentStatuses();
-            Statuses = new ObservableCollection<AppointmentStatus>(appointmentStatuses);
-
-            _client = await context.Client
-                .Include(c => c.User)
-                .FirstOrDefaultAsync(c => c.User == user);
-
-            if (_client != null)
+            if (user != null)
             {
+                _client = user; 
+
                 FullName = $"{_client.Name} {_client.Surname}";
 
                 DateTime today = DateTime.Today;
@@ -223,14 +207,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
             else
             {
-                Debug.WriteLine("Client not found for the logged-in user.");
+                Debug.WriteLine("No user logged in.");
             }
-        }
-
-        private async Task<List<AppointmentStatus>> GetAppointmentStatuses()
-        {
-            using var context = _contextFactory.CreateDbContext();
-            return await context.AppointmentStatus.ToListAsync();
         }
 
         private async Task GetPetsCount(DateTime prev7Start, DateTime prev7End, DateTime last7Start, DateTime today)
@@ -238,13 +216,13 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             using var context = _contextFactory.CreateDbContext();
 
             int currentCount = await context.Pet
-                .CountAsync(p => p.ClientId == _client.Id);
+                .CountAsync(p => p.UserId == _client.Id);
 
             int last7Count = await context.Pet
-                .CountAsync(p => p.ClientId == _client.Id && p.CreatedAt >= last7Start && p.CreatedAt <= today);
+                .CountAsync(p => p.UserId == _client.Id && p.CreatedAt >= last7Start && p.CreatedAt <= today);
 
             int prev7Count = await context.Pet
-                .CountAsync(p => p.ClientId == _client.Id && p.CreatedAt >= prev7Start && p.CreatedAt <= prev7End);
+                .CountAsync(p => p.UserId == _client.Id && p.CreatedAt >= prev7Start && p.CreatedAt <= prev7End);
 
             PetsCount = currentCount;
 
@@ -265,13 +243,13 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             DateTime nextWeek = today.AddDays(7);
 
             int currentCount = await context.Appointment
-                .CountAsync(a => a.Pet.ClientId == _client.Id && a.AppointmentDate >= today && a.AppointmentDate <= nextWeek);
+                .CountAsync(a => a.Pet.UserId == _client.Id && a.AppointmentDate >= today && a.AppointmentDate <= nextWeek);
 
             int last7Count = await context.Appointment
-                .CountAsync(a => a.Pet.ClientId == _client.Id && a.AppointmentDate >= last7Start && a.AppointmentDate <= today);
+                .CountAsync(a => a.Pet.UserId == _client.Id && a.AppointmentDate >= last7Start && a.AppointmentDate <= today);
 
             int prev7Count = await context.Appointment
-                .CountAsync(a => a.Pet.ClientId == _client.Id && a.AppointmentDate >= prev7Start && a.AppointmentDate <= prev7End);
+                .CountAsync(a => a.Pet.UserId == _client.Id && a.AppointmentDate >= prev7Start && a.AppointmentDate <= prev7End);
 
             UpcomingAppointmentsCount = currentCount;
 
@@ -290,11 +268,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             using var context = _contextFactory.CreateDbContext();
 
             int currentCount = await context.Prescription
-                .CountAsync(p => p.Appointment.Pet.ClientId == _client.Id && p.ExpiryDate >= today);
+                .CountAsync(p => p.Appointment.Pet.UserId == _client.Id && p.ExpiryDate >= today);
 
             ActivePrescriptionsCount = currentCount;
 
-            ActivePrescriptionsRatio = double.NaN; 
+            ActivePrescriptionsRatio = double.NaN;
         }
 
         private async Task GetLastOpinions()
@@ -304,9 +282,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             var lastOpinions = await context.Opinion
                 .Where(o => o.ClientId == _client.Id)
                 .Include(o => o.Doctor)
-                .ThenInclude(d => d.User)
                 .OrderByDescending(o => o.CreatedAt)
-                .Take(2) 
+                .Take(2)
                 .ToListAsync();
 
             LastOpinions.Clear();
@@ -318,7 +295,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     LastOpinions.Add(new DetailedOpinion
                     {
                         Opinion = opinion,
-                        DoctorName = $"Dr {opinion.Doctor.Name} {opinion.Doctor.Surname}"
+                        DoctorName = $"{opinion.Doctor.Name} {opinion.Doctor.Surname}"
                     });
                 }
                 HasOpinions = true;
@@ -332,9 +309,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         private async Task GetClientPets()
         {
             using var context = _contextFactory.CreateDbContext();
-
             var pets = await context.Pet
-                .Where(p => p.ClientId == _client.Id)
+                .Where(p => p.UserId == _client.Id)
                 .OrderBy(p => p.Name)
                 .ToListAsync();
 
@@ -345,7 +321,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 ClientPets.Add(new DetailedPet
                 {
                     Pet = pet,
-                    Client = _client
+                    Client = _client 
                 });
             }
         }
@@ -358,13 +334,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             DateTime nextTwoWeeks = today.AddDays(14);
 
             var appointments = await context.Appointment
-                .Where(a => a.Pet.ClientId == _client.Id && a.AppointmentDate >= today && a.AppointmentDate <= nextTwoWeeks)
-                .Include(a => a.AppointmentStatus)
+                .Where(a => a.Pet.UserId == _client.Id && a.AppointmentDate >= today && a.AppointmentDate <= nextTwoWeeks)
                 .Include(a => a.Pet)
                 .Include(a => a.Doctor)
-                .ThenInclude(d => d.User)
                 .OrderBy(a => a.AppointmentDate)
-                .Take(5) // Limit to 5 upcoming appointments
+                .Take(5)
                 .ToListAsync();
 
             UpcomingAppointments.Clear();
@@ -375,19 +349,17 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 {
                     Appointment = appointment,
                     Pet = appointment.Pet,
-                    Client = _client,
-                    Doctor = appointment.Doctor,
-                    Statuses = Statuses
+                    Client = _client, 
+                    Doctor = appointment.Doctor
                 });
             }
         }
     }
 
-    // Helper class for detailed pet information
     public class DetailedPet
     {
         public Pet Pet { get; set; }
-        public Client Client { get; set; }
+        public User Client { get; set; } 
 
         public string DisplayName => Pet?.Name ?? "Unknown";
         public string SpeciesName => Pet?.Species ?? "Unknown";

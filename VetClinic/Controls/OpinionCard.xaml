@@ -39,7 +39,7 @@
                         <TextBlock Text="★" FontSize="14" Margin="1,0">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="#DDD"/>
+                                    <Setter Property="Foreground" Value="{StaticResource White}"/>
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=Opinion.Opinion.Rating, Converter={StaticResource StarRatingConverter}, ConverterParameter=1}" 
                                                      Value="True">

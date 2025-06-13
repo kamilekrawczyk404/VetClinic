@@ -19,13 +19,11 @@ namespace VetClinic.MVVM.ViewModel
         private readonly IUserSessionService _userSessionService;
         private readonly INavigationService _navigationService;
 
-
         public DoctorListViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, IUserSessionService userSessionService, INavigationService navigationService)
         {
             _contextFactory = contextFactory;
             _userSessionService = userSessionService;
             _navigationService = navigationService;
-
 
             Doctors = new ObservableCollection<Doctor>();
 
@@ -35,10 +33,8 @@ namespace VetClinic.MVVM.ViewModel
             ViewOpinionsCommand = new RelayCommand(ViewOpinions);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
-
             _ = LoadDoctorsAsync();
         }
-
 
         private ObservableCollection<Doctor> _doctors;
         public ObservableCollection<Doctor> Doctors
@@ -68,27 +64,22 @@ namespace VetClinic.MVVM.ViewModel
         private async Task LoadDoctorsAsync()
         {
             using var context = _contextFactory.CreateDbContext();
-
             try
             {
-                var doctors = await context.Doctor
-                    .Include(d => d.User)
+                // W nowej strukturze tabela doctors jest niezależna - nie ma relacji z users
+                var doctors = await context.Doctor // Pozostawiamy Doctor zgodnie z życzeniem
                     .OrderBy(d => d.Surname)
                     .ThenBy(d => d.Name)
                     .ToListAsync();
 
-                if (doctors.Count > 0)
-                {
-                    Doctors = new ObservableCollection<Doctor>(doctors);
-                }
-                else
-                {
-                    Doctors = new ObservableCollection<Doctor>();
-                }
+                Doctors = new ObservableCollection<Doctor>(doctors);
+
+                Trace.WriteLine($"Loaded {doctors.Count} doctors from database");
             }
             catch (Exception ex)
             {
-                Trace.TraceWarning($"Cannot fetch doctors: {ex.Message}");
+                Trace.TraceError($"Cannot fetch doctors: {ex.Message}");
+                Trace.TraceError($"Stack trace: {ex.StackTrace}");
                 Doctors = new ObservableCollection<Doctor>();
             }
         }
@@ -96,21 +87,23 @@ namespace VetClinic.MVVM.ViewModel
         private void AddDoctor(object obj)
         {
             if (!IsAdmin) return;
-
+            // Implementacja dodawania lekarza
+            // _navigationService.NavigateTo<AddDoctorViewModel>();
         }
 
         private void EditDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
-
+            // Implementacja edycji lekarza
+            // _navigationService.NavigateTo<EditDoctorViewModel>(doctor);
         }
 
         private void DeleteDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
-
+            // Implementacja usuwania lekarza
+            // Można dodać dialog potwierdzenia i następnie usunięcie z bazy
         }
-
 
         private void ViewOpinions(object obj)
         {
@@ -118,7 +111,6 @@ namespace VetClinic.MVVM.ViewModel
             {
                 return;
             }
-
             _navigationService.NavigateTo<ViewOpinionsViewModel>(doctor);
         }
 
