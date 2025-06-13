@@ -17,6 +17,7 @@
     <None Remove="Images\DashboardItem\trend-down.png" />
     <None Remove="Images\DashboardItem\trend-flat.png" />
     <None Remove="Images\DashboardItem\trend-up.png" />
+    <None Remove="Images\DataGrid\add.png" />
     <None Remove="Images\DataGrid\trash-bin.png" />
     <None Remove="Images\doctor-active.png" />
     <None Remove="Images\doctor.png" />
@@ -74,6 +75,7 @@
     <Resource Include="Images\DashboardItem\trend-down.png" />
     <Resource Include="Images\DashboardItem\trend-flat.png" />
     <Resource Include="Images\DashboardItem\trend-up.png" />
+    <Resource Include="Images\DataGrid\add.png" />
     <Resource Include="Images\DataGrid\trash-bin.png" />
     <Resource Include="Images\doctor-active.png" />
     <Resource Include="Images\doctor.png" />

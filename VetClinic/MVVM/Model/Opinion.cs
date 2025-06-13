@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
-    [Table("opinion")]
+    [Table("opinions")]
     public class Opinion
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("client_id")]
+        [Column("user_id")]
         public int ClientId { get; set; }
 
         [Column("doctor_id")]
@@ -30,7 +30,7 @@ namespace VetClinic.Models
         [Column("created_at")]  
         public DateTime CreatedAt { get; set; }
 
-        public Client Client { get; set; }
+        public User User { get; set; }
         public Doctor Doctor { get; set; }
     }
 }

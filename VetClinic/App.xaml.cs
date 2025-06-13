@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 using VetClinic.Database;
-using VetClinic.Interfaces;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
 using VetClinic.MVVM.ViewModel.Auth;
@@ -89,6 +89,7 @@ public partial class App : Application
         try
         {
             await dbContext.Database.OpenConnectionAsync();
+
             //MessageBox.Show("Database connection successful", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         } catch(Exception ex)
         {

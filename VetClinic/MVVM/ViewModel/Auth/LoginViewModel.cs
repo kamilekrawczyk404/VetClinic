@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using VetClinic.Models;
+using VetClinic.MVVM.ViewModel.Dashboard;
 using VetClinic.Services;
 using VetClinic.Utils;
 
@@ -86,28 +88,39 @@ namespace VetClinic.MVVM.ViewModel.Auth
             {
                 if (string.IsNullOrWhiteSpace(Email))
                 {
-                    EmailErrorMessage = "This field is required.";
+                    EmailErrorMessage = "| This field is required.";
                 }
                 if (string.IsNullOrWhiteSpace(Password))
                 {
-                    PasswordErrorMessage = "This field is required.";
+                    PasswordErrorMessage = "| This field is required.";
                 }
                 return;
             }
 
             var user = await _userService.LoginUserAsync(Email, Password);
-                
+            Doctor doctor = new Doctor();
+            
+            // Check for doctor credentials
             if (user == null)
             {
-                PasswordErrorMessage = EmailErrorMessage = "Invalid email or password.";
+                doctor = await _userService.LoginDoctorAsync(Email, Password);
+            }
+                
+            if (user == null && doctor == null)
+            {
+                PasswordErrorMessage = EmailErrorMessage = "| Invalid email or password.";
                 return;
             }
 
-            // Navigate user to his dashboard
-
-            _userSessionService.SetUser(user);
-            // there are 3 dashboards, navigate them properly based on user role
-            //_navigation.NavigateTo<DashboardViewModel>();
+            if (user != null)
+            {
+                _userSessionService.SetUser(user);
+            }
+            else if (doctor != null)
+            {
+                _userSessionService.SetDoctor(doctor);
+                _navigation.NavigateTo<DoctorDashboardViewModel>();
+            }
         }
     }
 }

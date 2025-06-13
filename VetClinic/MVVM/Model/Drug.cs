@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
-    [Table("drug")]
+    [Table("drugs")]
     public class Drug
     {
         [Column("id")]

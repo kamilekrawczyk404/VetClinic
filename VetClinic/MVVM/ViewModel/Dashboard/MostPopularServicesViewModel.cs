@@ -17,7 +17,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
     // This view model handling information about most popular services for each doctor.
     // Doctor can change time range from single week, month or a year.
     // All data is displayed in the charts from LiveCharts library.
-
     class ServiceCount
     {
         public string ServiceName { get; set; }
@@ -57,9 +56,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 OnPropertyChanged();
             }
         }
-        //public ICartesianAxis[] YAxis { get; set; } = [
-        //    new Axis {MinLimit = 0, MaxLimit = 10}
-        //];
 
         private ObservableCollection<string> _timeIntervals;
         public ObservableCollection<string> TimeIntervals
@@ -109,7 +105,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     if (SelectedServicesCount <= _allServicesCount.Count())
                     {
                         // only cut current collection of those services
-                        Trace.WriteLine("Cutting!");
                         _allServicesCount = _allServicesCount.Take(SelectedServicesCount).ToList();
                         FitGraphData();
                     }
@@ -123,6 +118,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         }
 
         private IUserSessionService _userSessionService;
+
         private IDbContextFactory<VeterinaryClinicContext> _contextFactory;
 
         private List<ServiceCount> _allServicesCount { get; set; } = new();
@@ -145,8 +141,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             {
                 2,
                 4,
-                6,
-                8,
+                6
             };
 
             SelectedServicesCount = ServicesCount.Last();
@@ -155,7 +150,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             YAxis = new();
             XAxis = new();
 
-            _userSessionService.UserChanged += async () => await GetMostPopularServices();
+            GetMostPopularServices();
         }
 
         private async Task GetMostPopularServices()
@@ -184,7 +179,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     break;
             }
 
-            var doctor = _userSessionService.LoggedInUser;
+            var doctor = _userSessionService?.LoggedInDoctor;
 
             if (doctor == null)
                 return;

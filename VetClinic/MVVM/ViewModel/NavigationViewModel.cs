@@ -11,28 +11,6 @@ namespace VetClinic.MVVM.ViewModel
 {
     public class NavigationViewModel : ViewModel
     {
-        // Admin will have:
-        // - Dashboard
-        // - Appointments
-        // - Clients
-        // - Pets
-        // - Doctors
-        // - Drugs
-        // - Prescriptions
-
-        // Doctor will have:
-        // - Dashboard
-        // - Appointments (only with his/her patients)
-        // - Drugs (can onlt view drugs, not manage them)
-        // - Prescriptions (only with his/her patients)
-
-        // Client will have:
-        // - Dashboard
-        // - Appointments (only with his/her pets)
-        // - Pets (only his/her pets)
-        // - Prescriptions (only with his/her pets)
-        // - Doctors
-
         // display rest of the comnponents
         private bool _areOtherVisible;
         public bool AreOtherVisible
@@ -118,12 +96,6 @@ namespace VetClinic.MVVM.ViewModel
                 ArePetsVisible = true;
                 AreDoctorsVisible = true;
             }
-
-            // show all updated flags
-            Trace.WriteLine("doctor: " + AreDoctorsVisible);
-            Trace.WriteLine("client: " + AreClientsVisible);
-            Trace.WriteLine("pets: " + ArePetsVisible);
-            Trace.WriteLine("drugs: " + AreDrugsVisible);
         }
     }
 }

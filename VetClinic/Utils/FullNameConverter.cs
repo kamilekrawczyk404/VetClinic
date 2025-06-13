@@ -13,8 +13,8 @@ namespace VetClinic.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Client client)
-                return $"{client.Name} {client.Surname}";
+            if (value is User user)
+                return $"{user.Name} {user.Surname}";
             else if (value is Doctor doctor)
                 return $"Dr. {doctor.Name} {doctor.Surname}";
             return value?.ToString() ?? string.Empty;

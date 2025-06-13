@@ -52,10 +52,13 @@ namespace VetClinic.MVVM.ViewModel
             _navigation.NavigateTo<DoctorListViewModel>();
 
             //_navigation.NavigateTo<LoginViewModel>();
-
             // get the user
             User logged = context.User.FirstOrDefault(u => u.Email == "jan.kowalski@email.com");
             _userSessionService.SetUser(logged);
+
+            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "marek.weterynarz@vetclinic.com");
+            _userSessionService.SetDoctor(logged);
+            _navigation.NavigateTo<DoctorDashboardViewModel>();
 
 
             _navigationViewModel = navigationViewModel;

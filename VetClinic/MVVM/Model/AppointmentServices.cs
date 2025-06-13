@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,19 +10,18 @@ using System.Threading.Tasks;
 namespace VetClinic.Models
 {
     [Table("appointmentservices")]
+    [Keyless]
     public class AppointmentServices
     {
-        [Key]
-        [Column("id")]
-        public int Id { get; set; }
-
         [Column("appointment_id")]
+        [Key]
         public int AppointmentId { get; set; }
 
         [Column("service_id")]
+        [Key]
         public int ServiceId { get; set; }
 
-        public Appointment Appointment { get; set; }
-        public Service Service { get; set; }
+        public virtual Appointment Appointment { get; set; }
+        public virtual Service Service { get; set; }
     }
 }

@@ -81,9 +81,9 @@
     </UserControl.Resources>
 
     <ComboBox
-        ItemsSource="{Binding Statuses, ElementName=Root, Mode=TwoWay}"
-        SelectedItem="{Binding Status, ElementName=Root, Mode=TwoWay}"
-        IsEnabled="{Binding IsEditable, ElementName=Root}"
+        ItemsSource="{Binding Path=Statuses, ElementName=Root, Mode=TwoWay}"
+        SelectedItem="{Binding Path=Status, ElementName=Root, Mode=TwoWay}"
+        IsEnabled="{Binding Path=IsEditable, ElementName=Root}"
         Background="Transparent"
         BorderThickness="0"
         HorizontalContentAlignment="Left"
@@ -97,9 +97,9 @@
                     CornerRadius="3"
                     Margin="2"
                     Padding="6,2"
-                    BorderBrush="{Binding Status, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
-                    Background="{Binding Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
-                    <TextBlock Text="{Binding Status}" Foreground="{StaticResource Gray}"/>
+                    BorderBrush="{Binding Path=Status, ElementName=Root, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
+                    Background="{Binding Path=Status, ElementName=Root, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
+                    <TextBlock Text="{Binding Path=Status, ElementName=Root}" Foreground="{StaticResource Gray}"/>
                 </Border>
             </DataTemplate>
         </ComboBox.ItemTemplate>
@@ -135,7 +135,8 @@
                         ClickMode="Press"
                         Width="22"
                         Visibility="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type local:AppointmentStatusComboBox}}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        Height="15"
+                        Height="22"
+                        Margin="-2,0,0,0"
                         Style="{StaticResource ComboBoxArrowButtonStyle}"/>
 
                     <Popup

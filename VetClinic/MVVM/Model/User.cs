@@ -4,33 +4,34 @@ using VetClinic.Models;
 
 namespace VetClinic.Models
 {
-    [Table("user")]
+    [Table("users")]
     public class User
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
-        [Required]
-        [Column("role_id")]
-        public int RoleId { get; set; }
+        [Column("name")]
+        public string Name { get; set; }
 
-        [Required]
+        [Column("surname")]
+        public string Surname { get; set; }
+
         [EmailAddress]
         [Column("email")]
         public string Email { get; set; }
 
-        [Required]
         [Column("password")]
         public string PasswordHash { get; set; }
 
-        [Required]
         [Column("gender")]
         public string Gender { get; set; } = "Male";
 
-        [Required]
-        [Column("telephone")]
-        public string Telephone { get; set; }
+        [Column("role")]
+        public string Role { get; set; }
+
+        [Column("telephone_number")]
+        public int TelephoneNumber { get; set; }
 
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; } = DateTime.Now;
@@ -39,9 +40,8 @@ namespace VetClinic.Models
         [Column("last_login")]
         public DateTime? LastLogin { get; set; } = DateTime.Now;
 
-        public virtual Admin Admin { get; set; }
-        public virtual Doctor Doctor { get; set; }
-        public virtual Client Client { get; set; }
-        public virtual Role Role { get; set; }
+        public virtual ICollection<Pet> Pets { get; set; }
+
+        public virtual ICollection<Opinion> Opinions { get; set; }
     }
 }

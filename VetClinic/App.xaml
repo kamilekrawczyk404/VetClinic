@@ -68,6 +68,7 @@
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
            <SolidColorBrush x:Key="UltraLightTurquise">#dff4f1</SolidColorBrush>
            <SolidColorBrush x:Key="White">#fffafb</SolidColorBrush>
+            <SolidColorBrush x:Key="UltraLightGray">#fbeff2</SolidColorBrush>
            <SolidColorBrush x:Key="Gray">#2b2c28</SolidColorBrush>
            <SolidColorBrush x:Key="LightGray">#afb2a9</SolidColorBrush>
            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>

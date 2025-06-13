@@ -27,10 +27,6 @@ namespace VetClinic.MVVM.View.Window
         public PrescriptionDetailsWindow(Prescription prescription, Action<Prescription> prescriptionUpdated, IDbContextFactory<VeterinaryClinicContext> context)
         {
             InitializeComponent();
-            var vm =  new PrescriptionDetailsWindowViewModel(prescription, prescriptionUpdated, context);
-            
-            DataContext = vm;
-            vm.PrescriptionUpdated += OnPrescriptionUpdated;
         }
 
         private void OnPrescriptionUpdated(Prescription _)

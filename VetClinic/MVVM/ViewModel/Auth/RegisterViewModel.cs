@@ -171,7 +171,7 @@ namespace VetClinic.MVVM.ViewModel.Auth
                 return;
             }
 
-            User newClient = await _userService.CreateClientAsync(Name, Surname, Email, Telephone, Password);
+            User newClient = await _userService.CreateClientAsync(Name, Surname, Email, Telephone, Password, "Male", DateTime.Now);
 
             // after successful registration navigate to login view and show success message
 
@@ -245,7 +245,7 @@ namespace VetClinic.MVVM.ViewModel.Auth
                 EmailErrorMessage = "Email is too long. Max length is 50 symbols.";
             }
 
-            bool isEmailUnique = await _userService.IsEmailUniqueAsync(Email);
+            bool isEmailUnique = await _userService.IsUserEmailUniqueAsync(Email);
 
             if (!isEmailUnique)
             {

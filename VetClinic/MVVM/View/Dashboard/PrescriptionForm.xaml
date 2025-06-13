@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="VetClinic.MVVM.View.Dashboard.PrescriptionForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VetClinic.MVVM.View.Dashboard"
+             xmlns:input="clr-namespace:VetClinic.Controls.Input"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:controls="clr-namespace:VetClinic.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Style="{StaticResource BorderWrapper}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Prescription" Style="{StaticResource MediumHeader}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1">
+                    <Button Style="{StaticResource ListViewButton}" Command="{Binding SavePrescriptionCommand}" Content="Save prescription"  HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <input:InputControl Title="Client name"  Text="{Binding Prescription.Appointment.Pet.User, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                <input:InputControl Title="Doctor name" Margin="5,0"  Grid.Column="1" Text="{Binding Prescription.Appointment.Doctor, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                <input:CustomDatePicker Grid.Column="2" ErrorMessage="{Binding ExpiryDateErrorMessage}" Title="Expiry date" SelectedDate="{Binding ExpiryDate}"/>
+            </Grid>
+
+            <Border Grid.Row="2" Margin="0,10" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Selected Drugs" Style="{StaticResource SmallHeader}" />
+                    <DataGrid
+                        ItemsSource="{Binding PrescriptionDrugs, Mode=TwoWay}"
+                        SelectionMode="Single"
+                        AutoGenerateColumns="False"
+                        MaxHeight="200"
+                        Style="{StaticResource CustomDataGridStyle}" 
+                        RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                        CellStyle="{StaticResource CustomDataGridCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}"/>
+                            <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}"/>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                            <DataGridTextColumn Header="Dosage Instructions" Binding="{Binding DosageInstructions}" Width="*"/>
+                            <DataGridTemplateColumn Header="Actions" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <controls:RemoveButton
+                                            Command="{Binding DataContext.RemoveDrugFromPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="3" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="List of drugs" Style="{StaticResource SmallHeader}"/>
+                    <DataGrid 
+                        x:Name="DrugDataGrid"
+                        ItemsSource="{Binding Drugs, Mode=TwoWay}"
+                        AutoGenerateColumns="False"
+                        MaxHeight="200"
+                        Style="{StaticResource CustomDataGridStyle}" 
+                        RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                        CellStyle="{StaticResource CustomDataGridCellStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
+                            <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}"/>
+                            <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}"/>
+                            <DataGridTextColumn Header="Stock Quantity" Binding="{Binding Quantity}" Width="*"/>
+                            <DataGridTemplateColumn Header="Actions" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <controls:AddButton 
+                                            Command="{Binding DataContext.AddDrugToPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

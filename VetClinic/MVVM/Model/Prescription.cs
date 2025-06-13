@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace VetClinic.Models
 {
-    [Table("prescription")]
+    [Table("prescriptions")]
     public class Prescription
     {
         [Key]
@@ -18,9 +18,6 @@ namespace VetClinic.Models
 
         [Column("appointment_id")]
         public int AppointmentId { get; set; }
-
-        [Column("instructions")]
-        public string Instructions { get; set; }
 
         [Column("expiry_date")]
         public DateTime ExpiryDate { get; set; }
