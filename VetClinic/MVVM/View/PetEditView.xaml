@@ -151,11 +151,27 @@
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
                             <ComboBox ItemsSource="{Binding AvailableOwners}"
-                                      SelectedItem="{Binding EditingPet.User}"
-                                      DisplayMemberPath="FullName"
-                                      FontSize="14"
-                                      Height="35"
-                                      Padding="8,6"/>
+                                  SelectedItem="{Binding EditingPet.User}"
+                                  FontSize="14"
+                                  Height="35"
+                                  Padding="8,6"
+                                  MinWidth="250">
+                                  <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Width="220">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" 
+                                                       Text="{Binding Name}" 
+                                                       FontWeight="Normal"/>
+                                            <TextBlock Grid.Column="1" 
+                                                       Text="{Binding Surname}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15"

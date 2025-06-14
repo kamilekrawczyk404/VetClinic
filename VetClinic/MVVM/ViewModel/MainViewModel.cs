@@ -50,7 +50,7 @@ namespace VetClinic.MVVM.ViewModel
 
             // _navigation.NavigateTo<DoctorDashboardViewModel>();
             // _navigation.NavigateTo<DoctorListViewModel>();
-             _navigation.NavigateTo<PetListViewModel>();
+             _navigation.NavigateTo<AppointmentListViewModel>();
 
 
             //_navigation.NavigateTo<LoginViewModel>();
@@ -58,9 +58,9 @@ namespace VetClinic.MVVM.ViewModel
             User logged = context.User.FirstOrDefault(u => u.Email == "anna.nowak@example.com");
            _userSessionService.SetUser(logged);
 
-         //   Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "marek.weterynarz@vetclinic.com");
-       //     _userSessionService.SetDoctor(logged);
-         //   _navigation.NavigateTo<DoctorDashboardViewModel>();
+          // Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "marek.weterynarz@vetclinic.com");
+          //  _userSessionService.SetDoctor(logged);
+          //  _navigation.NavigateTo<DoctorDashboardViewModel>();
 
 
           //  _navigationViewModel = navigationViewModel;
