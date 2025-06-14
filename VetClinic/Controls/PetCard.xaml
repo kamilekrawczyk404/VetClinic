@@ -19,7 +19,10 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Border Style="{StaticResource BorderDefault}" Margin="0,0,5,0" MinWidth="150" CornerRadius="4" Grid.RowSpan="3">
+   
+            <TextBlock Text="Pet information" Style="{StaticResource MediumHeader}" Grid.ColumnSpan="2" Margin="0,0,0,5" />
+
+            <Border Grid.Row="1" Style="{StaticResource BorderDefault}" Margin="0,0,5,0" MinWidth="150" CornerRadius="4">
                 <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -31,7 +34,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Column="1" Style="{StaticResource BorderDefault}" CornerRadius="4" Grid.RowSpan="3">
+            <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderDefault}" CornerRadius="4">
                 <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>

@@ -16,63 +16,35 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `Appointments`
+-- Table structure for table `Users`
 --
 
-DROP TABLE IF EXISTS `Appointments`;
+DROP TABLE IF EXISTS `Users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Appointments` (
+CREATE TABLE `Users` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `pet_id` int NOT NULL,
-  `doctor_id` int NOT NULL,
-  `status` enum('Sheduled','In Progress','Completed','Cancelled') NOT NULL DEFAULT 'Sheduled',
-  `reason_for_visit` varchar(255) NOT NULL,
-  `diagnosis` varchar(255) NOT NULL,
-  `notes` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `surname` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `gender` enum('Female','Male') NOT NULL,
+  `role` enum('client','admin') NOT NULL DEFAULT 'client',
+  `telephone_number` int NOT NULL,
+  `date_of_birth` datetime NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `appointment_date` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_pet_appointments` (`pet_id`),
-  KEY `fk_doctor_appointments` (`doctor_id`),
-  CONSTRAINT `fk_doctor_appointments` FOREIGN KEY (`doctor_id`) REFERENCES `Doctors` (`id`),
-  CONSTRAINT `fk_pet_appointments` FOREIGN KEY (`pet_id`) REFERENCES `Pets` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Appointments`
+-- Dumping data for table `Users`
 --
 
-LOCK TABLES `Appointments` WRITE;
-/*!40000 ALTER TABLE `Appointments` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Appointments` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `AppointmentServices`
---
-
-DROP TABLE IF EXISTS `AppointmentServices`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `AppointmentServices` (
-  `appointment_id` int NOT NULL,
-  `service_id` int NOT NULL,
-  KEY `fk_appointment_app_ser` (`appointment_id`),
-  KEY `fk_service_app_ser` (`service_id`),
-  CONSTRAINT `fk_appointment_app_ser` FOREIGN KEY (`appointment_id`) REFERENCES `Appointments` (`id`),
-  CONSTRAINT `fk_service_app_ser` FOREIGN KEY (`service_id`) REFERENCES `Services` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `AppointmentServices`
---
-
-LOCK TABLES `AppointmentServices` WRITE;
-/*!40000 ALTER TABLE `AppointmentServices` DISABLE KEYS */;
-/*!40000 ALTER TABLE `AppointmentServices` ENABLE KEYS */;
+LOCK TABLES `Users` WRITE;
+/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -96,7 +68,7 @@ CREATE TABLE `Doctors` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +97,7 @@ CREATE TABLE `Drugs` (
   `manufacturer` varchar(255) NOT NULL,
   `stock_quantity` bigint NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,34 +110,28 @@ LOCK TABLES `Drugs` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Opinions`
+-- Table structure for table `Services`
 --
 
-DROP TABLE IF EXISTS `Opinions`;
+DROP TABLE IF EXISTS `Services`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Opinions` (
+CREATE TABLE `Services` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `doctor_id` int NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `rating` smallint NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `fk_user_comments` (`user_id`),
-  KEY `fk_doctor_comments` (`doctor_id`),
-  CONSTRAINT `fk_doctor_comments` FOREIGN KEY (`doctor_id`) REFERENCES `Doctors` (`id`),
-  CONSTRAINT `fk_user_comments` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `price` decimal(10,0) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `Opinions`
+-- Dumping data for table `Services`
 --
 
-LOCK TABLES `Opinions` WRITE;
-/*!40000 ALTER TABLE `Opinions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Opinions` ENABLE KEYS */;
+LOCK TABLES `Services` WRITE;
+/*!40000 ALTER TABLE `Services` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Services` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -188,7 +154,7 @@ CREATE TABLE `Pets` (
   PRIMARY KEY (`id`),
   KEY `fk_user_pets` (`user_id`),
   CONSTRAINT `fk_user_pets` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,6 +164,124 @@ CREATE TABLE `Pets` (
 LOCK TABLES `Pets` WRITE;
 /*!40000 ALTER TABLE `Pets` DISABLE KEYS */;
 /*!40000 ALTER TABLE `Pets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Appointments`
+--
+
+DROP TABLE IF EXISTS `Appointments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Appointments` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pet_id` int NOT NULL,
+  `doctor_id` int NOT NULL,
+  `status` enum('Sheduled','In Progress','Completed','Cancelled') NOT NULL DEFAULT 'Sheduled',
+  `reason_for_visit` varchar(255) NOT NULL,
+  `diagnosis` varchar(255) NOT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `appointment_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_pet_appointments` (`pet_id`),
+  KEY `fk_doctor_appointments` (`doctor_id`),
+  CONSTRAINT `fk_doctor_appointments` FOREIGN KEY (`doctor_id`) REFERENCES `Doctors` (`id`),
+  CONSTRAINT `fk_pet_appointments` FOREIGN KEY (`pet_id`) REFERENCES `Pets` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Appointments`
+--
+
+LOCK TABLES `Appointments` WRITE;
+/*!40000 ALTER TABLE `Appointments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Appointments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Opinions`
+--
+
+DROP TABLE IF EXISTS `Opinions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Opinions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `doctor_id` int NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `rating` smallint NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_user_comments` (`user_id`),
+  KEY `fk_doctor_comments` (`doctor_id`),
+  CONSTRAINT `fk_doctor_comments` FOREIGN KEY (`doctor_id`) REFERENCES `Doctors` (`id`),
+  CONSTRAINT `fk_user_comments` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Opinions`
+--
+
+LOCK TABLES `Opinions` WRITE;
+/*!40000 ALTER TABLE `Opinions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Opinions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Prescriptions`
+--
+
+DROP TABLE IF EXISTS `Prescriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Prescriptions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `appointment_id` int NOT NULL,
+  `expiry_date` datetime NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `fk_prescription_appointment` (`appointment_id`),
+  CONSTRAINT `fk_prescription_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `Appointments` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Prescriptions`
+--
+
+LOCK TABLES `Prescriptions` WRITE;
+/*!40000 ALTER TABLE `Prescriptions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Prescriptions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `AppointmentServices`
+--
+
+DROP TABLE IF EXISTS `AppointmentServices`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `AppointmentServices` (
+  `appointment_id` int NOT NULL,
+  `service_id` int NOT NULL,
+  KEY `fk_appointment_app_ser` (`appointment_id`),
+  KEY `fk_service_app_ser` (`service_id`),
+  CONSTRAINT `fk_appointment_app_ser` FOREIGN KEY (`appointment_id`) REFERENCES `Appointments` (`id`),
+  CONSTRAINT `fk_service_app_ser` FOREIGN KEY (`service_id`) REFERENCES `Services` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `AppointmentServices`
+--
+
+LOCK TABLES `AppointmentServices` WRITE;
+/*!40000 ALTER TABLE `AppointmentServices` DISABLE KEYS */;
+/*!40000 ALTER TABLE `AppointmentServices` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -216,7 +300,7 @@ CREATE TABLE `PrescriptionDrugs` (
   KEY `fk_drug_pre_drug` (`drug_id`),
   CONSTRAINT `fk_drug_pre_drug` FOREIGN KEY (`drug_id`) REFERENCES `Drugs` (`id`),
   CONSTRAINT `fk_prescription_pre_drug` FOREIGN KEY (`prescription_id`) REFERENCES `Prescriptions` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,89 +312,17 @@ LOCK TABLES `PrescriptionDrugs` WRITE;
 /*!40000 ALTER TABLE `PrescriptionDrugs` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `Prescriptions`
---
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-DROP TABLE IF EXISTS `Prescriptions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Prescriptions` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `appointment_id` int NOT NULL,
-  `expiry_date` datetime NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `fk_prescription_appointment` (`appointment_id`),
-  CONSTRAINT `fk_prescription_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `Appointments` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
---
--- Dumping data for table `Prescriptions`
---
-
-LOCK TABLES `Prescriptions` WRITE;
-/*!40000 ALTER TABLE `Prescriptions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Prescriptions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Services`
---
-
-DROP TABLE IF EXISTS `Services`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Services` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `description` varchar(255) NOT NULL,
-  `price` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Services`
---
-
-LOCK TABLES `Services` WRITE;
-/*!40000 ALTER TABLE `Services` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Services` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Users`
---
-
-DROP TABLE IF EXISTS `Users`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `surname` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `gender` enum('Female','Male') NOT NULL,
-  `role` enum('client','admin') NOT NULL DEFAULT 'client',
-  `telephone_number` int NOT NULL,
-  `date_of_birth` datetime NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `last_login` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Users`
---
-
-LOCK TABLES `Users` WRITE;
-/*!40000 ALTER TABLE `Users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Users` ENABLE KEYS */;
-UNLOCK TABLES;
+-- Dump completed on 2025-06-13 22:53:04
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
