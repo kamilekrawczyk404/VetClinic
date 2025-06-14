@@ -180,24 +180,42 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         public RelayCommand SetSelectedDayCommand { get; }
         public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
+        public AsyncRelayCommand CancelAppointmentCommand { get; }
 
         public DoctorDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
         {
             _contextFactory = contextFactory;
             _userSessionService = userSessionService;
 
-            AppointmentViewModel = new AppointmentViewModel(ExitAppointment, GetDoctorsAppointments, contextFactory);
+            AppointmentViewModel = new AppointmentViewModel(ExitAppointment, RefreshCurrentAppointment, contextFactory);
             MostPopularServicesViewModel = new MostPopularServicesViewModel(contextFactory, userSessionService);
 
             SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
             SetCurrentAppointmentCommand = new AsyncRelayCommand(SetCurrentAppointment);
+            CancelAppointmentCommand = new AsyncRelayCommand(CancelAppointment);
 
-            //_userSessionService.UserChanged += async () => await OnUserChanged();
-
-            Statuses = new ObservableCollection<string>(GetAppointmentStatuses());
             IsAppointmentDisplayed = false;
 
+            Statuses = new() { "Sheduled", "In Progress", "Completed", "Canceled" };
+
             FetchDoctorData();
+        }
+
+        private async Task CancelAppointment(object arg)
+        {
+            if (arg is Appointment appointment)
+            {
+                if (appointment.Status.ToLower() == "canceled")
+                    return;
+
+                using var context = _contextFactory.CreateDbContext();
+
+                appointment.Status = "Canceled";
+                context.Appointment.Update(appointment);
+
+                await context.SaveChangesAsync();
+                await this.RefreshCurrentAppointment(appointment.Id);
+            }
         }
 
         private Task ExitAppointment()
@@ -205,6 +223,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             IsAppointmentDisplayed = false;
             AppointmentViewModel.DetailedAppointment = null;
 
+            _ = SelectedDayAppointments;
+            
             return Task.CompletedTask;
         }
 
@@ -233,16 +253,47 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             {
                 using var context = _contextFactory.CreateDbContext();
 
-                // Change status to in progress
-                detailedAppointment.Appointment.Status = "In Progress";
-
-                //context.Appointment.Update(appointment.Appointment);
-                //await context.SaveChangesAsync();
-                //await GetDoctorsAppointments();
+                // Change status to in progress if appointment is sheduled
+                if (detailedAppointment.Appointment.Status.ToLower() == "sheduled")
+                {
+                    detailedAppointment.Appointment.Status = "In Progress";
+                    context.Appointment.Update(detailedAppointment.Appointment);
+                    await context.SaveChangesAsync();
+                    await GetDoctorsAppointments();
+                }
 
                 IsAppointmentDisplayed = true;
-
                 AppointmentViewModel.DetailedAppointment = detailedAppointment;
+            }
+        }
+
+        private async Task RefreshCurrentAppointment(int appointmentId)
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var refreshedAppointment = await context.Appointment
+                .Include(a => a.Pet)
+                    .ThenInclude(p => p.User)
+                .Include(a => a.Doctor)
+                .Include(a => a.Prescription)
+                    .ThenInclude(p => p.PrescriptionDrugs)
+                        .ThenInclude(pd => pd.Drug)
+                .Include(a => a.AppointmentServices)
+                    .ThenInclude(asv => asv.Service)
+                .FirstOrDefaultAsync(a => a.Id == appointmentId);
+
+            if (refreshedAppointment != null)
+            {
+                int index = SelectedDayAppointments.IndexOf(SelectedDayAppointments.FirstOrDefault(a => a.Appointment.Id == appointmentId));
+                SelectedDayAppointments[index] = new DetailedAppointment()
+                {
+                    Appointment = refreshedAppointment,
+                    Pet = refreshedAppointment.Pet,
+                    Client = refreshedAppointment.Pet.User,
+                    Doctor = refreshedAppointment.Doctor,
+                    Statuses = new(Statuses),
+                    Prescription = refreshedAppointment.Prescription,
+                    Services = refreshedAppointment.AppointmentServices.Select(a => a.Service).Where(s => s != null).ToList()
+                };
             }
         }
 
@@ -284,7 +335,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             DateTime firstDayOfWeek = today.AddDays(-(int)today.DayOfWeek + 1);
             DateTime lastDayOfWeek = firstDayOfWeek.AddDays(6);
 
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 DateTime date = firstDayOfWeek.AddDays(i);
                 CalendarDays.Add(new CalendarDay
@@ -294,11 +345,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     IsSelected = false
                 });
             }
-        }
-
-        private List<string> GetAppointmentStatuses()
-        {
-            return new List<string>() { "Sheduled", "In Progress", "Completed", "Cancelled" };
         }
 
         private async Task GetDoctorsAppointments()
@@ -318,6 +364,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .Include(a => a.Prescription)
                     .ThenInclude(p => p.PrescriptionDrugs)
                         .ThenInclude(pd => pd.Drug)
+                .Include(a => a.AppointmentServices)
+                    .ThenInclude(asv => asv.Service)
                 .OrderBy(a => a.AppointmentDate)
                 .ToListAsync();
 
@@ -331,8 +379,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     Pet = appointment.Pet,
                     Client = appointment.Pet.User,
                     Doctor = appointment.Doctor,
-                    Statuses = Statuses,
+                    Statuses = new(Statuses),
                     Prescription = appointment.Prescription,
+                    Services = appointment.AppointmentServices.Select(a => a.Service).Where(s => s != null).ToList()
                 });
             }
 

@@ -17,7 +17,7 @@ namespace VetClinic.MVVM.Model
         public User Client {get; set;}
         public int Duration { get; set; } = 30; // Default duration in minutes
         public Prescription Prescription { get; set; } = new();
-        public ObservableCollection<string> Statuses { get; set; } = new();
-        public ObservableCollection<Service> Services { get; set; } = new();
+        public List<string> Statuses { get; set; } = new();
+        public List<Service> Services { get; set; } = new();
     }
 }

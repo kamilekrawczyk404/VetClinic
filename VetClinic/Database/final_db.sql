@@ -177,7 +177,7 @@ CREATE TABLE `Appointments` (
   `id` int NOT NULL AUTO_INCREMENT,
   `pet_id` int NOT NULL,
   `doctor_id` int NOT NULL,
-  `status` enum('Sheduled','In Progress','Completed','Cancelled') NOT NULL DEFAULT 'Sheduled',
+  `status` enum('Sheduled','In Progress','Completed','Canceled') NOT NULL DEFAULT 'Sheduled',
   `reason_for_visit` varchar(255) NOT NULL,
   `diagnosis` varchar(255) NOT NULL,
   `notes` varchar(255) DEFAULT NULL,

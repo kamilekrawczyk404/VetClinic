@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,6 +52,18 @@ namespace VetClinic.Controls
         {
             get => (ICommand)GetValue(OnAppoinmentClickedProperty);
             set => SetValue(OnAppoinmentClickedProperty, value);
+        }
+
+        public static readonly DependencyProperty CancelAppointmentCommandProperty =
+           DependencyProperty.Register(
+               nameof(CancelAppointmentCommand),
+               typeof(ICommand),
+               typeof(NextAppointmentsListView));
+
+        public ICommand CancelAppointmentCommand
+        {
+            get => (ICommand)GetValue(CancelAppointmentCommandProperty);
+            set => SetValue(CancelAppointmentCommandProperty, value);
         }
 
         public static readonly DependencyProperty StatusesProperty =

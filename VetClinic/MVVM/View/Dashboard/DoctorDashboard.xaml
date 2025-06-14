@@ -15,15 +15,46 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Style="{StaticResource Header}" Text="Hello, dr. "/>
             <TextBlock Style="{StaticResource Header}" Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
+
+        <Grid Grid.Row="1" Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter} }">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Margin="0,0,0,10" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <controls:DashboardItem Title="Appointments" Value="{Binding AppointmentsCount}" Ratio="{Binding AppointmentsRatio}" ImageSource="/Images/DashboardItem/appointment-item.png"/>
+                <controls:DashboardItem Margin="10,0,0,0" Grid.Column="1" Title="Prescriptions" Value="{Binding PrescriptionsCount}" Ratio="{Binding PrescriptionsRatio}" ImageSource="/Images/DashboardItem/prescription-item.png"/>
+                <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <local:MostPopularServices DataContext="{Binding MostPopularServicesViewModel}"/>
+
+                <calendar:CalendarWeek Margin="0,10,0,0"  Grid.Row="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
+            </Grid>
+        </Grid>
+
+        <DockPanel Grid.Row="1" Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <local:AppointmentDetails VerticalAlignment="Stretch" DataContext="{Binding AppointmentViewModel}"/>
+        </DockPanel>
 
         <TextBlock Grid.Column="1" Margin="10,0,0,10" Text="Upcoming Appointments" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
 
@@ -35,37 +66,7 @@
             ItemsSource="{Binding SelectedDayAppointments, Mode=TwoWay}"  
             Statuses="{Binding Statuses, Mode=TwoWay}"
             HorizontalAlignment="Stretch"
-            OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"
-            />
-
-        <Grid Margin="0,0,0,10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-
-            <controls:DashboardItem Title="Appointments" Value="{Binding AppointmentsCount}" Ratio="{Binding AppointmentsRatio}" ImageSource="/Images/DashboardItem/appointment-item.png"/>
-            <controls:DashboardItem Margin="10,0,0,0" Grid.Column="1" Title="Prescriptions" Value="{Binding PrescriptionsCount}" Ratio="{Binding PrescriptionsRatio}" ImageSource="/Images/DashboardItem/prescription-item.png"/>
-            <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
-        </Grid>
-
-
-        <Grid Grid.Row="2" Grid.Column="0">
-            <DockPanel Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <local:AppointmentDetails VerticalAlignment="Stretch" DataContext="{Binding AppointmentViewModel}"/>
-            </DockPanel>
-
-            <Grid Visibility="{Binding IsAppointmentDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <local:MostPopularServices DataContext="{Binding MostPopularServicesViewModel}"/>
-                
-                <calendar:CalendarWeek Margin="0,10,0,0"  Grid.Row="1" Days="{Binding CalendarDays, UpdateSourceTrigger=PropertyChanged}" OnDaySelected="{Binding SetSelectedDayCommand}"/>
-            </Grid>
-        </Grid>
+            CancelAppointmentCommand="{Binding CancelAppointmentCommand}"
+            OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"/>
     </Grid>
 </UserControl>

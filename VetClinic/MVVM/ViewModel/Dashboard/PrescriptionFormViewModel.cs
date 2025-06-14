@@ -98,12 +98,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         }
 
         public RelayCommand AddDrugToPrescriptionCommand { get; }
-        public AsyncRelayCommand SavePrescriptionCommand { get; }
         public RelayCommand RemoveDrugFromPrescriptionCommand { get; }
 
-
-        public Action<Prescription> PrescriptionUpdated;
-        public PrescriptionFormViewModel(Prescription prescription, Action<Prescription> prescriptionUpdated, IDbContextFactory<VeterinaryClinicContext> contextFactory)
+        public PrescriptionFormViewModel(Prescription prescription, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
             _contextFactory = contextFactory;
 
@@ -112,10 +109,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             PrescriptionDrugs = new();
 
             Prescription = prescription;
-            PrescriptionUpdated = prescriptionUpdated;
 
             AddDrugToPrescriptionCommand = new RelayCommand(AddDrugToPrescription);
-            SavePrescriptionCommand = new AsyncRelayCommand(SavePrescription);
             RemoveDrugFromPrescriptionCommand = new RelayCommand(RemoveDrugFromPrescription);
 
             _ = GetDrugs();
@@ -130,21 +125,21 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 ExpiryDate = Prescription?.ExpiryDate ?? DateTime.Now;
 
                 // Add to the array drugs, that are already tied with this prescription
-                //if (Prescription?.PrescriptionDrugs.Count() > 0)
-                //{
-                //    foreach (var prescriptionDrug in Prescription.PrescriptionDrugs)
-                //    { 
-                //        PrescriptionDrugs.Add(new PrescriptionDrug()
-                //        {
-                //            Quantity = prescriptionDrug.Quantity,
-                //            DosageInstructions = prescriptionDrug?.DosageInstructions ?? "",
-                //            Id = prescriptionDrug.DrugId,
-                //            Name = prescriptionDrug.Drug.Name,
-                //            DosageForm = prescriptionDrug.Drug?.DosageForm ?? "",
-                //            Manufacturer = prescriptionDrug.Drug.Manufacturer,
-                //        });
-                //    }
-                //}
+                if (Prescription?.PrescriptionDrugs.Count() > 0)
+                {
+                    foreach (var prescriptionDrug in Prescription.PrescriptionDrugs)
+                    {
+                        PrescriptionDrugs.Add(new PrescriptionDrug()
+                        {
+                            Quantity = prescriptionDrug.Quantity,
+                            DosageInstructions = prescriptionDrug?.DosageInstructions ?? "",
+                            Id = prescriptionDrug.DrugId,
+                            Name = prescriptionDrug.Drug.Name,
+                            DosageForm = prescriptionDrug.Drug?.DosageForm ?? "",
+                            Manufacturer = prescriptionDrug.Drug.Manufacturer,
+                        });
+                    }
+                }
             }
         }
 
@@ -155,8 +150,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 PrescriptionDrugs.Remove(drug);
             }
         }
-
-        private async Task SavePrescription(object obj)
+        public async Task OnAppointmentSaved()
         {
             ExpiryDateErrorMessage = string.Empty;
 
@@ -255,8 +249,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 .Include(p => p.PrescriptionDrugs)
                     .ThenInclude(pd => pd.Drug)
                 .FirstOrDefaultAsync(p => p.Id == Prescription.Id);
-
-            PrescriptionUpdated?.Invoke(updatedPrescription);
         }
 
         private void AddDrugToPrescription(object obj)

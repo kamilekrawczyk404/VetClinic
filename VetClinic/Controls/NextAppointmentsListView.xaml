@@ -8,9 +8,9 @@
              mc:Ignorable="d" 
              x:Name="Root"
              d:DesignHeight="450" d:DesignWidth="800">
-    <ListView ItemsSource="{Binding Path=ItemsSource, ElementName=Root}">
+    <ListView ItemsSource="{Binding Path=ItemsSource, Mode=TwoWay, ElementName=Root}">
         <i:Interaction.Triggers>
-            <i:EventTrigger EventName="SelectionChanged">
+            <i:EventTrigger EventName="MouseLeftButtonUp">
                 <i:InvokeCommandAction 
                     Command="{Binding Path=OnAppointmentClicked, ElementName=Root}" 
                     CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListView}}" />
@@ -65,12 +65,12 @@
 
                         <StackPanel Grid.Column="1" Margin="5">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Client.Name}"/>
-                                <TextBlock Text="{Binding Client.Surname}" Margin="2,0"/>
+                                <TextBlock Text="{Binding Client.Name, Mode=TwoWay}"/>
+                                <TextBlock Text="{Binding Client.Surname, Mode=TwoWay}" Margin="2,0"/>
                                 <TextBlock Text=" - "/>
-                                <TextBlock Text="{Binding Pet.Name}"/>
+                                <TextBlock Text="{Binding Pet.Name, Mode=TwoWay}"/>
                                 <TextBlock Text=" ("/>
-                                <TextBlock Text="{Binding Pet.Species}"/>
+                                <TextBlock Text="{Binding Pet.Species, Mode=TwoWay}"/>
                                 <TextBlock Text=")"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
@@ -87,9 +87,9 @@
                                     Padding="4,2"
                                     BorderBrush="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
                                     Background="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
-                                    <TextBlock Text="{Binding Appointment.Status}" Foreground="{DynamicResource Gray}"/>
+                                    <TextBlock Text="{Binding Appointment.Status, Mode=TwoWay}" Foreground="{DynamicResource Gray}"/>
                                 </Border>
-                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment"/>
+                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment" Command="{Binding Path=CancelAppointmentCommand, ElementName=Root}" CommandParameter="{Binding Appointment}"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

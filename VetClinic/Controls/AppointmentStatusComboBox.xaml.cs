@@ -28,7 +28,11 @@ namespace VetClinic.Controls
         }
 
         public static readonly DependencyProperty StatusesProperty =
-        DependencyProperty.Register(nameof(Statuses), typeof(IEnumerable<string>), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
+        DependencyProperty.Register(
+            nameof(Statuses),
+            typeof(IEnumerable<string>),
+            typeof(AppointmentStatusComboBox),
+            new PropertyMetadata(null));
 
         public IEnumerable<string> Statuses
         {
@@ -36,13 +40,23 @@ namespace VetClinic.Controls
             set => SetValue(StatusesProperty, value);
         }
 
-        public static readonly DependencyProperty StatusProperty =
-            DependencyProperty.Register(nameof(Status), typeof(string), typeof(AppointmentStatusComboBox), new PropertyMetadata(null));
+        public static readonly DependencyProperty SelectedStatusProperty =
+            DependencyProperty.Register(
+                nameof(SelectedStatus), 
+                typeof(string), 
+                typeof(AppointmentStatusComboBox), 
+                new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnSelectionChanged));
 
-        public string Status
+        private static void OnSelectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => (string)GetValue(StatusProperty);
-            set => SetValue(StatusProperty, value);
+            var control = (AppointmentStatusComboBox)d;
+            control.PART_ComboBox.SelectedItem = (string)e.NewValue;
+        }
+
+        public string SelectedStatus
+        {
+            get => (string)GetValue(SelectedStatusProperty);
+            set => SetValue(SelectedStatusProperty, value);
         }
 
         public static readonly DependencyProperty IsEditableProperty =
