@@ -81,8 +81,9 @@
     </UserControl.Resources>
 
     <ComboBox
+        x:Name="PART_ComboBox"
         ItemsSource="{Binding Path=Statuses, ElementName=Root, Mode=TwoWay}"
-        SelectedItem="{Binding Path=Status, ElementName=Root, Mode=TwoWay}"
+        SelectedItem="{Binding Path=SelectedStatus, ElementName=Root, Mode=TwoWay}"
         IsEnabled="{Binding Path=IsEditable, ElementName=Root}"
         Background="Transparent"
         BorderThickness="0"
@@ -97,9 +98,9 @@
                     CornerRadius="3"
                     Margin="2"
                     Padding="6,2"
-                    BorderBrush="{Binding Path=Status, ElementName=Root, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
-                    Background="{Binding Path=Status, ElementName=Root, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
-                    <TextBlock Text="{Binding Path=Status, ElementName=Root}" Foreground="{StaticResource Gray}"/>
+                    BorderBrush="{Binding Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
+                    Background="{Binding Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
+                    <TextBlock Text="{Binding}" Foreground="{StaticResource Gray}"/>
                 </Border>
             </DataTemplate>
         </ComboBox.ItemTemplate>

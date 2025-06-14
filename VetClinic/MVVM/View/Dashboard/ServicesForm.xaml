@@ -28,9 +28,9 @@
                         MaxHeight="200"
                         AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
-                            <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding Price}" IsReadOnly="True"/>
                             <DataGridTemplateColumn Header="Actions" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -57,9 +57,9 @@
                     MaxHeight="200"
                     AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                        <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
-                        <DataGridTextColumn Header="Price" Binding="{Binding Price}"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" IsReadOnly="True"/>
                         <DataGridTemplateColumn Header="Actions" Width="50">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

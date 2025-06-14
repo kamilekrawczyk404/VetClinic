@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Controls;
+using System.Windows.Media;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.Model;
@@ -23,10 +24,32 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 if (value != null)
                 {
                     _detailedAppointment = value;
-                    PrescriptionFormViewModel = new PrescriptionFormViewModel(_detailedAppointment.Prescription, PrescriptionUpdated, _contextFactory);
-                    ServicesFormViewModel = new ServicesFormViewModel(_detailedAppointment.Services, _contextFactory);
+                   
                     OnPropertyChanged();
+                    OnDetailedAppointmentChanged();
                 }
+            }
+        }
+
+        private void OnDetailedAppointmentChanged()
+        {
+            PrescriptionFormViewModel = new PrescriptionFormViewModel(_detailedAppointment.Prescription, _contextFactory);
+            ServicesFormViewModel = new ServicesFormViewModel(_detailedAppointment.Services, _contextFactory);
+
+            IsCompleted = _detailedAppointment.Appointment.Status.ToLower() == "completed" || _detailedAppointment.Appointment.Status.ToLower() == "canceled";
+            SelectedStatus = _detailedAppointment?.Appointment.Status ?? "In progress";
+            Diagnosis = _detailedAppointment.Appointment.Diagnosis;
+            Notes = _detailedAppointment?.Appointment.Notes ?? "";
+        }
+
+        private bool _isCompleted;
+        public bool IsCompleted
+        {
+            get => _isCompleted;
+            set
+            {
+                _isCompleted = value;
+                OnPropertyChanged();
             }
         }
 
@@ -53,13 +76,47 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private Service _selectedService;
-        public Service SelectedService
+        private string _selectedStatus;
+        public string SelectedStatus
         {
-            get => _selectedService;
+            get => _selectedStatus;
             set
             {
-                _selectedService = value;
+                _selectedStatus = value;
+                Trace.WriteLine("Status " + value.ToString());
+                OnPropertyChanged();
+            }
+        }
+
+        private string _notes;
+        public string Notes
+        {
+            get => _notes;
+            set
+            {
+                _notes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _diagnosis;
+        public string Diagnosis
+        {
+            get => _diagnosis;
+            set
+            {
+                _diagnosis = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _diagnosisErrorMessage;
+        public string DiagnosisErrorMessage
+        {
+            get => _diagnosisErrorMessage;
+            set
+            {
+                _diagnosisErrorMessage = value;
                 OnPropertyChanged();
             }
         }
@@ -86,64 +143,81 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        public RelayCommand AddPrescriptionCommand { get; }
         public RelayCommand ExitAppointmentCommand { get; }
-        public AsyncRelayCommand CompleteAppointmentCommand { get; }
+        public AsyncRelayCommand SaveAppointmentCommand { get; }
 
 
         private Func<Task> _exitAppointment;
 
-        private readonly Func<Task> _refreshAppointments;
+        private readonly Func<int, Task> _refreshAppointments;
 
-        public event Action<Prescription> PrescriptionUpdated;
-
-        public AppointmentViewModel(Func<Task> exitAppointment, Func<Task> refreshAppointments, IDbContextFactory<VeterinaryClinicContext> contextFactory)
+        public AppointmentViewModel(Func<Task> exitAppointment, Func<int, Task> refreshAppointments, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
             _contextFactory = contextFactory;
 
             _exitAppointment = exitAppointment;
             _refreshAppointments = refreshAppointments;
 
-            PrescriptionUpdated += OnPrescriptionUpdate;
-
-            AddPrescriptionCommand = new RelayCommand(AddPrescription);
             ExitAppointmentCommand = new RelayCommand(Exit);
-            CompleteAppointmentCommand = new AsyncRelayCommand(CompleteAppointment);
+            SaveAppointmentCommand = new AsyncRelayCommand(SaveAppointment);
+
+            DiagnosisErrorMessage  = string.Empty;
         }
 
-        private void OnPrescriptionUpdate(Prescription updatedPrescription)
+        private async Task SaveAppointment(object obj)
         {
-            if (updatedPrescription == null)
-                return;
-
-            Prescription = updatedPrescription;
-        }
-
-        private async Task CompleteAppointment(object obj)
-        {
-            using var context = _contextFactory.CreateDbContext();
-
             if (DetailedAppointment?.Appointment == null)
             {
                 return;
             }
-            DetailedAppointment.Appointment.Status = "Completed";
 
-            context.Appointment.Update(DetailedAppointment.Appointment);
+            DiagnosisErrorMessage = string.Empty;
 
-            // validate fielsd, prescription and services 
-            await context.SaveChangesAsync();
+            if (string.IsNullOrEmpty(Diagnosis))
+            {
+                DiagnosisErrorMessage = "| Cannot be empty";
+                return;
+            }
 
-            _refreshAppointments?.Invoke();
+            using var context = _contextFactory.CreateDbContext();
+
+            bool hasChanged = false;
+
+            if (DetailedAppointment.Appointment.Diagnosis != Diagnosis)
+            {
+                DetailedAppointment.Appointment.Diagnosis = Diagnosis;
+                hasChanged = true;
+            }
+
+            if (DetailedAppointment.Appointment.Notes != Notes)
+            {
+                DetailedAppointment.Appointment.Notes = Notes != null ? Notes : "";
+                hasChanged = true;
+            }
+
+            if (DetailedAppointment.Appointment.Status != SelectedStatus)
+            {
+                DetailedAppointment.Appointment.Status = SelectedStatus;
+                hasChanged = true;
+            }
+
+            if (SelectedStatus.ToLower() != "canceled")
+            {
+                DetailedAppointment.Appointment.Status = "Completed";
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+            {
+                context.Appointment.Update(DetailedAppointment.Appointment);
+                await context.SaveChangesAsync();
+            }
+
+            await ServicesFormViewModel.OnAppointmentSaved(DetailedAppointment.Appointment);
+            await PrescriptionFormViewModel.OnAppointmentSaved();
+
+            _refreshAppointments?.Invoke(DetailedAppointment.Appointment.Id);
             _exitAppointment?.Invoke();
-        }
-
-        private void AddPrescription(object obj)
-        {
-            // Logic to add a prescription to the appointment
-            // This could involve opening a dialog or navigating to a different view
-            // For now, we will just simulate this with a console message
-            //Console.WriteLine("Add Prescription command executed for appointment: " + Appointment?.Id);
         }
 
         private void Exit(object obj)

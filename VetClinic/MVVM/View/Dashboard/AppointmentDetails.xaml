@@ -22,8 +22,21 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Content="Go back" Command="{Binding ExitAppointmentCommand}"/>
-                    <Button Content="Save" Command="{Binding CompleteAppointmentCommand}" Grid.Column="1"/>
+                    <controls:ImageButton Text="Go back" ImageSource="/Images/Buttons/arrow.png" Command="{Binding ExitAppointmentCommand}" HorizontalAlignment="Left"/>
+                    <controls:ImageButton 
+                        Text="Complete appointment" 
+                        ImageSource="/Images/Buttons/checkbox.png" 
+                        Command="{Binding SaveAppointmentCommand}" 
+                        Grid.Column="1" 
+                        Visibility="{Binding IsCompleted, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                        HorizontalAlignment="Right" />
+                    <controls:ImageButton 
+                        Text="Save appointment" 
+                        ImageSource="/Images/Buttons/save.png" 
+                        Command="{Binding SaveAppointmentCommand}" 
+                        Visibility="{Binding IsCompleted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Grid.Column="1" 
+                        HorizontalAlignment="Right"/>
                 </Grid>
             </Border>
            
@@ -81,13 +94,13 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="Appointment status" FontWeight="SemiBold" Foreground="{DynamicResource Gray}" VerticalAlignment="Center"/>
-                                        <controls:AppointmentStatusComboBox Grid.Column="1"  HorizontalAlignment="Right" Status="{Binding DetailedAppointment.Appointment.Status, Mode=TwoWay}" IsEditable="True" Statuses="{Binding DetailedAppointment.Statuses}"/>
+                                        <controls:AppointmentStatusComboBox Grid.Column="1"  HorizontalAlignment="Right" SelectedStatus="{Binding SelectedStatus, Mode=TwoWay}" IsEditable="True" Statuses="{Binding DetailedAppointment.Statuses}"/>
                                     </Grid>
                                 </Border>
 
-                                <input:TextArea Grid.Row="2" Margin="0,0,2.5,0" Title="Diagnosis" Placeholder="Enter diagnosis..." Text="{Binding DetailedAppointment.Appointment.Diagnosis}" />
+                                <input:TextArea Grid.Row="2" Margin="0,0,2.5,0" Title="Diagnosis" Placeholder="Enter diagnosis..." Text="{Binding Diagnosis}" ErrorMessage="{Binding DiagnosisErrorMessage}" />
 
-                                <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,0,0,0" Title="Notes"  Placeholder="Enter notes..." Text="{Binding DetailedAppointment.Appointment.Notes}" />
+                                <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,0,0,0" Title="Notes"  Placeholder="Enter notes..." Text="{Binding Notes}" />
                             </Grid>
                         </Border>
 

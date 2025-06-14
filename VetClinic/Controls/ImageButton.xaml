@@ -7,19 +7,24 @@
              mc:Ignorable="d" 
              x:Name="Root"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border x:Name="BorderElement">
-        <Border.Style>
-            <Style TargetType="{x:Type Border}">
-                <Setter Property="Background" Value="{DynamicResource White}"/>
-                <Setter Property="CornerRadius" Value="8"/>
-                <Setter Property="Padding" Value="10,5"/>
-                <Setter Property="BorderBrush" Value="{DynamicResource LightGray}"/>
-                <Setter Property="BorderThickness" Value="1"/>
-            </Style>
-        </Border.Style>
-        <StackPanel>
-            <Image Source="{Binding Path=ImageSource, ElementName=Root}" Height="20" Width="20" VerticalAlignment="Center"/>
-            <Button Content="{Binding Path=Content, ElementName=Root}" Command="{Binding Path=Command, ElementName=Root}"/>
-        </StackPanel>       
-    </Border>
+
+    <Button 
+        Command="{Binding Path=Command, ElementName=Root}"
+        CommandParameter="{Binding Path=CommandParameter, ElementName=Root}"
+        Style="{StaticResource ButtonBase}">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Image 
+                Source="{Binding Path=ImageSource, ElementName=Root}"
+                Height="20"
+                Width="20"
+                VerticalAlignment="Center"
+                RenderOptions.BitmapScalingMode="HighQuality"/>
+            <TextBlock 
+                Margin="8,0,0,0"
+                Text="{Binding Path=Text, ElementName=Root}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                TextWrapping="Wrap"/>
+        </StackPanel>
+    </Button>
 </UserControl>
