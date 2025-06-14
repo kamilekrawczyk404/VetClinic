@@ -17,14 +17,22 @@ using VetClinic.MVVM.ViewModel;
 namespace VetClinic.MVVM.View
 {
     /// <summary>
-    /// Logika interakcji dla klasy PetList.xaml
+    /// Logika interakcji dla klasy PetEditView.xaml
     /// </summary>
-    public partial class PetList : UserControl
+    public partial class PetEditView : UserControl
     {
-        public PetList()
+        public PetEditView()
         {
             InitializeComponent();
+          
+            this.Focusable = true;
         }
 
+      
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Focus();
+        }
     }
 }

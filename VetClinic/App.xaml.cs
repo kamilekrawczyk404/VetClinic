@@ -74,6 +74,8 @@ public partial class App : Application
         services.AddTransient<DoctorListViewModel>();
         services.AddTransient<ViewOpinionsViewModel>();
         services.AddTransient<PetListViewModel>();
+        services.AddTransient<PetEditViewModel>();
+
 
 
 

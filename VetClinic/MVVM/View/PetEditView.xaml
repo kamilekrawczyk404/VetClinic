@@ -1,0 +1,237 @@
+﻿<UserControl x:Class="VetClinic.MVVM.View.PetEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="800">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="20,20,20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0"
+                    Content="← Powrót"
+                    Command="{Binding GoBackCommand}"
+                    Style="{StaticResource SubmitButton}"
+                    Margin="0,0,20,0"
+                    Cursor="Hand"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Title}"
+                       Style="{StaticResource Header}"
+                       FontSize="24"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"/>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="5,5,5,5">
+            <Border Style="{StaticResource BorderDefault}" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MaxWidth="900">
+                <Grid Margin="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="300"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <Grid Margin="0,0,0,20" HorizontalAlignment="Center">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <Image Source="{Binding EditingPet.Species, Converter={StaticResource SpeciesToImageSourceConverter}}" 
+                                   Height="120" Width="120" 
+                                   Margin="0,0,0,10"/>
+                            <TextBlock Grid.Row="1"
+                                       Text="{Binding EditingPet.Name, FallbackValue='Nowe zwierzę'}"
+                                       Style="{StaticResource MediumHeader}"
+                                       HorizontalAlignment="Center"
+                                       FontSize="16"
+                                       TextWrapping="Wrap"/>
+                        </Grid>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Gatunek *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding EditingPet.Species, UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="14"
+                                     Height="35"
+                                     Padding="8,6"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Płeć *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <ComboBox SelectedValue="{Binding EditingPet.Gender}"
+                                      SelectedValuePath="Content"
+                                      FontSize="14"
+                                      Height="35"
+                                      Padding="8,6">
+                                <ComboBoxItem Content="Male"/>
+                                <ComboBoxItem Content="Female"/>
+                                <ComboBoxItem Content="Neutered"/>
+                                <ComboBoxItem Content="Spayed"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Margin="0,35,0,35">
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Imię zwierzęcia *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding EditingPet.Name, UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="14"
+                                     Height="35"
+                                     Padding="8,6"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Rasa *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding EditingPet.Breed, UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="14"
+                                     Height="35"
+                                     Padding="8,6"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Waga (kg) *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <TextBox Text="{Binding EditingPet.Weight, UpdateSourceTrigger=PropertyChanged}"
+                                     FontSize="14"
+                                     Height="35"
+                                     Padding="8,6"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15">
+                            <TextBlock Text="Data urodzenia *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <DatePicker SelectedDate="{Binding EditingPet.DateOfBirth}"
+                                        FontSize="14"
+                                        Height="35"
+                                        Padding="8,6"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="4" Margin="0,35,0,35">
+                        <StackPanel Margin="0,0,0,15"
+                                    Visibility="{Binding ShowOwnerSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="Właściciel *" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <ComboBox ItemsSource="{Binding AvailableOwners}"
+                                      SelectedItem="{Binding EditingPet.User}"
+                                      DisplayMemberPath="FullName"
+                                      FontSize="14"
+                                      Height="35"
+                                      Padding="8,6"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,15"
+                                    Visibility="{Binding ShowCurrentOwner, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="Obecny właściciel" 
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Margin="0,0,0,3"/>
+                            <Border Background="{StaticResource LightGray}"
+                                    CornerRadius="5"
+                                    Padding="8"
+                                    Height="35">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <Image Source="/Images/patient.png" 
+                                           Height="14" Width="14" 
+                                           Margin="0,0,6,0"
+                                           VerticalAlignment="Center"/>
+                                    <TextBlock FontSize="14" VerticalAlignment="Center">
+                                        <Run Text="{Binding EditingPet.User.Name}"/>
+                                        <Run Text="{Binding EditingPet.User.Surname}"/>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <Border Background="{StaticResource LightRed}"
+                                CornerRadius="5"
+                                Padding="12"
+                                Margin="0,20,0,0"
+                                MaxHeight="200"
+                                Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                <StackPanel>
+                                    <TextBlock Text="Błędy:"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource White}"
+                                               FontSize="12"
+                                               Margin="0,0,0,8"/>
+                                    <ItemsControl ItemsSource="{Binding ValidationErrors}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}"
+                                                           Foreground="{StaticResource White}"
+                                                           FontSize="11"
+                                                           TextWrapping="Wrap"
+                                                           Margin="0,1"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Border Grid.Row="2" 
+                Padding="20">
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center">
+                <Button Content="Anuluj"
+                        Command="{Binding CancelCommand}"
+                        Style="{StaticResource SubmitButton}"
+                        Background="{StaticResource Red}"
+                        Margin="0,0,15,0"
+                        MinWidth="120"
+                        Height="40"
+                        Cursor="Hand"/>
+                <Button Content="{Binding SaveButtonText}"
+                        Command="{Binding SaveCommand}"
+                        Style="{StaticResource SubmitButton}"
+                        MinWidth="120"
+                        Height="40"
+                        Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

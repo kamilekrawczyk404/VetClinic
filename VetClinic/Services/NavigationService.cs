@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
 using VetClinic.Utils;
 
@@ -34,6 +35,10 @@ namespace VetClinic.Services
             if (viewModel is ViewOpinionsViewModel opinionsViewModel && parameters.Length > 0 && parameters[0] is Models.Doctor doctor)
             {
                 opinionsViewModel.SelectedDoctor = doctor;
+            }
+            else if (viewModel is PetEditViewModel petEditViewModel && parameters.Length > 0 && parameters[0] is Pet pet)
+            {
+                petEditViewModel.Pet = pet;
             }
             CurrentView = viewModel;
         }
