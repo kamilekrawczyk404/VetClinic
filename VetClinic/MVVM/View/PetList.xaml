@@ -25,13 +25,13 @@
                        VerticalAlignment="Center">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0}">
-                        <Binding Source="Lista zwierząt"/>
+                        <Binding Source="Pets list"/>
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
 
             <Button Grid.Column="1"
-                    Content="Dodaj zwierzę"
+                    Content="Add new pet"
                     Command="{Binding NavigateToAddPetCommand}"
                     Visibility="{Binding CanManagePets, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Style="{StaticResource SubmitButton}"
@@ -163,7 +163,7 @@
                                                        Height="18" Width="18" 
                                                        Margin="0,0,8,0"
                                                        VerticalAlignment="Center"/>
-                                                <TextBlock Text="Birthday: " 
+                                                <TextBlock Text="Date of birth: " 
                                                            FontWeight="SemiBold"
                                                            FontSize="16"
                                                            VerticalAlignment="Center"/>
@@ -197,7 +197,7 @@
                                                Margin="15,15,15,15">
 
                                         <!-- Edit Button - visible for admins and when user owns the pet -->
-                                        <Button Content="✏️ Edytuj"
+                                        <Button Content="✏️ Edit"
                                                 Command="{Binding DataContext.NavigateToEditPetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
@@ -211,7 +211,7 @@
                                         </Button>
 
                                         <!-- Delete Button - visible for admins and when user owns the pet -->
-                                        <Button Content="🗑️ Usuń"
+                                        <Button Content="🗑️ Delete"
                                                 Command="{Binding DataContext.DeletePetCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Background="{StaticResource Red}" 
@@ -226,7 +226,7 @@
                                         </Button>
                                     </StackPanel>
 
-                                    <!-- Owner Information (visible for admin) - now inside border -->
+                                    <!-- Owner Information (visible for admin) -->
                                     <StackPanel Grid.Row="1" 
                                                Grid.ColumnSpan="3"
                                                Orientation="Horizontal"
@@ -236,7 +236,7 @@
                                                Height="18" Width="18" 
                                                Margin="0,0,8,0"
                                                VerticalAlignment="Center"/>
-                                        <TextBlock Text="Właściciel: " 
+                                        <TextBlock Text="Owner: " 
                                                    FontWeight="SemiBold"
                                                    FontSize="16"
                                                    VerticalAlignment="Center"/>
@@ -259,12 +259,12 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Visibility="{Binding Pets.Count, Converter={StaticResource CountToVisibilityConverter}}">
-            <TextBlock Text="Brak zwierząt w systemie"
+            <TextBlock Text="No pets in the system"
                        Style="{StaticResource Header}"
                        FontSize="16"
                        HorizontalAlignment="Center"
                        Opacity="0.6"/>
-            <TextBlock Text="Dodaj pierwsze zwierzę, aby rozpocząć"
+            <TextBlock Text="Add your first pet to start"
                        FontSize="12"
                        HorizontalAlignment="Center"
                        Opacity="0.5"

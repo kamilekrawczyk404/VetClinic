@@ -12,6 +12,7 @@ using VetClinic.Utils;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel.Dashboard;
+using VetClinic.MVVM.View;
 
 namespace VetClinic.MVVM.ViewModel
 {
@@ -48,7 +49,7 @@ namespace VetClinic.MVVM.ViewModel
             _navigation = navigation;
             _userSessionService = userSessionService;
 
-             _navigation.NavigateTo<ClientDashboardViewModel>();
+             _navigation.NavigateTo<PrescriptionListViewModel>();
             // _navigation.NavigateTo<DoctorListViewModel>();
             // _navigation.NavigateTo<AppointmentListViewModel>();
             // _navigation.NavigateTo<PrescriptionListViewModel>();

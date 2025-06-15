@@ -19,13 +19,13 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" 
-                       Text="Lista lekarzy" 
+                       Text="Doctor list" 
                        Style="{StaticResource Header}"
                        FontSize="20"
                        VerticalAlignment="Center"/>
 
             <Button Grid.Column="1"
-                    Content="Dodaj lekarza"
+                    Content="Add new doctor"
                     Command="{Binding AddDoctorCommand}"
                     Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Style="{StaticResource SubmitButton}"
@@ -71,7 +71,6 @@
                                     <TextBlock Text="{Binding Description}" 
                                                TextWrapping="Wrap"
                                                FontSize="12"
-                                               Opacity="0.8"
                                                MaxHeight="40"/>
                                 </StackPanel>
 
@@ -83,8 +82,7 @@
                                     <StackPanel Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                      
 
-                                        <!-- Przycisk "Zobacz opinie" - zawsze widoczny dla klientów -->
-                                        <Button Content="Zobacz opinie"
+                                        <Button Content="Show opinions"
                                                 Command="{Binding DataContext.ViewOpinionsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
@@ -126,7 +124,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Visibility="{Binding Doctors.Count, Converter={StaticResource CountToVisibilityConverter}}">
-            <TextBlock Text="Brak lekarzy w systemie"
+            <TextBlock Text="No doctors in the system"
                        Style="{StaticResource Header}"
                        FontSize="16"
                        HorizontalAlignment="Center"

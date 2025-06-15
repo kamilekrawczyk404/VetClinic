@@ -18,13 +18,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Sekcja powitalna -->
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Style="{StaticResource Header}" Text="Witaj, "/>
+            <TextBlock Style="{StaticResource Header}" Text="Hello, "/>
             <TextBlock Style="{StaticResource Header}" Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
-        <TextBlock Grid.Column="1" Margin="10,0,0,10" Text="Nadchodzące wizyty" Style="{StaticResource Header}" VerticalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Margin="10,0,0,10" Text="Upcoming appointments" Style="{StaticResource Header}" VerticalAlignment="Center"/>
 
         <!-- Lista nadchodzących wizyt -->
         <controls:NextAppointmentsListView 
@@ -46,7 +45,7 @@
             </Grid.ColumnDefinitions>
 
             <controls:DashboardItem 
-                Title="Moje zwierzęta" 
+                Title="Your pets" 
                 Value="{Binding PetsCount}" 
                 ImageSource="/Images/DashboardItem/pet-item.png"
                 ShowTrendLine="False"/>
@@ -54,7 +53,7 @@
             <controls:DashboardItem 
                 Margin="10,0,0,0" 
                 Grid.Column="1" 
-                Title="Nadchodzące wizyty" 
+                Title="Upcomming appointments" 
                 Value="{Binding UpcomingAppointmentsCount}" 
                 ImageSource="/Images/DashboardItem/appointment-item.png"
                 ShowTrendLine="False"/>
@@ -62,7 +61,7 @@
             <controls:DashboardItem 
                 Margin="10,0,0,0" 
                 Grid.Column="2" 
-                Title="Aktywne recepty" 
+                Title="Active prescriptions" 
                 Value="{Binding ActivePrescriptionsCount}" 
                 ImageSource="/Images/DashboardItem/prescription-item.png"
                 ShowTrendLine="False"/>
@@ -82,7 +81,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Twoje zwierzęta" Style="{StaticResource Header}" Margin="0,0,0,10"/>
+                <TextBlock Text="Your pets" Style="{StaticResource Header}" Margin="0,0,0,10"/>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <ItemsControl ItemsSource="{Binding ClientPets}">
@@ -163,7 +162,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Ostatnie twoje opinie" Style="{StaticResource Header}" Margin="0,0,0,10"/>
+                <TextBlock Text="Your last opinions" Style="{StaticResource Header}" Margin="0,0,0,10"/>
 
                 <!-- Lista ostatnich opinii -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
@@ -188,14 +187,12 @@
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Image Source="/Images/DashboardItem/opinion-item.png"
                                Height="50" Width="50" 
-                               Margin="0,0,0,10"
-                               Opacity="0.5"/>
-                        <TextBlock Text="Brak wystawionych opinii" 
+                               Margin="0,0,0,10"/>
+                        <TextBlock Text="No opinion posted yet" 
 
                                    FontSize="14"/>
-                        <TextBlock Text="Możesz wystawić opinię o lekarzu" 
+                        <TextBlock Text="You can leave a opinion about the doctor" 
                                    FontSize="12"
-                                   Opacity="0.7"
                                    Margin="0,5,0,0"/>
                     </StackPanel>
                 </Border>

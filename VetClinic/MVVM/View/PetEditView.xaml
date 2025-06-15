@@ -22,7 +22,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0"
-                    Content="← Powrót"
+                    Content="← Back"
                     Command="{Binding GoBackCommand}"
                     Style="{StaticResource SubmitButton}"
                     Margin="0,0,20,0"
@@ -61,7 +61,7 @@
                                    Height="120" Width="120" 
                                    Margin="0,0,0,10"/>
                             <TextBlock Grid.Row="1"
-                                       Text="{Binding EditingPet.Name, FallbackValue='Nowe zwierzę'}"
+                                       Text="{Binding EditingPet.Name, FallbackValue='New pet'}"
                                        Style="{StaticResource MediumHeader}"
                                        HorizontalAlignment="Center"
                                        FontSize="16"
@@ -69,7 +69,7 @@
                         </Grid>
 
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Gatunek *" 
+                            <TextBlock Text="Species *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -80,7 +80,7 @@
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Płeć *" 
+                            <TextBlock Text="Gender *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -99,7 +99,7 @@
 
                     <StackPanel Grid.Column="2" Margin="0,35,0,35">
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Imię zwierzęcia *" 
+                            <TextBlock Text="Pet's name *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -110,7 +110,7 @@
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Rasa *" 
+                            <TextBlock Text="Breed *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -121,7 +121,7 @@
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Waga (kg) *" 
+                            <TextBlock Text="Weight (kg) *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -132,7 +132,7 @@
                         </StackPanel>
 
                         <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Data urodzenia *" 
+                            <TextBlock Text="Date of birth *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -146,7 +146,7 @@
                     <StackPanel Grid.Column="4" Margin="0,35,0,35">
                         <StackPanel Margin="0,0,0,15"
                                     Visibility="{Binding ShowOwnerSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text="Właściciel *" 
+                            <TextBlock Text="Owner *" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -176,7 +176,7 @@
 
                         <StackPanel Margin="0,0,0,15"
                                     Visibility="{Binding ShowCurrentOwner, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text="Obecny właściciel" 
+                            <TextBlock Text="Current owner" 
                                        FontWeight="SemiBold"
                                        FontSize="12"
                                        Margin="0,0,0,3"/>
@@ -205,7 +205,7 @@
                                 Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                 <StackPanel>
-                                    <TextBlock Text="Błędy:"
+                                    <TextBlock Text="Errors:"
                                                FontWeight="SemiBold"
                                                Foreground="{StaticResource White}"
                                                FontSize="12"
@@ -233,7 +233,7 @@
                 Padding="20">
             <StackPanel Orientation="Horizontal" 
                         HorizontalAlignment="Center">
-                <Button Content="Anuluj"
+                <Button Content="Cancel"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SubmitButton}"
                         Background="{StaticResource Red}"
