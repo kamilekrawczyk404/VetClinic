@@ -48,10 +48,10 @@ namespace VetClinic.MVVM.ViewModel
             _navigation = navigation;
             _userSessionService = userSessionService;
 
-            // _navigation.NavigateTo<DoctorDashboardViewModel>();
+             _navigation.NavigateTo<ClientDashboardViewModel>();
             // _navigation.NavigateTo<DoctorListViewModel>();
             // _navigation.NavigateTo<AppointmentListViewModel>();
-             _navigation.NavigateTo<PrescriptionListViewModel>();
+            // _navigation.NavigateTo<PrescriptionListViewModel>();
 
             //_navigation.NavigateTo<LoginViewModel>();
             // get the user
