@@ -77,5 +77,17 @@ namespace VetClinic.Controls
             get { return (double)GetValue(RatioProperty); }
             set { SetValue(RatioProperty, value); }
         }
+        public static readonly DependencyProperty ShowTrendLineProperty =
+          DependencyProperty.RegisterAttached(
+              "ShowTrendLine",
+              typeof(bool),
+              typeof(DashboardItem),
+              new PropertyMetadata(true));
+
+        public bool ShowTrendLine
+        {
+            get { return (bool)GetValue(ShowTrendLineProperty); }
+            set { SetValue(ShowTrendLineProperty, value); }
+        }
     }
 }

@@ -42,6 +42,7 @@ namespace VetClinic.Models
         [Column("last_login")]
         public DateTime? LastLogin { get; set; } = DateTime.Now;
 
+        [NotMapped]
         public virtual ICollection<Appointment> Appointments { get; set; }
         public virtual ICollection<Opinion> Opinions { get; set; }
     }

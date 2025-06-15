@@ -21,7 +21,7 @@ namespace VetClinic.Models
         [Column("doctor_id")]
         public int DoctorId { get; set; }
 
-        [Column("commnet")]
+        [Column("comment")]
         public string Comment { get; set; }
 
         [Column("rating")]

@@ -7,7 +7,6 @@ using System.Windows.Media;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.Model;
-using VetClinic.MVVM.View.Window;
 using VetClinic.Utils;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
