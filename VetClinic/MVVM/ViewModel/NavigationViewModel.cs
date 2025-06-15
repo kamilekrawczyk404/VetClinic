@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
+using VetClinic.MVVM.ViewModel.Auth;
+using VetClinic.MVVM.ViewModel.Dashboard;
 using VetClinic.Services;
+using VetClinic.Utils;
 
 namespace VetClinic.MVVM.ViewModel
 {
@@ -56,7 +59,7 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        public bool _areDoctorsVisible;
+        private bool _areDoctorsVisible;
         public bool AreDoctorsVisible
         {
             get => _areDoctorsVisible;
@@ -67,17 +70,99 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        private IUserSessionService _userSessionService;
+        public bool _isDashboardSelected;
+        public bool IsDashboardSelected
+        {
+            get => _isDashboardSelected;
+            set
+            {
+                _isDashboardSelected = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public NavigationViewModel(IUserSessionService userSessionService)
+        private IUserSessionService _userSessionService;
+        private INavigationService _navigation;
+
+        public RelayCommand NavigateToDashboardCommand { get; }
+        public RelayCommand NavigateToAppointmentsListCommand { get; }
+        public RelayCommand NavigateToPetsListCommand { get; }
+        public RelayCommand NavigateToDrugsListCommand { get; }
+        public RelayCommand NavigateToPrescriptionsListCommand { get; }
+        public RelayCommand NavigateToClientsListCommand { get; }
+        public RelayCommand NavigateToDoctorsListCommand { get; }
+
+        public NavigationViewModel(IUserSessionService userSessionService, INavigationService navigation)
         {
             _userSessionService = userSessionService;
-            _userSessionService.UserChanged += () => CheckButtonsVisibility();
+            _navigation = navigation;
+
+            _userSessionService.UserChanged += CheckButtonsVisibility;
+
             AreOtherVisible = AreClientsVisible = ArePetsVisible = AreDoctorsVisible = AreDrugsVisible = false;
+
+            NavigateToDashboardCommand = new RelayCommand(NavigateToDashboard);
+            NavigateToAppointmentsListCommand = new RelayCommand(NavigateToAppointmentsList);
+            NavigateToPetsListCommand = new RelayCommand(NavigateToPetsList);
+            NavigateToDrugsListCommand = new RelayCommand(NavigateToDrugsList);
+            NavigateToPrescriptionsListCommand = new RelayCommand(NavigateToPrescriptionsList);
+            NavigateToClientsListCommand = new RelayCommand(NavigateToClientsList);
+            NavigateToDoctorsListCommand = new RelayCommand(NavigateToDoctorsList);
+        }
+
+        private void NavigateToDashboard(object obj)
+        {
+            if (_userSessionService.IsDoctor)
+            {
+                _navigation.NavigateTo<DoctorDashboardViewModel>();
+            }
+            else if (_userSessionService.IsAdmin)
+            {
+                //_navigation.NavigateTo<AdminDashboardViewModel>();
+            }
+            else if (_userSessionService.IsClient)
+            {
+                _navigation.NavigateTo<ClientDashboardViewModel>();
+            }
+            else
+            {
+                _navigation.NavigateTo<LoginViewModel>();
+            }
+        }
+
+        private void NavigateToPrescriptionsList(object obj)
+        {
+            _navigation.NavigateTo<PrescriptionListViewModel>();
+        }
+
+        private void NavigateToAppointmentsList(object obj)
+        {
+            _navigation.NavigateTo<AppointmentListViewModel>();
+        }
+
+        private void NavigateToDrugsList(object obj)
+        {
+            //_navigation.NavigateTo<DrugsListViewModel>();
+        }
+
+        private void NavigateToPetsList(object obj)
+        {
+            _navigation.NavigateTo<PetListViewModel>();
+        }
+
+        private void NavigateToDoctorsList(object obj)
+        {
+            _navigation.NavigateTo<DoctorListViewModel>();
+        }
+
+        private void NavigateToClientsList(object obj)
+        {
+            //_navigation.NavigateTo<ClientsListViewModel>();
         }
 
         private void CheckButtonsVisibility()
         {
+            Trace.WriteLine("user check visibility");
             AreOtherVisible = true;
 
             if (_userSessionService.IsAdmin)
@@ -96,6 +181,8 @@ namespace VetClinic.MVVM.ViewModel
                 ArePetsVisible = true;
                 AreDoctorsVisible = true;
             }
+
+            IsDashboardSelected = true;
         }
     }
 }

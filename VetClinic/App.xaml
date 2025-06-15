@@ -51,6 +51,7 @@
             <DataTemplate DataType="{x:Type authViewModel:LoginViewModel}">
                 <authView:LoginView/>
             </DataTemplate>
+
             <DataTemplate DataType="{x:Type dashboardViewModel:DoctorDashboardViewModel}">
                 <dashboardView:DoctorDashboard/>
             </DataTemplate>

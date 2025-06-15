@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="VetClinic.Controls.NavigationButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VetClinic.Controls"
+             mc:Ignorable="d" 
+             x:Name="Root"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Button
+        x:Name="PART_Button"
+        CommandParameter="{Binding Path=CommandParameter, ElementName=Root}"
+        Command="{Binding Path=Command, ElementName=Root}">
+        <Button.Style>
+            <Style TargetType="Button">
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="Foreground" Value="{DynamicResource White}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Padding" Value="8"/>
+                <Setter Property="Margin" Value="0,0,0,4"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border
+                               Padding="{TemplateBinding Padding}"
+                               Background="{TemplateBinding Background}"
+                               BorderBrush="{TemplateBinding BorderBrush}"
+                               BorderThickness="{TemplateBinding BorderThickness}"
+                               CornerRadius="12">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image
+                                        x:Name="PART_Icon"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                        Source="{Binding Path=Icon, ElementName=Root}" 
+                                        Width="25" 
+                                        Height="25"
+                                        Margin="0,0,10,0"
+                                        Visibility="{Binding Path=IsSelected, ElementName=Root, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                    <Image
+                                        x:Name="PART_ActiveIcon"
+                                        VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                        Source="{Binding Path=ActiveIcon, ElementName=Root}" 
+                                        Width="25" 
+                                        Height="25"
+                                        Margin="0,0,10,0"
+                                        Visibility="{Binding Path=IsSelected, ElementName=Root, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                    <TextBlock x:Name="PART_ButtonText" Text="{Binding Path=Text, ElementName=Root}" VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource White}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Turquise}"/>
+                                    <Setter TargetName="PART_ActiveIcon" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="PART_Icon" Property="Visibility" Value="Collapsed"/>
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Path=IsSelected, ElementName=Root}" Value="True">
+                                    <Setter Property="Background" Value="{DynamicResource White}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Turquise}"/>
+                                    <Setter TargetName="PART_ActiveIcon" Property="Visibility" Value="Visible"/>
+                                    <Setter TargetName="PART_Icon" Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </Button.Style>
+    </Button>
+
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
+</UserControl>
