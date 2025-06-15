@@ -42,6 +42,7 @@
             <utils:StarRatingConverter x:Key="StarRatingConverter"/>
             <utils:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
             <utils:IntToBoolConverter  x:Key="IntToBoolConverter"/>
+            <utils:SelectedViewModelToBooleanConventer  x:Key="SelectedViewModelToBooleanConventer"/>
 
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">
@@ -76,12 +77,16 @@
             <DataTemplate DataType="{x:Type viewModel:PrescriptionListViewModel}">
                 <view:PrescriptionsList/>
             </DataTemplate>
-            <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
+            <DataTemplate DataType="{x:Type viewModel:DrugListViewModel}">
+                <view:DrugList/>
+            </DataTemplate>
+                
+           <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>
            <SolidColorBrush x:Key="UltraLightTurquise">#dff4f1</SolidColorBrush>
            <SolidColorBrush x:Key="White">#fffafb</SolidColorBrush>
-            <SolidColorBrush x:Key="UltraLightGray">#fbeff2</SolidColorBrush>
+           <SolidColorBrush x:Key="UltraLightGray">#fbeff2</SolidColorBrush>
            <SolidColorBrush x:Key="Gray">#2b2c28</SolidColorBrush>
            <SolidColorBrush x:Key="LightGray">#afb2a9</SolidColorBrush>
            <SolidColorBrush x:Key="Black">#131515</SolidColorBrush>

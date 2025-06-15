@@ -71,8 +71,4 @@
             </Style>
         </Button.Style>
     </Button>
-
-    <UserControl.Resources>
-        
-    </UserControl.Resources>
 </UserControl>

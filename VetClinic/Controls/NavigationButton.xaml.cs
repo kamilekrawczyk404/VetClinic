@@ -46,23 +46,11 @@ namespace VetClinic.Controls
             set => SetValue(TextProperty, value);
         }
 
-        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(NavigationButton), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+        public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(NavigationButton), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
         public bool IsSelected
         {
             get => (bool)GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
-        }
-        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var button = d as NavigationButton;
-            if (button != null)
-            {
-                button.OnIsSelectedChanged((bool)e.NewValue);
-            }
-        }
-        protected virtual void OnIsSelectedChanged(bool isSelected)
-        {
-            Background = isSelected ? Brushes.LightBlue : Brushes.Transparent;
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand), typeof(NavigationButton), new PropertyMetadata(null));

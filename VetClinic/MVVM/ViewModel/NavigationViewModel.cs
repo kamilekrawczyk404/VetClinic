@@ -70,13 +70,14 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        public bool _isDashboardSelected;
-        public bool IsDashboardSelected
+
+        private string _selectedViewName;
+        public string SelectedViewName
         {
-            get => _isDashboardSelected;
+            get => _selectedViewName;
             set
             {
-                _isDashboardSelected = value;
+                _selectedViewName = value;
                 OnPropertyChanged();
             }
         }
@@ -128,41 +129,47 @@ namespace VetClinic.MVVM.ViewModel
             {
                 _navigation.NavigateTo<LoginViewModel>();
             }
+            SelectedViewName = "Dashboard";
         }
 
         private void NavigateToPrescriptionsList(object obj)
         {
             _navigation.NavigateTo<PrescriptionListViewModel>();
+            SelectedViewName = "Prescriptions";
         }
 
         private void NavigateToAppointmentsList(object obj)
         {
             _navigation.NavigateTo<AppointmentListViewModel>();
+            SelectedViewName = "Appointments";
         }
 
         private void NavigateToDrugsList(object obj)
         {
-            //_navigation.NavigateTo<DrugsListViewModel>();
+            _navigation.NavigateTo<DrugListViewModel>();
+            SelectedViewName = "Drugs";
         }
 
         private void NavigateToPetsList(object obj)
         {
             _navigation.NavigateTo<PetListViewModel>();
+            SelectedViewName = "Pets";
         }
 
         private void NavigateToDoctorsList(object obj)
         {
             _navigation.NavigateTo<DoctorListViewModel>();
+            SelectedViewName = "Doctors";
         }
 
         private void NavigateToClientsList(object obj)
         {
             //_navigation.NavigateTo<ClientsListViewModel>();
+            SelectedViewName = "Clients";
         }
 
         private void CheckButtonsVisibility()
         {
-            Trace.WriteLine("user check visibility");
             AreOtherVisible = true;
 
             if (_userSessionService.IsAdmin)
@@ -182,7 +189,7 @@ namespace VetClinic.MVVM.ViewModel
                 AreDoctorsVisible = true;
             }
 
-            IsDashboardSelected = true;
+            SelectedViewName = "Dashboard";
         }
     }
 }
