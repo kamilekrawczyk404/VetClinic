@@ -196,7 +196,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
             IsAppointmentDisplayed = false;
 
-            Statuses = new() { "Sheduled", "In Progress", "Completed", "Canceled" };
+            Statuses = new() { "Scheduled", "In Progress", "Completed", "Cancelled" };
 
             FetchDoctorData();
         }
@@ -205,12 +205,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (arg is Appointment appointment)
             {
-                if (appointment.Status.ToLower() == "canceled")
+                if (appointment.Status == "Cancelled")
                     return;
 
                 using var context = _contextFactory.CreateDbContext();
 
-                appointment.Status = "Canceled";
+                appointment.Status = "Cancelled";
                 context.Appointment.Update(appointment);
 
                 await context.SaveChangesAsync();
@@ -253,8 +253,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             {
                 using var context = _contextFactory.CreateDbContext();
 
-                // Change status to in progress if appointment is sheduled
-                if (detailedAppointment.Appointment.Status.ToLower() == "sheduled")
+                // Change status to in progress if appointment is scheduledS
+                if (detailedAppointment.Appointment.Status == "Scheduled")
                 {
                     detailedAppointment.Appointment.Status = "In Progress";
                     context.Appointment.Update(detailedAppointment.Appointment);

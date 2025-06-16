@@ -69,7 +69,6 @@ namespace VetClinic.MVVM.ViewModel
                         DosageForm = drug.DosageForm,
                         Manufacturer = drug.Manufacturer,
                         UnitOfMeasure = drug.UnitOfMeasure,
-                        Quantity = drug.Quantity,
                         Strength = drug.Strength,
                     });
                 }

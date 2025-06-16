@@ -28,13 +28,14 @@
                         MaxHeight="200"
                         AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="120" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*" IsReadOnly="True"/>
                             <DataGridTextColumn Header="Price" Binding="{Binding Price}" IsReadOnly="True"/>
-                            <DataGridTemplateColumn Header="Actions" Width="50">
+                            <DataGridTemplateColumn Header="Actions" MinWidth="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <controls:RemoveButton
+                                            IsEnabled="{Binding DataContext.IsAppointmentCompleted, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseBooleanConverter}}"
                                             Command="{Binding DataContext.RemoveServiceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"/>
                                     </DataTemplate>
@@ -45,7 +46,7 @@
                 </StackPanel>
             </Border>
 
-            <Border Margin="0,10,0,0" Grid.Row="2" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="5">
+            <Border Margin="0,10,0,0" Grid.Row="2" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="5" Visibility="{Binding IsAppointmentCompleted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
                 <StackPanel>
                 <TextBlock Text="Available services" Style="{StaticResource SmallHeader}" Margin="0,0,0,5"/>
                 <DataGrid

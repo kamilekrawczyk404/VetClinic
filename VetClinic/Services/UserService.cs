@@ -25,9 +25,9 @@ namespace VetClinic.Services
                 Role = "Client",
                 Email = email,
                 PasswordHash = passwordHash,
-                TelephoneNumber = int.Parse(phoneNumber),
+                TelephoneNumber = phoneNumber,
                 DateOfBirth = dateOfBirth,
-                Gender = gender,
+                IsActive = true,
                 Name = name,
                 Surname = surname,
             };

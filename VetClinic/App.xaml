@@ -43,6 +43,8 @@
             <utils:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
             <utils:IntToBoolConverter  x:Key="IntToBoolConverter"/>
             <utils:SelectedViewModelToBooleanConventer  x:Key="SelectedViewModelToBooleanConventer"/>
+            <utils:InverseBooleanConverter  x:Key="InverseBooleanConverter"/>
+            <utils:CancelledAppointmentStatusToCollapsedVisibilityConverter  x:Key="CancelledAppointmentStatusToCollapsedVisibilityConverter"/>
 
 
             <DataTemplate DataType="{x:Type authViewModel:RegisterViewModel}">

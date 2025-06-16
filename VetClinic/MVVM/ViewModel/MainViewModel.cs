@@ -59,7 +59,7 @@ namespace VetClinic.MVVM.ViewModel
             //User logged = context.User.FirstOrDefault(u => u.Email == ".com");
            //_userSessionService.SetUser(logged);
 
-            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "marek.weterynarz@vetclinic.com");
+            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "john.doe@vetclinic.com");
             _userSessionService.SetDoctor(logged);
             _navigation.NavigateTo<DoctorDashboardViewModel>();
 

@@ -18,11 +18,11 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock
                     x:Name="PART_TextBlockTitle"
-                    Text="{Binding Title, ElementName=Root}"
+                    Text="{Binding Path=Title, ElementName=Root}"
                     Foreground="{DynamicResource Gray}"/>
                 <TextBlock
                     x:Name="PART_ErrorMessageTextBlock"
-                    Text="{Binding ErrorMessage, ElementName=Root}"
+                    Text="{Binding Path=ErrorMessage, ElementName=Root, Mode=TwoWay}"
                     Margin="5,0,0,0"
                     Foreground="{DynamicResource Red}"/>
             </StackPanel>

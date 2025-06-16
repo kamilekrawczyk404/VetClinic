@@ -20,14 +20,14 @@ namespace VetClinic.Models
         [Column("email")]
         public string Email { get; set; }
 
+        [Column("is_active")]
+        public bool IsActive { get; set; }
+
         [Column("password")]
         public string PasswordHash { get; set; }
 
-        [Column("gender")]
-        public string Gender { get; set; } = "Male";
-
-        [Column("telephone_number")]
-        public int TelephoneNumber { get; set; }
+        [Column("phone_number")]
+        public string TelephoneNumber { get; set; }
 
         [Column("specialization")]
         public string Specialization { get; set; }
