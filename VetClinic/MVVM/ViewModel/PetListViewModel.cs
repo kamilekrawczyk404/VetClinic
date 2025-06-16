@@ -128,9 +128,17 @@ namespace VetClinic.MVVM.ViewModel
                     var hasAppointments = await context.Appointment.AnyAsync(a => a.PetId == petToRemove.Id);
                     if (hasAppointments)
                     {
-                        MessageBox.Show("Nie można usunąć zwierzęcia, które ma zaplanowane lub przeszłe wizyty.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show("You cannot delete pet thas has upcoming or past appointments.", "Eroor", MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
+                    var result = MessageBox.Show(
+                       $"Are you sure you want to delete this pet?",
+                       "Delete pet",
+                       MessageBoxButton.YesNo,
+                       MessageBoxImage.Question);
+
+                    if (result != MessageBoxResult.Yes)
+                        return;
 
                     context.Pet.Remove(petToRemove);
                     await context.SaveChangesAsync();

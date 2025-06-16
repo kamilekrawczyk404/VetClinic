@@ -21,6 +21,7 @@ namespace VetClinic.MVVM.ViewModel
         private readonly INavigationService _navigationService;
 
         private DateTime _currentWeekStart;
+        private Doctor _preselectedDoctor; 
 
         public BookAppointmentViewModel(
             IDbContextFactory<VeterinaryClinicContext> contextFactory,
@@ -31,16 +32,13 @@ namespace VetClinic.MVVM.ViewModel
             _userSessionService = userSessionService;
             _navigationService = navigationService;
 
-            // Initialize collections
             Doctors = new ObservableCollection<Doctor>();
             UserPets = new ObservableCollection<Pet>();
             WeekDays = new ObservableCollection<CalendarDay>();
             AvailableTimeSlots = new ObservableCollection<TimeSlot>();
 
-            // Initialize current week to today
             _currentWeekStart = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
 
-            // Initialize commands
             PreviousWeekCommand = new RelayCommand(PreviousWeek);
             NextWeekCommand = new RelayCommand(NextWeek);
             SelectDayCommand = new RelayCommand(SelectDay);
@@ -125,7 +123,6 @@ namespace VetClinic.MVVM.ViewModel
         }
 
         private string _notes;
-
 
         private CalendarDay _selectedDay;
         public CalendarDay SelectedDay
@@ -314,7 +311,6 @@ namespace VetClinic.MVVM.ViewModel
                 BookingResult = "Appointment booked successfully!";
                 IsBookingSuccess = true;
 
-                // Clear the form after successful booking
                 _navigationService.NavigateTo<AppointmentListViewModel>();
             }
             catch (Exception ex)
@@ -333,6 +329,24 @@ namespace VetClinic.MVVM.ViewModel
         private void Cancel(object parameter)
         {
             _navigationService.NavigateTo<AppointmentListViewModel>();
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Sets the preselected doctor. This method should be called from the navigation service.
+        /// </summary>
+        /// <param name="doctor">The doctor to preselect</param>
+        public void SetPreselectedDoctor(Doctor doctor)
+        {
+            _preselectedDoctor = doctor;
+
+            if (Doctors != null && Doctors.Count > 0)
+            {
+                SetSelectedDoctorFromPreselected();
+            }
         }
 
         #endregion
@@ -357,10 +371,25 @@ namespace VetClinic.MVVM.ViewModel
                     .ToListAsync();
 
                 Doctors = new ObservableCollection<Doctor>(doctors);
+
+                SetSelectedDoctorFromPreselected();
             }
             catch (Exception ex)
             {
                 Trace.TraceError($"Error loading doctors: {ex.Message}");
+            }
+        }
+
+        private void SetSelectedDoctorFromPreselected()
+        {
+            if (_preselectedDoctor != null && Doctors != null)
+            {
+                // Find the doctor in the loaded collection by ID
+                var doctorToSelect = Doctors.FirstOrDefault(d => d.Id == _preselectedDoctor.Id);
+                if (doctorToSelect != null)
+                {
+                    SelectedDoctor = doctorToSelect;
+                }
             }
         }
 
@@ -390,8 +419,9 @@ namespace VetClinic.MVVM.ViewModel
             {
                 var date = _currentWeekStart.AddDays(i);
 
-                // Skip past dates (except today)
                 if (date < DateTime.Today)
+                    continue;
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
                     continue;
 
                 days.Add(new CalendarDay
@@ -431,13 +461,12 @@ namespace VetClinic.MVVM.ViewModel
                     .ToListAsync();
 
                 var timeSlots = new ObservableCollection<TimeSlot>();
-                var startTime = new TimeSpan(8, 0, 0); // 8:00 AM
-                var endTime = new TimeSpan(15, 30, 0);  // 6:00 PM
-                var slotDuration = new TimeSpan(0, 30, 0); // 30 minutes
+                var startTime = new TimeSpan(8, 0, 0);
+                var endTime = new TimeSpan(16, 0, 0);
+                var slotDuration = new TimeSpan(0, 30, 0);
 
                 for (var time = startTime; time < endTime; time = time.Add(slotDuration))
                 {
-                    // Skip if this time slot is already booked
                     if (existingAppointments.Contains(time))
                         continue;
 
@@ -445,6 +474,12 @@ namespace VetClinic.MVVM.ViewModel
                     if (SelectedDay.Date.Date == DateTime.Today &&
                         DateTime.Now.TimeOfDay > time.Add(TimeSpan.FromMinutes(30)))
                         continue;
+
+                    if (SelectedDay.Date.DayOfWeek == DayOfWeek.Saturday || SelectedDay.Date.DayOfWeek == DayOfWeek.Sunday)
+                    {
+                        AvailableTimeSlots = new ObservableCollection<TimeSlot>();
+                        return;
+                    }
 
                     timeSlots.Add(new TimeSlot
                     {

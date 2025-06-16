@@ -53,10 +53,9 @@
                                     <DataTemplate>
                                         <TextBlock VerticalAlignment="Center">
                                             <TextBlock.Text>
-                                                <MultiBinding StringFormat="{}{0} {1} - {2}">
+                                                <MultiBinding StringFormat="{}{0} {1}">
                                                     <Binding Path="Name"/>
                                                     <Binding Path="Surname"/>
-                                                    <Binding Path="Specialization"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -150,7 +149,7 @@
                         <ItemsControl ItemsSource="{Binding WeekDays}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Rows="1" Columns="7"/>
+                                    <UniformGrid Rows="1" Columns="5"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -293,10 +292,9 @@
                             VerticalAlignment="Center"
                             Visibility="{Binding HasValidSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="Selected: " 
-                               FontSize="12"
-                               Opacity="0.8"/>
+                               FontSize="14"/>
                     <TextBlock Text="{Binding AppointmentSummary}" 
-                               FontSize="12"
+                               FontSize="14"
                                FontWeight="SemiBold"/>
                 </StackPanel>
 
@@ -304,17 +302,16 @@
                         Content="Cancel"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SubmitButton}"
-                        Width="100"
-                        Height="40"
+                        Background="{StaticResource Red}"
                         Margin="0,0,10,0"
+                        Padding="10"
                         Cursor="Hand"/>
 
                 <Button Grid.Column="2"
                         Content="Book Appointment"
                         Command="{Binding BookAppointmentCommand}"
                         Style="{StaticResource SubmitButton}"
-                        Width="150"
-                        Height="40"
+                        Padding="10"
                         Cursor="Hand"/>
             </Grid>
         </Border>

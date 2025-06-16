@@ -21,7 +21,7 @@
 
             <TextBlock Grid.Column="0" 
                        Style="{StaticResource Header}"
-                       FontSize="20"
+                       FontSize="24"
                        VerticalAlignment="Center">
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0}">

@@ -25,6 +25,12 @@
                        Style="{StaticResource Header}"
                        FontSize="24"
                        VerticalAlignment="Center"/>
+            <Button Grid.Column="1"
+                Content="Book new appointment"
+                Command="{Binding BookAppointmentCommand}"
+                Visibility="{Binding isClient, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Style="{StaticResource SubmitButton}"
+                Cursor="Hand"/>
 
         </Grid>
 

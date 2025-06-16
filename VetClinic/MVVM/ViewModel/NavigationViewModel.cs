@@ -188,6 +188,16 @@ namespace VetClinic.MVVM.ViewModel
                 ArePetsVisible = true;
                 AreDoctorsVisible = true;
             }
+            // Sprawdzenie końcowych wartości flag
+            System.Diagnostics.Debug.WriteLine("=== Końcowe wartości flag widoczności ===");
+            System.Diagnostics.Debug.WriteLine($"User Role: Admin={_userSessionService.IsAdmin}, Doctor={_userSessionService.IsDoctor}, Client={_userSessionService.IsClient}");
+            System.Diagnostics.Debug.WriteLine($"AreOtherVisible: {AreOtherVisible}");
+            System.Diagnostics.Debug.WriteLine($"AreDrugsVisible: {AreDrugsVisible}");
+            System.Diagnostics.Debug.WriteLine($"ArePetsVisible: {ArePetsVisible}");
+            System.Diagnostics.Debug.WriteLine($"AreClientsVisible: {AreClientsVisible}");
+            System.Diagnostics.Debug.WriteLine($"AreDoctorsVisible: {AreDoctorsVisible}");
+            System.Diagnostics.Debug.WriteLine($"SelectedViewName: {SelectedViewName}");
+            System.Diagnostics.Debug.WriteLine("=========================================");
 
             SelectedViewName = "Dashboard";
         }

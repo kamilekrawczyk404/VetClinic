@@ -21,7 +21,7 @@
             <TextBlock Grid.Column="0" 
                        Text="Doctor list" 
                        Style="{StaticResource Header}"
-                       FontSize="20"
+                       FontSize="24"
                        VerticalAlignment="Center"/>
 
             <Button Grid.Column="1"
@@ -79,18 +79,21 @@
                                             Orientation="Vertical"
                                             VerticalAlignment="Center">
 
-                                    <StackPanel Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                     
+                                    <Button Content="Book appointment"
+                                                Command="{Binding DataContext.BookAppointmentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource SubmitButton}"
+                                                Cursor="Hand"
+                                                Margin="2,2,2,2">
+                                    </Button>
 
-                                        <Button Content="Show opinions"
+                                    <Button Content="Show opinions"
                                                 Command="{Binding DataContext.ViewOpinionsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
                                                 Cursor="Hand"
                                                 Margin="2,2,2,2">
-                                        </Button>
-
-                                    </StackPanel>
+                                    </Button>
 
 
                                     <StackPanel Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
