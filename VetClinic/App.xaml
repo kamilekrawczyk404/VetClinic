@@ -75,6 +75,9 @@
             <DataTemplate DataType="{x:Type viewModel:PrescriptionListViewModel}">
                 <view:PrescriptionsList/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:BookAppointmentViewModel}">
+                <view:BookAppointmentView/>
+            </DataTemplate>
             <SolidColorBrush x:Key="DarkTurquise">#267A6B</SolidColorBrush>
            <SolidColorBrush x:Key="Turquise">#339989</SolidColorBrush>
            <SolidColorBrush x:Key="LightTurquise">#7de2d1</SolidColorBrush>

@@ -157,6 +157,20 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             ViewOpinionCommand = new RelayCommand(ViewOpinion);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
+
+            _ = LoadDataAsync();
+
+        }
+        private async Task LoadDataAsync()
+        {
+            try
+            {
+                await OnUserChanged();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading dashboard data: {ex.Message}");
+            }
         }
 
         private void SelectPet(object obj)
