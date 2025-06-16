@@ -21,12 +21,12 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" 
-                       Text="Moje wizyty" 
+                       Text="My appointments" 
                        Style="{StaticResource Header}"
                        FontSize="24"
                        VerticalAlignment="Center"/>
             <Button Grid.Column="1"
-                Content="Book new appointment"
+                Content="📅 Book new appointment"
                 Command="{Binding BookAppointmentCommand}"
                 Visibility="{Binding isClient, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{StaticResource SubmitButton}"
@@ -172,7 +172,7 @@
                                                 </TextBlock>
                                             </StackPanel>
                                             <Button Grid.Column="2"
-                                                    Content="Cancel"
+                                                    Content="❌ Cancel"
                                                     Command="{Binding DataContext.CancelAppointmentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
                                                     Background="{StaticResource Red}"

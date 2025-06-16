@@ -79,7 +79,7 @@
                                             Orientation="Vertical"
                                             VerticalAlignment="Center">
 
-                                    <Button Content="Book appointment"
+                                    <Button Content="📅 Book appointment"
                                                 Command="{Binding DataContext.BookAppointmentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
@@ -87,7 +87,7 @@
                                                 Margin="2,2,2,2">
                                     </Button>
 
-                                    <Button Content="Show opinions"
+                                    <Button Content="💭 Show opinions"
                                                 Command="{Binding DataContext.ViewOpinionsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
@@ -97,7 +97,7 @@
 
 
                                     <StackPanel Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                        <Button Content="Edytuj"
+                                        <Button Content="✏️ Edit"
                                                 Command="{Binding DataContext.EditDoctorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource SubmitButton}"
@@ -105,7 +105,7 @@
                                                 Margin="2,2,2,2">
                                         </Button>
 
-                                        <Button Content="Usuń"
+                                        <Button Content="🗑️ Delete"
                                                 Command="{Binding DataContext.DeleteDoctorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Background="{StaticResource Red}" 

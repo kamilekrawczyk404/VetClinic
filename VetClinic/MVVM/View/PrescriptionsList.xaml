@@ -21,7 +21,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" 
-                       Text="Moje recepty" 
+                       Text="Your prescriptions" 
                        Style="{StaticResource Header}"
                        FontSize="24"
                        VerticalAlignment="Center"/>

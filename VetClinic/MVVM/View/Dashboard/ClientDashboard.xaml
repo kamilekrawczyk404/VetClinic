@@ -33,6 +33,7 @@
             Grid.RowSpan="3" 
             ItemsSource="{Binding UpcomingAppointments, Mode=TwoWay}"  
             Statuses="{Binding Statuses, Mode=TwoWay}"
+            CancelAppointmentCommand="{Binding CancelAppointmentCommand}"
             HorizontalAlignment="Stretch"
             />
 

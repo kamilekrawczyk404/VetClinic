@@ -49,19 +49,19 @@
                             HorizontalAlignment="Center"
                             Visibility="{Binding IsNotAddingOrEditingOpinion, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-                    <Button Content="Add new opinion" 
+                    <Button Content="💬 Add new opinion" 
                             Command="{Binding AddOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
                             Margin="0,0,10,0"
                             Visibility="{Binding CanAddOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                    <Button Content="Edit opinion" 
+                    <Button Content="✏️ Edit opinion" 
                             Command="{Binding EditOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
                             Margin="0,0,10,0"
                             Visibility="{Binding CanEditOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                    <Button Content="Delete opinion" 
+                    <Button Content="🗑️ Delete opinion" 
                             Background="{StaticResource Red}"
                             Command="{Binding DeleteOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
@@ -70,7 +70,7 @@
 
                 <!-- Opinion form -->
                 <StackPanel Visibility="{Binding IsAddingOpinion, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock Text="Add your opinion" 
+                    <TextBlock Text="💬 Add your opinion" 
                                Style="{StaticResource Header}" 
                                FontSize="16" 
                                Margin="0,0,0,10"/>
@@ -111,11 +111,11 @@
                              Margin="0,0,0,10"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Save" 
+                        <Button Content="💾 Save" 
                                 Command="{Binding SaveOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"
                                 Margin="0,0,10,0"/>
-                        <Button Content="Cancel" 
+                        <Button Content="❌ Cancel" 
                                 Command="{Binding CancelOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"/>
                     </StackPanel>
@@ -164,11 +164,12 @@
                              Margin="0,0,0,10"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Save changes" 
+                        <Button Content="💾 Save changes" 
                                 Command="{Binding SaveOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"
                                 Margin="0,0,10,0"/>
-                        <Button Content="Cancel" 
+                        <Button Content="❌ Cancel" 
+                                Background="{StaticResource Red}"
                                 Command="{Binding CancelOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"/>
                     </StackPanel>

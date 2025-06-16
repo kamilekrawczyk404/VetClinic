@@ -64,7 +64,7 @@ namespace VetClinic.MVVM.ViewModel
             {
                 IsAddingPet = false;
                 Title = $"Edit pet: {_pet.Name}";
-                SaveButtonText = "Save changes";
+                SaveButtonText = "💾 Save changes";
 
                 EditingPet = new Pet
                 {
@@ -91,7 +91,7 @@ namespace VetClinic.MVVM.ViewModel
             {
                 IsAddingPet = false;
                 Title = $"Edit pet: {_originalPet.Name}";
-                SaveButtonText = "Save changes";
+                SaveButtonText = "💾 Save changes";
 
                 EditingPet = new Pet
                 {
@@ -110,15 +110,15 @@ namespace VetClinic.MVVM.ViewModel
             else
             {
                 IsAddingPet = true;
-                Title = "Add new pet";
-                SaveButtonText = "Add pet";
+                Title = "➕Add new pet";
+                SaveButtonText = "➕Add pet";
 
                 EditingPet = new Pet
                 {
                     DateOfBirth = DateTime.Now.AddYears(-1),
                     CreatedAt = DateTime.Now,
                     Gender = "Male",
-                    Species = "Pies",
+                    Species = "Dog",
                     Weight = 1.0
                 };
 

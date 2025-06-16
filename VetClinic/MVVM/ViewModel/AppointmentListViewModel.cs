@@ -139,7 +139,7 @@ namespace VetClinic.MVVM.ViewModel
             if (!(obj is Appointment appointment))
                 return false;
 
-            return appointment.Status != "Cancelled" &&
+            return appointment.Status != "Canceled" &&
                    appointment.Status != "Completed" &&
                    appointment.AppointmentDate > DateTime.Now;
         }
@@ -167,10 +167,18 @@ namespace VetClinic.MVVM.ViewModel
 
                 if (appointmentToUpdate != null)
                 {
-                    appointmentToUpdate.Status = "Cancelled";
+                    appointmentToUpdate.Status = "Canceled";
                     await context.SaveChangesAsync();
 
-                    await LoadAppointmentsAsync();
+                    var upcomingToRemove = UpcomingAppointments.FirstOrDefault(a => a.Id == appointment.Id);
+                    if (upcomingToRemove != null)
+                    {
+                        UpcomingAppointments.Remove(upcomingToRemove);
+
+                        upcomingToRemove.Status = "Canceled";
+
+                        PastAppointments.Insert(0, upcomingToRemove);
+                    }
 
                     MessageBox.Show("The appointment has been cancelled.", "Appointment Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -179,6 +187,8 @@ namespace VetClinic.MVVM.ViewModel
             {
                 Trace.TraceError($"Error cancelling appointment: {ex.Message}");
                 MessageBox.Show("An error occurred while cancelling the appointment.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await LoadAppointmentsAsync();
             }
         }
 
