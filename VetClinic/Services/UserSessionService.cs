@@ -12,74 +12,25 @@ namespace VetClinic.Services
 {
     public interface IUserSessionService
     {
-        User LoggedInUser { get; }
-        Doctor LoggedInDoctor { get; }
+        User LoggedInUser { get; set; }
+        Doctor LoggedInDoctor { get; set; }
 
         event Action UserChanged;
         void SetUser(User user);
         void SetDoctor(Doctor doctor);
         void ClearUser();
 
-        bool IsClient { get; }
-        bool IsDoctor { get; }
-        bool IsAdmin { get; }
+        bool IsClient { get; set; }
+        bool IsDoctor { get; set; }
+        bool IsAdmin { get; set; }
     }
     public class UserSessionService : ObservableObject, IUserSessionService
     {
-        private User _loggedInUser;
-        public User LoggedInUser
-        {
-            get => _loggedInUser;
-            private set
-            {
-                _loggedInUser = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Doctor _loggedInDoctor;
-        public Doctor LoggedInDoctor
-        {
-            get => _loggedInDoctor;
-            private set
-            {
-                _loggedInDoctor = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isClient;
-        public bool IsClient
-        {
-            get => _isClient;
-            private set
-            {
-                _isClient = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isDoctor;
-        public bool IsDoctor
-        {
-            get => _isDoctor;
-            private set
-            {
-                _isDoctor = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private bool _isAdmin;
-        public bool IsAdmin
-        {
-            get => _isAdmin;
-            private set
-            {
-                _isAdmin = value;
-                OnPropertyChanged();
-            }
-        }
+        public User LoggedInUser { get; set;  }
+        public Doctor LoggedInDoctor { get; set; }
+        public bool IsClient { get; set; }
+        public bool IsDoctor { get; set; }
+        public bool IsAdmin { get; set;  }
 
         public event Action UserChanged;
         public void SetUser(User user)
@@ -94,7 +45,6 @@ namespace VetClinic.Services
             LoggedInDoctor = doctor;
             CheckUserRole();
             UserChanged?.Invoke();
-            Trace.WriteLine("Doctor " + doctor.Name);
         }
         public void ClearUser()
         {
@@ -116,8 +66,6 @@ namespace VetClinic.Services
             {
                 return;
             }
-
-            Trace.WriteLine("roles");
             if (LoggedInUser != null)
             {
                 IsClient = LoggedInUser.Role.ToLower() == "client";

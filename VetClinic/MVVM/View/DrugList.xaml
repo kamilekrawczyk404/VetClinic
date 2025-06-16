@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="VetClinic.MVVM.View.DrugList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VetClinic.MVVM.View"
+             xmlns:controls="clr-namespace:VetClinic.Controls"
+             xmlns:input="clr-namespace:VetClinic.Controls.Input"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Style="{StaticResource BorderDefault}" Padding="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="350"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Drug list" Style="{StaticResource Header}" VerticalAlignment="Center"/>
+
+            <Button Content="Add new drug" Style="{StaticResource SubmitButton}" Grid.Column="1" HorizontalAlignment="Right"/>
+
+            <Border Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BorderWrapper}" Margin="0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Border Background="{DynamicResource White}" Margin="0,0,10,0" CornerRadius="4">
+                        <Image Source="/Images/medicine-active.png" Height="100" Width="100" />
+                    </Border>
+                    <Border Grid.Column="1" Style="{StaticResource BorderWrapper}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.ColumnSpan="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Editing drug #1 - Some name" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
+
+                                <Button Grid.Column="1" Style="{StaticResource SubmitButton}" Content="Save drug" HorizontalAlignment="Right"/>
+                            </Grid>
+
+                            <input:InputControl Title="Name" ErrorMessage="" Text="" Grid.Row="1" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Dosage Form" ErrorMessage="" Text="" Grid.Row="2" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Strength" ErrorMessage="" Text="" Grid.Row="3" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Unit of measure" ErrorMessage="" Text="" Grid.Row="4" Margin="0,0,5,0"/>
+                            
+                            <input:InputControl Title="Manufacturer" ErrorMessage="" Text="" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:InputControl Title="Quantity" ErrorMessage="" Text="" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:TextArea Title="Description" ErrorMessage="" Text="" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Margin="5,0,0,0"/>
+                        </Grid>
+                        
+                    </Border>
+                </Grid>
+            </Border>
+            <DataGrid
+                Grid.Row="2"
+                Grid.ColumnSpan="2"
+                Style="{StaticResource CustomDataGridStyle}"
+                RowStyle="{StaticResource CustomDataGridRowStyle}"
+                CellStyle="{StaticResource CustomDataGridCellStyle}"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Drugs, Mode=TwoWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="120"/>
+                    <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Strength" Binding="{Binding Strength}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Unit of measure" Binding="{Binding UnitOfMeasure}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Manufacturer" Width="120"  Binding="{Binding Manufacturer}" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="Actions" Width="75">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <controls:RemoveButton 
+                                        Command="{Binding DataContext.EditDrugCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        CommandParameter="{Binding }"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Border>
+</UserControl>

@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.MVVM.View"
              xmlns:utils="clr-namespace:VetClinic.Utils"
+             xmlns:controls="clr-namespace:VetClinic.Controls"
              xmlns:viewModel="clr-namespace:VetClinic.MVVM.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -30,55 +31,55 @@
             </Border>
         </StackPanel>
         <StackPanel VerticalAlignment="Top" Grid.Row="1" Margin="0,20,0,0">
-            <Button 
-                Style="{StaticResource NavigationButtonBase}"
-                Content="Dashboard" 
-                utils:ButtonAttachedProperties.ImageSource="/Images/home.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/home-active.png"
+            <controls:NavigationButton 
+                Text="Dashboard" 
+                Icon="/Images/home.png" 
+                ActiveIcon="/Images/home-active.png" 
                 Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Appointments"
-                utils:ButtonAttachedProperties.ImageSource="/Images/appointment.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/appointment-active.png"
+                Command="{Binding NavigateToDashboardCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Dashboard}"/>
+            <controls:NavigationButton 
+                Text="Appointments" 
+                Icon="/Images/appointment.png" 
+                ActiveIcon="/Images/appointment-active.png" 
                 Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Clients"
-                utils:ButtonAttachedProperties.ImageSource="/Images/patient.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/patient-active.png"
+                Command="{Binding NavigateToAppointmentsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Appointments}"/>
+            <controls:NavigationButton 
+                Text="Clients" 
+                Icon="/Images/patient.png" 
+                ActiveIcon="/Images/patient-active.png" 
                 Visibility="{Binding AreClientsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Doctors"
-                utils:ButtonAttachedProperties.ImageSource="/Images/doctor.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/doctor-active.png"
+                Command="{Binding NavigateToClientsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Clients}"/>
+            <controls:NavigationButton 
+                Text="Doctors" 
+                Icon="/Images/doctor.png" 
+                ActiveIcon="/Images/doctor-active.png" 
                 Visibility="{Binding AreDoctorsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-            />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Pets"
-                utils:ButtonAttachedProperties.ImageSource="/Images/hamster.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/hamster-active.png"
+                Command="{Binding NavigateToDoctorsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Doctors}"/>
+            <controls:NavigationButton 
+                Text="Pets" 
+                Icon="/Images/hamster.png" 
+                ActiveIcon="/Images/hamster-active.png" 
                 Visibility="{Binding ArePetsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-             />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Prescriptions"
-                utils:ButtonAttachedProperties.ImageSource="/Images/medical-prescription.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/medical-prescription-active.png" 
+                Command="{Binding NavigateToPetsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Pets}"/>
+            <controls:NavigationButton 
+                Text="Prescriptions" 
+                Icon="/Images/medical-prescription.png" 
+                ActiveIcon="/Images/medical-prescription-active.png" 
                 Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-             />
-            <Button 
-                Style="{StaticResource NavigationButtonBase}" 
-                Content="Drugs"
-                utils:ButtonAttachedProperties.ImageSource="/Images/medicine.png" 
-                utils:ButtonAttachedProperties.ActiveImageSource="/Images/medicine-active.png"
-                Visibility="{Binding AreDrugsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-             /> 
+                Command="{Binding NavigateToPrescriptionsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Prescriptions}"/>
+            <controls:NavigationButton 
+                Text="Drugs" 
+                Icon="/Images/medicine.png" 
+                ActiveIcon="/Images/medicine-active.png" 
+                Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Command="{Binding NavigateToDrugsListCommand}"
+                IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Drugs}"/>
         </StackPanel>
     </Grid>
 </UserControl>

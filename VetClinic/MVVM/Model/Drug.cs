@@ -20,7 +20,7 @@ namespace VetClinic.Models
         public string DosageForm { get; set; }
 
         [Column("strength")]
-        public string strength { get; set; }
+        public string Strength { get; set; }
 
         [Column("unit_of_measure")]
         public string UnitOfMeasure { get; set; }
