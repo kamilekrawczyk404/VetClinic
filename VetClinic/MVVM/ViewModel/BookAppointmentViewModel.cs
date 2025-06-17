@@ -299,7 +299,7 @@ namespace VetClinic.MVVM.ViewModel
                     DoctorId = SelectedDoctor.Id,
                     AppointmentDate = SelectedDay.Date.Add(SelectedTimeSlot.Time.TimeOfDay),
                     ReasonForVisit = ReasonForVisit,
-                    Status = "Sheduled",
+                    Status = "Scheduled",
                     Diagnosis = "",
                     Notes = "",
                     CreatedAt = DateTime.Now

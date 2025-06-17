@@ -139,7 +139,7 @@ namespace VetClinic.MVVM.ViewModel
             if (!(obj is Appointment appointment))
                 return false;
 
-            return appointment.Status != "Canceled" &&
+            return appointment.Status != "Cancelled" &&
                    appointment.Status != "Completed" &&
                    appointment.AppointmentDate > DateTime.Now;
         }
@@ -167,7 +167,7 @@ namespace VetClinic.MVVM.ViewModel
 
                 if (appointmentToUpdate != null)
                 {
-                    appointmentToUpdate.Status = "Canceled";
+                    appointmentToUpdate.Status = "Cancelled";
                     await context.SaveChangesAsync();
 
                     var upcomingToRemove = UpcomingAppointments.FirstOrDefault(a => a.Id == appointment.Id);
@@ -175,7 +175,7 @@ namespace VetClinic.MVVM.ViewModel
                     {
                         UpcomingAppointments.Remove(upcomingToRemove);
 
-                        upcomingToRemove.Status = "Canceled";
+                        upcomingToRemove.Status = "Cancelled";
 
                         PastAppointments.Insert(0, upcomingToRemove);
                     }
