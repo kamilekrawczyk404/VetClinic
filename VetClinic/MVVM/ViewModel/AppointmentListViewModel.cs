@@ -70,7 +70,10 @@ namespace VetClinic.MVVM.ViewModel
         }
 
         public bool IsClient => _userSessionService.IsClient;
+        public bool IsDoctor => _userSessionService.IsDoctor;
+        public bool IsAdmin => _userSessionService.IsAdmin;
         public int? CurrentUserId => _userSessionService.LoggedInUser?.Id;
+        public int? CurrentDoctorId => _userSessionService.LoggedInDoctor?.Id;
 
         public RelayCommand CancelAppointmentCommand { get; }
         public RelayCommand RefreshCommand { get; }
@@ -82,7 +85,7 @@ namespace VetClinic.MVVM.ViewModel
 
         private async Task LoadAppointmentsAsync()
         {
-            if (!IsClient || CurrentUserId == null)
+            if (CurrentUserId == null && CurrentDoctorId == null)
             {
                 UpcomingAppointments = new ObservableCollection<Appointment>();
                 PastAppointments = new ObservableCollection<Appointment>();
@@ -95,14 +98,36 @@ namespace VetClinic.MVVM.ViewModel
             try
             {
                 var now = DateTime.Now;
+                List<Appointment> allAppointments = new();
 
-                // Pobierz wszystkie wizyty klienta z relacjami (przez Pet.UserId)
-                var allAppointments = await context.Appointment
-                    .Include(a => a.Doctor)
-                    .Include(a => a.Pet)
-                    .Where(a => a.Pet.UserId == CurrentUserId)
-                    .OrderBy(a => a.AppointmentDate)
-                    .ToListAsync();
+                if (IsClient)
+                {
+                    // Pobierz wszystkie wizyty klienta z relacjami (przez Pet.UserId)
+                    allAppointments = await context.Appointment
+                        .Include(a => a.Doctor)
+                        .Include(a => a.Pet)
+                        .Where(a => a.Pet.UserId == CurrentUserId)
+                        .OrderBy(a => a.AppointmentDate)
+                        .ToListAsync();
+                } 
+                else if (IsDoctor)
+                {
+                    // Pobierz wszystkie wizyty doktora z relacjami
+                    allAppointments = await context.Appointment
+                        .Include(a => a.Doctor)
+                        .Include(a => a.Pet)
+                        .Where(a => a.Doctor.Id == CurrentDoctorId)
+                        .OrderBy(a => a.AppointmentDate)
+                        .ToListAsync();
+                }
+                else if(IsAdmin)
+                {
+                    allAppointments = await context.Appointment
+                        .Include(a => a.Doctor)
+                        .Include(a => a.Pet)
+                        .OrderBy(a => a.AppointmentDate)
+                        .ToListAsync();
+                }
 
                 // Podziel na nadchodzące i przeszłe
                 var upcoming = allAppointments
@@ -117,8 +142,6 @@ namespace VetClinic.MVVM.ViewModel
 
                 UpcomingAppointments = new ObservableCollection<Appointment>(upcoming);
                 PastAppointments = new ObservableCollection<Appointment>(past);
-
-                Trace.WriteLine($"Loaded {upcoming.Count} upcoming and {past.Count} past appointments for client {CurrentUserId}");
             }
             catch (Exception ex)
             {

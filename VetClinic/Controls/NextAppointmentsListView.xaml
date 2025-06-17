@@ -8,134 +8,149 @@
              mc:Ignorable="d" 
              x:Name="Root"
              d:DesignHeight="450" d:DesignWidth="800">
-    <ListView ItemsSource="{Binding Path=ItemsSource, Mode=TwoWay, ElementName=Root}">
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseLeftButtonUp">
-                <i:InvokeCommandAction 
-                    Command="{Binding Path=OnAppointmentClicked, ElementName=Root}" 
-                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListView}}" />
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+    <Grid VerticalAlignment="Stretch">
+        <ListView VerticalAlignment="Stretch" ItemsSource="{Binding Path=ItemsSource, Mode=TwoWay, ElementName=Root}" >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <i:InvokeCommandAction 
+                        Command="{Binding Path=OnAppointmentClicked, ElementName=Root}" 
+                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListView}}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
         
-        <ListView.Template>
-            <ControlTemplate TargetType="ListView">
-                <Border 
-                    BorderBrush="{StaticResource LightGray}" 
-                    BorderThickness="1" 
-                    CornerRadius="12" 
-                    Background="{TemplateBinding Background}"
-                    ClipToBounds="True">  
-                    <ScrollViewer Focusable="false" Padding="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                        <ItemsPresenter/>
-                    </ScrollViewer>
-                </Border>
-            </ControlTemplate>
-        </ListView.Template>
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <Border Margin="0,4">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid VerticalAlignment="Stretch">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Border Background="{StaticResource UltraLightTurquise}" BorderBrush="{StaticResource DarkTurquise}" BorderThickness="1" Padding="5" CornerRadius="100" Margin="5">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Opacity" Value="0.25"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsMouseOver}" Value="True">
-                                                <Setter Property="Opacity" Value="1"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}" Value="True">
-                                                <Setter Property="Opacity" Value="1"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
-                                <Image Source="/Images/hamster-active.png" Height="20" Width="20" />
-                            </Border>
-                            <Rectangle Grid.Row="1"  Width="1" Fill="{StaticResource LightGray}" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+            <ListView.Template>
+                <ControlTemplate TargetType="ListView">
+                    <Border
+                        VerticalAlignment="Stretch"
+                        BorderBrush="{StaticResource LightGray}" 
+                        BorderThickness="1" 
+                        CornerRadius="12" 
+                        Background="{TemplateBinding Background}"
+                        ClipToBounds="True">
+                        <Grid>
+                            <ScrollViewer Visibility="{Binding Path=ItemsSource.Count, ElementName=Root, Converter={StaticResource InverseZeroToVisibilityConverter}}" Focusable="false" Padding="2" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                            <StackPanel
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding Path=ItemsSource.Count, ElementName=Root, Converter={StaticResource ZeroToVisibilityConverter}}">
+                                <Image Source="/Images/appointment-active.png" Height="100" Width="100"/>
+                                <TextBlock 
+                                    Text="No appointments found for this day."
+                                    TextAlignment="Center"
+                                    Style="{StaticResource SmallHeader}"/>
+                            </StackPanel>
                         </Grid>
-
-                        <StackPanel Grid.Column="1" Margin="5">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Client.Name, Mode=TwoWay}"/>
-                                <TextBlock Text="{Binding Client.Surname, Mode=TwoWay}" Margin="2,0"/>
-                                <TextBlock Text=" - "/>
-                                <TextBlock Text="{Binding Pet.Name, Mode=TwoWay}"/>
-                                <TextBlock Text=" ("/>
-                                <TextBlock Text="{Binding Pet.Species, Mode=TwoWay}"/>
-                                <TextBlock Text=")"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Style="{StaticResource SmallSecondaryText}" Text="{Binding Appointment.AppointmentDate, StringFormat={}{0:hh\\:mm tt}}"/>
-                                <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" • "/>
-                                <TextBlock Style="{StaticResource SmallSecondaryText}" Text="{Binding Duration}"/>
-                                <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" min"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                <Border 
-                                    Margin="0,0,5,0" 
-                                    BorderThickness="1"
-                                    CornerRadius="4"
-                                    Padding="4,2"
-                                    BorderBrush="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
-                                    Background="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
-                                    <TextBlock Text="{Binding Appointment.Status, Mode=TwoWay}" Foreground="{DynamicResource Gray}"/>
+                    </Border>
+                </ControlTemplate>
+            </ListView.Template>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Background="{StaticResource UltraLightTurquise}" BorderBrush="{StaticResource DarkTurquise}" BorderThickness="1" Padding="5" CornerRadius="100" Margin="5">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Opacity" Value="0.25"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsMouseOver}" Value="True">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=IsSelected}" Value="True">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Image Source="/Images/hamster-active.png" Height="20" Width="20" />
                                 </Border>
-                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment" Command="{Binding Path=CancelAppointmentCommand, ElementName=Root}" CommandParameter="{Binding Appointment}" Visibility="{Binding Appointment.Status, Converter={StaticResource CancelledAppointmentStatusToCollapsedVisibilityConverter}}"/>
+                                <Rectangle Grid.Row="1"  Width="1" Fill="{StaticResource LightGray}" VerticalAlignment="Stretch" HorizontalAlignment="Center"/>
+                            </Grid>
+
+                            <StackPanel Grid.Column="1" Margin="5">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Client.Name, Mode=TwoWay}"/>
+                                    <TextBlock Text="{Binding Client.Surname, Mode=TwoWay}" Margin="2,0"/>
+                                    <TextBlock Text=" - "/>
+                                    <TextBlock Text="{Binding Pet.Name, Mode=TwoWay}"/>
+                                    <TextBlock Text=" ("/>
+                                    <TextBlock Text="{Binding Pet.Species, Mode=TwoWay}"/>
+                                    <TextBlock Text=")"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource SmallSecondaryText}" Text="{Binding Appointment.AppointmentDate, StringFormat={}{0:hh\\:mm tt}}"/>
+                                    <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" • "/>
+                                    <TextBlock Style="{StaticResource SmallSecondaryText}" Text="{Binding Duration}"/>
+                                    <TextBlock Style="{StaticResource SmallSecondaryText}" Text=" min"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <Border 
+                                        Margin="0,0,5,0" 
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Padding="4,2"
+                                        BorderBrush="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBrushColorConventer}}"
+                                        Background="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
+                                        <TextBlock Text="{Binding Appointment.Status, Mode=TwoWay}" Foreground="{DynamicResource Gray}"/>
+                                    </Border>
+                                    <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment" Command="{Binding Path=CancelAppointmentCommand, ElementName=Root}" CommandParameter="{Binding Appointment}" Visibility="{Binding Appointment.Status, Converter={StaticResource CancelledAppointmentStatusToCollapsedVisibilityConverter}}"/>
+                                </StackPanel>
                             </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-        <ListView.ItemContainerStyle>
-            <Style TargetType="ListViewItem">
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderBrush" Value="{StaticResource LightGray}"/>
-                <Setter Property="Border.CornerRadius" Value="12"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                <Setter Property="Margin" Value="2"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListViewItem">
-                            <Border
-                                 x:Name="Bd"
-                                 Margin="{TemplateBinding Margin}"
-                                 Background="{TemplateBinding Background}"
-                                 BorderBrush="{TemplateBinding BorderBrush}"
-                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                 CornerRadius="{TemplateBinding Border.CornerRadius}"
-                                 SnapsToDevicePixels="true">
-                                <ContentPresenter
-                                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" /> 
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource UltraLightTurquise}"/>
-                                    <Setter Property="BorderBrush" Value="{StaticResource Turquise}"/>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{StaticResource UltraLightTurquise}"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListView.ItemContainerStyle>
-    </ListView>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource LightGray}"/>
+                    <Setter Property="Border.CornerRadius" Value="12"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="Margin" Value="2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border
+                                     x:Name="Bd"
+                                     Margin="{TemplateBinding Margin}"
+                                     Background="{TemplateBinding Background}"
+                                     BorderBrush="{TemplateBinding BorderBrush}"
+                                     BorderThickness="{TemplateBinding BorderThickness}"
+                                     CornerRadius="{TemplateBinding Border.CornerRadius}"
+                                     SnapsToDevicePixels="true">
+                                    <ContentPresenter
+                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                         VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                         SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" /> 
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource UltraLightTurquise}"/>
+                                        <Setter Property="BorderBrush" Value="{StaticResource Turquise}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource UltraLightTurquise}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+    </Grid>
 </UserControl>

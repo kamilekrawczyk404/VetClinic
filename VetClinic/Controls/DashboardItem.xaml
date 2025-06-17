@@ -5,23 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VetClinic.Controls"
              mc:Ignorable="d" 
+             x:Name="Root"
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border Style="{StaticResource BorderDefault}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Button Command="{Binding Path=Command, ElementName=Root}">
+        <Button.Template>
+            <ControlTemplate>
+                <Border Style="{StaticResource BorderDefault}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-            <StackPanel Margin="20">
-                <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" Foreground="{StaticResource Gray}" Text="{Binding Path=Title, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Grid.Row="1" FontSize="20" Foreground="{StaticResource DarkTurquise}" Text="{Binding Path=Value, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
-                <local:TrendLine Grid.Row="2" 
+                        <StackPanel Margin="20">
+                            <TextBlock Grid.Column="0" Grid.Row="0" FontSize="14" Foreground="{StaticResource Gray}" Text="{Binding Path=Title, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <TextBlock Grid.Row="1" FontSize="20" Foreground="{StaticResource DarkTurquise}" Text="{Binding Path=Value, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"/>
+                            <local:TrendLine Grid.Row="2" 
                                 Ratio="{Binding Path=Ratio, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, UpdateSourceTrigger=PropertyChanged}"
                                 Visibility="{Binding Path=ShowTrendLine, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            </StackPanel>
+                        </StackPanel>
 
-            <Image Style="{StaticResource DashboardItemImage}" Grid.Column="1" Source="{Binding Path=ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}}"/>
-        </Grid>
-    </Border>
+                        <Image Style="{StaticResource DashboardItemImage}" Grid.Column="1" Source="{Binding Path=ImageSource, RelativeSource={RelativeSource AncestorType={x:Type local:DashboardItem}}}"/>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Button.Template>
+    </Button>
 </UserControl>

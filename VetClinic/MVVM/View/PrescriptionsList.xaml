@@ -182,7 +182,7 @@
                                                                         <Run Text="- ilość:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
-                                                                    <TextBlock Text="{Binding DosageInstructions}" 
+                                                                    <TextBlock Text="{Binding Dosage}" 
                                                                                FontSize="14"
                                                                                Foreground="{StaticResource White}"
                                                                                Margin="15,2,0,0"
@@ -294,7 +294,7 @@
                                                                         <Run Text="- ilość:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
-                                                                    <TextBlock Text="{Binding DosageInstructions}" 
+                                                                    <TextBlock Text="{Binding Dosage}" 
                                                                                FontSize="14"
                                                                                Foreground="{StaticResource White}"
                                                                                Margin="15,2,0,0"

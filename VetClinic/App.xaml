@@ -44,6 +44,8 @@
             <utils:IntToBoolConverter  x:Key="IntToBoolConverter"/>
             <utils:SelectedViewModelToBooleanConventer  x:Key="SelectedViewModelToBooleanConventer"/>
             <utils:InverseBooleanConverter  x:Key="InverseBooleanConverter"/>
+            <utils:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+            <utils:InverseZeroToVisibilityConverter x:Key="InverseZeroToVisibilityConverter"/>
             <utils:CancelledAppointmentStatusToCollapsedVisibilityConverter  x:Key="CancelledAppointmentStatusToCollapsedVisibilityConverter"/>
 
 

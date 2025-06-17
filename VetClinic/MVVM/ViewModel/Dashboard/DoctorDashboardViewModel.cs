@@ -178,9 +178,21 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private bool _isSomeDaySelected;
+        public bool IsSomeDaySelected
+        {
+            get => _isSomeDaySelected;
+            set
+            {
+                _isSomeDaySelected = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand SetSelectedDayCommand { get; }
         public AsyncRelayCommand SetCurrentAppointmentCommand { get; }
         public AsyncRelayCommand CancelAppointmentCommand { get; }
+        public RelayCommand NavigateToOpinionsViewCommand { get; }
 
         public DoctorDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
         {
@@ -193,12 +205,14 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             SetSelectedDayCommand = new RelayCommand(SetSelectedDay);
             SetCurrentAppointmentCommand = new AsyncRelayCommand(SetCurrentAppointment);
             CancelAppointmentCommand = new AsyncRelayCommand(CancelAppointment);
+            NavigateToOpinionsViewCommand = new RelayCommand((object obj) => { navigation.NavigateTo<ViewOpinionsViewModel>(); });
 
             IsAppointmentDisplayed = false;
+            IsSomeDaySelected = false;
 
             Statuses = new() { "Scheduled", "In Progress", "Completed", "Cancelled" };
 
-            FetchDoctorData();
+            _ = FetchDoctorData();
         }
 
         private async Task CancelAppointment(object arg)
@@ -232,6 +246,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (obj is CalendarDay day)
             {
+                IsSomeDaySelected = true;
+
                 // select clicked appointment
                 foreach (var calendarDay in CalendarDays)
                 {

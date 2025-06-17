@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:VetClinic.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
 
@@ -15,20 +16,18 @@
         </Grid.RowDefinitions>
 
         <!-- Header with back button and doctor name -->
-        <Grid Grid.Row="0" Margin="0,0,0,20">
+        <Grid Grid.Row="0" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Grid.Column="0" 
-                    Content="← Powrót do listy lekarzy"
-                    Command="{Binding BackToDoctorsCommand}"
-                    Style="{StaticResource SubmitButton}"
-                    Margin="0,0,20,0"/>
+            <controls:ImageButton VerticalAlignment="Center" Text="Back to doctor's list" ImageSource="/Images/Buttons/arrow.png" Command="{Binding BackToDoctorsCommand}" Margin="0,0,20,0" Visibility="{Binding IsClient, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <controls:ImageButton VerticalAlignment="Center" Text="Back to dashboard" ImageSource="/Images/Buttons/arrow.png" Command="{Binding BackToDoctorDashboardCommand}" Margin="0,0,20,0" Visibility="{Binding IsDoctor, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <controls:ImageButton VerticalAlignment="Center" Text="Back to dashboard" ImageSource="/Images/Buttons/arrow.png" Command="{Binding BackToAdminDashboardCommand}" Margin="0,0,20,0" Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock Text="Opinie o lekarzu" 
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Horizontal">
+                <TextBlock Text="Opinions about doctor" 
                            Style="{StaticResource Header}" 
                            FontSize="24"/>
                 <TextBlock Text="{Binding DoctorDisplayName}" 
@@ -49,19 +48,19 @@
                             HorizontalAlignment="Center"
                             Visibility="{Binding IsNotAddingOrEditingOpinion, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-                    <Button Content="Dodaj opinię" 
+                    <Button Content="Add opinion" 
                             Command="{Binding AddOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
                             Margin="0,0,10,0"
                             Visibility="{Binding CanAddOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                    <Button Content="Edytuj opinię" 
+                    <Button Content="Edit opinion" 
                             Command="{Binding EditOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
                             Margin="0,0,10,0"
                             Visibility="{Binding CanEditOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                    <Button Content="Usuń opinię" 
+                    <Button Content="Delete opinion" 
                             Command="{Binding DeleteOpinionCommand}"
                             Style="{StaticResource SubmitButton}"
                             Visibility="{Binding CanDeleteOpinion, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -69,12 +68,12 @@
 
                 <!-- Opinion form -->
                 <StackPanel Visibility="{Binding IsAddingOpinion, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock Text="Dodaj swoją opinię" 
+                    <TextBlock Text="Add your opinion" 
                                Style="{StaticResource Header}" 
                                FontSize="16" 
                                Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Ocena:" 
+                    <TextBlock Text="Rating:" 
                                Margin="0,0,0,5"/>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -100,7 +99,7 @@
                                      Margin="0,0,5,0"/>
                     </StackPanel>
 
-                    <TextBlock Text="Komentarz:" 
+                    <TextBlock Text="Comment:" 
                                Margin="0,0,0,5"/>
 
                     <TextBox Text="{Binding NewOpinionComment, UpdateSourceTrigger=PropertyChanged}" 
@@ -110,11 +109,11 @@
                              Margin="0,0,0,10"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Zapisz" 
+                        <Button Content="Save" 
                                 Command="{Binding SaveOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"
                                 Margin="0,0,10,0"/>
-                        <Button Content="Anuluj" 
+                        <Button Content="Cancel" 
                                 Command="{Binding CancelOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"/>
                     </StackPanel>
@@ -122,12 +121,12 @@
 
                 <!-- Edit opinion form -->
                 <StackPanel Visibility="{Binding IsEditingOpinion, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <TextBlock Text="Edytuj swoją opinię" 
+                    <TextBlock Text="Edit your opinion" 
                                Style="{StaticResource Header}" 
                                FontSize="16" 
                                Margin="0,0,0,10"/>
 
-                    <TextBlock Text="Ocena:" 
+                    <TextBlock Text="Rating:" 
                                Margin="0,0,0,5"/>
 
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -153,7 +152,7 @@
                                      Margin="0,0,5,0"/>
                     </StackPanel>
 
-                    <TextBlock Text="Komentarz:" 
+                    <TextBlock Text="Comment:" 
                                Margin="0,0,0,5"/>
 
                     <TextBox Text="{Binding NewOpinionComment, UpdateSourceTrigger=PropertyChanged}" 
@@ -163,11 +162,11 @@
                              Margin="0,0,0,10"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="Zapisz zmiany" 
+                        <Button Content="Save changes" 
                                 Command="{Binding SaveOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"
                                 Margin="0,0,10,0"/>
-                        <Button Content="Anuluj" 
+                        <Button Content="Cancel" 
                                 Command="{Binding CancelOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"/>
                     </StackPanel>
@@ -178,7 +177,7 @@
         <!-- Opinions list -->
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Text="Wszystkie opinie" 
+                <TextBlock Text="All opinions" 
                            Style="{StaticResource Header}" 
                            FontSize="18" 
                            Margin="0,0,0,15"/>
@@ -299,12 +298,12 @@
                 <Border Style="{StaticResource BorderDefault}" 
                         Visibility="{Binding Opinions.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter=0}">
                     <StackPanel Margin="20" HorizontalAlignment="Center">
-                        <TextBlock Text="Brak opinii" 
+                        <TextBlock Text="No opinions found" 
                                    Style="{StaticResource Header}" 
                                    FontSize="16" 
                                    HorizontalAlignment="Center"
                                    Margin="0,0,0,5"/>
-                        <TextBlock Text="Ten lekarz nie ma jeszcze żadnych opinii." 
+                        <TextBlock Text="This doctor has not received any reviews yet." 
                                    HorizontalAlignment="Center"
                                    Opacity="0.7"/>
                     </StackPanel>

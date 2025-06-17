@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
+using VetClinic.MVVM.View.Dashboard;
 using VetClinic.MVVM.ViewModel.Auth;
 using VetClinic.MVVM.ViewModel.Dashboard;
 using VetClinic.Services;
