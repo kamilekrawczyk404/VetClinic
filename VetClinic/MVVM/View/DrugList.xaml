@@ -16,7 +16,7 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="350"/>
+                <RowDefinition Height="360"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Drug list" Style="{StaticResource Header}" VerticalAlignment="Center"/>
@@ -50,19 +50,22 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Editing drug #1 - Some name" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="Editing drug" Style="{StaticResource MediumHeader}" />
+                                    <TextBlock Margin="5,0,0,0" Text="{Binding Id, StringFormat=#{0}}" Style="{StaticResource MediumHeader}"/>
+                                </StackPanel>
 
                                 <Button Grid.Column="1" Style="{StaticResource SubmitButton}" Content="Save drug" HorizontalAlignment="Right"/>
                             </Grid>
 
-                            <input:InputControl Title="Name" ErrorMessage="" Text="" Grid.Row="1" Margin="0,0,5,0"/>
-                            <input:InputControl Title="Dosage Form" ErrorMessage="" Text="" Grid.Row="2" Margin="0,0,5,0"/>
-                            <input:InputControl Title="Strength" ErrorMessage="" Text="" Grid.Row="3" Margin="0,0,5,0"/>
-                            <input:InputControl Title="Unit of measure" ErrorMessage="" Text="" Grid.Row="4" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Id" ErrorMessage="" Text="{Binding Id}" Grid.Row="1" Margin="0,0,5,0" IsEnabled="False"/>
+                            <input:InputControl Title="Name" ErrorMessage="" Text="{Binding Name}" Grid.Row="2" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Dosage Form" ErrorMessage="" Text="{Binding DosageForm}" Grid.Row="3" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Strength" ErrorMessage="" Text="{Binding Strength}" Grid.Row="4" Margin="0,0,5,0"/>
                             
-                            <input:InputControl Title="Manufacturer" ErrorMessage="" Text="" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
-                            <input:InputControl Title="Quantity" ErrorMessage="" Text="" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0"/>
-                            <input:TextArea Title="Description" ErrorMessage="" Text="" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:InputControl Title="Unit of measure" ErrorMessage="" Text="{Binding UnitOfMeasure}" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:InputControl Title="Manufacturer" ErrorMessage="" Text="{Binding Manufacturer}" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:TextArea Title="Description" ErrorMessage="" Text="{Binding Description}" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Margin="5,0,0,0"/>
                         </Grid>
                         
                     </Border>
@@ -84,14 +87,16 @@
                     <DataGridTextColumn Header="Unit of measure" Binding="{Binding UnitOfMeasure}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Description" Width="*" Binding="{Binding Description}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Manufacturer" Width="120"  Binding="{Binding Manufacturer}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" IsReadOnly="True"/>
                     <DataGridTemplateColumn Header="Actions" Width="75">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel>
-                                    <controls:RemoveButton 
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <controls:EditButton
                                         Command="{Binding DataContext.EditDrugCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                        CommandParameter="{Binding }"/>
+                                        CommandParameter="{Binding}" Margin="0,0,5,0"/>
+                                    <controls:RemoveButton 
+                                        Command="{Binding DataContext.RemoveDrugCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        CommandParameter="{Binding}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>

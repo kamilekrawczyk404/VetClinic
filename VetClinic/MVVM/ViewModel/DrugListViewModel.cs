@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 using VetClinic.Database;
 using VetClinic.Models;
@@ -18,6 +20,83 @@ namespace VetClinic.MVVM.ViewModel
     {
         private IUserSessionService _userSessionService;
         private IDbContextFactory<VeterinaryClinicContext> _contextFactory;
+
+        private string _id;
+        public string Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _dosageForm;
+        public string DosageForm
+        {
+            get => _dosageForm;
+            set
+            {
+                _dosageForm = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _strength;
+        public string Strength
+        {
+            get => _strength;
+            set
+            {
+                _strength = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _unitOfMeasure;
+        public string UnitOfMeasure
+        {
+            get => _unitOfMeasure;
+            set
+            {
+                _unitOfMeasure = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string _manufacturer;
+        public string Manufacturer
+        {
+            get => _manufacturer;
+            set
+            {
+                _manufacturer = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        private string _description;
+        public string Description
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
 
         private ObservableCollection<Drug> _drugs;
         public ObservableCollection<Drug> Drugs
@@ -32,6 +111,7 @@ namespace VetClinic.MVVM.ViewModel
 
         // for admin role
         public AsyncRelayCommand AddNewDrugCommand { get; }
+        public AsyncRelayCommand EditDrugCommand { get; }
         public AsyncRelayCommand RemoveDrugCommand { get; }
         public AsyncRelayCommand SaveDrugListCommand { get; }
 
@@ -43,10 +123,62 @@ namespace VetClinic.MVVM.ViewModel
             AddNewDrugCommand = new AsyncRelayCommand(AddNewDrug);
             RemoveDrugCommand = new AsyncRelayCommand(RemoveDrug);
             SaveDrugListCommand = new AsyncRelayCommand(SaveDrugList);
+            EditDrugCommand = new AsyncRelayCommand(EditDrug);
+
 
             Drugs = new();
 
+            ResetFormFields();
+
             _ = LoadDrugs();
+        }
+
+        private void ResetFormFields()
+        {
+            Id = Name = Description = DosageForm = Manufacturer = UnitOfMeasure = Strength = string.Empty;
+        }
+
+        private async Task SaveDrug(object obj)
+        {
+            Trace.WriteLine("save drug");
+        }
+
+        private async Task EditDrug(object obj)
+        {
+            if (Id != string.Empty)
+            {
+                Drug selectedDrug = Drugs.First(d => d.Id == int.Parse(Id));
+                if (selectedDrug != null)
+                {
+                    if (
+                        Name != selectedDrug.Name || 
+                        DosageForm != selectedDrug.DosageForm || 
+                        Description != selectedDrug.Description || 
+                        Manufacturer != selectedDrug.Manufacturer || 
+                        UnitOfMeasure != selectedDrug.UnitOfMeasure ||
+                        Strength != selectedDrug.Strength
+                        )
+                    {
+                        var userChoice = MessageBox.Show("You have made some changed with currently selected drug. Do you want to save changes?", "Information", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    
+                        if (userChoice == MessageBoxResult.Yes)
+                        {
+                            await SaveDrug(selectedDrug);
+                        }
+                    }
+                }
+            }
+
+            if (obj is Drug drug && drug != null)
+            {
+                Id = drug.Id.ToString();
+                Name = drug.Name;
+                DosageForm = drug.DosageForm;
+                Description = drug.Description;
+                Manufacturer = drug.Manufacturer;
+                UnitOfMeasure = drug.UnitOfMeasure;
+                Strength = drug.Strength;
+            }
         }
 
         private async Task LoadDrugs()
@@ -86,7 +218,22 @@ namespace VetClinic.MVVM.ViewModel
 
         private async Task RemoveDrug(object arg)
         {
-            throw new NotImplementedException();
+            if (arg is Drug drug && drug != null)
+            {
+                var acceptation = MessageBox.Show("Are you sure to remove this drug?", "Confirmation", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                if (acceptation == MessageBoxResult.Yes)
+                {
+                    using var context = _contextFactory.CreateDbContext();
+
+                    //context.Drug.Remove(drug);
+                    //await context.SaveChangesAsync();
+
+                    // update ui
+                    //Drugs.Remove(drug);
+                }
+
+            }
         }
 
         private async Task SaveDrugList(object arg)

@@ -13,6 +13,7 @@
     <None Remove="Images\appointment.png" />
     <None Remove="Images\Buttons\arrow.png" />
     <None Remove="Images\Buttons\checkbox.png" />
+    <None Remove="Images\Buttons\edit.png" />
     <None Remove="Images\Buttons\save.png" />
     <None Remove="Images\DashboardItem\appointment-item.png" />
     <None Remove="Images\DashboardItem\pet-item.png" />
@@ -20,8 +21,6 @@
     <None Remove="Images\DashboardItem\trend-down.png" />
     <None Remove="Images\DashboardItem\trend-flat.png" />
     <None Remove="Images\DashboardItem\trend-up.png" />
-    <None Remove="Images\DataGrid\add.png" />
-    <None Remove="Images\DataGrid\trash-bin.png" />
     <None Remove="Images\doctor-active.png" />
     <None Remove="Images\doctor.png" />
     <None Remove="Images\hamster-active.png" />
@@ -59,6 +58,7 @@
   <ItemGroup>
     <Resource Include="Images\Buttons\arrow.png" />
     <Resource Include="Images\Buttons\checkbox.png" />
+    <Resource Include="Images\Buttons\edit.png" />
     <Resource Include="Images\Buttons\save.png" />
   </ItemGroup>
 
@@ -84,8 +84,8 @@
     <Resource Include="Images\DashboardItem\trend-down.png" />
     <Resource Include="Images\DashboardItem\trend-flat.png" />
     <Resource Include="Images\DashboardItem\trend-up.png" />
-    <Resource Include="Images\DataGrid\add.png" />
-    <Resource Include="Images\DataGrid\trash-bin.png" />
+    <Resource Include="Images\Buttons\add.png" />
+    <Resource Include="Images\Buttons\trash-bin.png" />
     <Resource Include="Images\doctor-active.png" />
     <Resource Include="Images\doctor.png" />
     <Resource Include="Images\hamster-active.png" />
