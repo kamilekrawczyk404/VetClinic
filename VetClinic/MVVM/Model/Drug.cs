@@ -31,9 +31,6 @@ namespace VetClinic.Models
         [Column("manufacturer")]
         public string Manufacturer { get; set; }
 
-        [Column("stock_quantity")]
-        public int Quantity { get; set; }
-
         public ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
     }
 }

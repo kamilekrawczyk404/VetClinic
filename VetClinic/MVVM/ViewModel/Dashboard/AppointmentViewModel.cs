@@ -11,6 +11,8 @@ using VetClinic.Utils;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
 {
+
+    // TODO: cannot edit presciptions and services list if it's completed or cancelled 
     public class AppointmentViewModel : ViewModel
     {
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
@@ -24,7 +26,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 if (value != null)
                 {
                     _detailedAppointment = value;
-                   
+
                     OnPropertyChanged();
                     OnDetailedAppointmentChanged();
                 }
@@ -33,13 +35,23 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private void OnDetailedAppointmentChanged()
         {
-            PrescriptionFormViewModel = new PrescriptionFormViewModel(_detailedAppointment.Prescription, _contextFactory);
+            PrescriptionFormViewModel = new PrescriptionFormViewModel(_detailedAppointment.Prescription, new()
+            {
+                Appointment = _detailedAppointment.Appointment,
+                Client = _detailedAppointment.Appointment.Pet.User,
+                Doctor = _detailedAppointment.Appointment.Doctor,
+            }, _contextFactory);
+
             ServicesFormViewModel = new ServicesFormViewModel(_detailedAppointment.Services, _contextFactory);
 
-            IsCompleted = _detailedAppointment.Appointment.Status.ToLower() == "completed" || _detailedAppointment.Appointment.Status.ToLower() == "canceled";
-            SelectedStatus = _detailedAppointment?.Appointment.Status ?? "In progress";
+            IsCompleted = _detailedAppointment.Appointment.Status == "Completed" || _detailedAppointment.Appointment.Status == "Cancelled";
             Diagnosis = _detailedAppointment.Appointment.Diagnosis;
             Notes = _detailedAppointment?.Appointment.Notes ?? "";
+
+            PrescriptionFormViewModel.IsAppointmentCompleted = IsCompleted;
+            PrescriptionFormViewModel.HasPrescription = _detailedAppointment?.Prescription?.Id != null;
+            PrescriptionFormViewModel.IsPrescriptionDisplayed = IsCompleted && !PrescriptionFormViewModel.HasPrescription;
+            ServicesFormViewModel.IsAppointmentCompleted = IsCompleted;
         }
 
         private bool _isCompleted;
@@ -72,18 +84,6 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             set
             {
                 _services = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _selectedStatus;
-        public string SelectedStatus
-        {
-            get => _selectedStatus;
-            set
-            {
-                _selectedStatus = value;
-                Trace.WriteLine("Status " + value.ToString());
                 OnPropertyChanged();
             }
         }
@@ -195,26 +195,25 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 hasChanged = true;
             }
 
-            if (DetailedAppointment.Appointment.Status != SelectedStatus)
-            {
-                DetailedAppointment.Appointment.Status = SelectedStatus;
-                hasChanged = true;
-            }
+            DetailedAppointment.Appointment.Status = "Completed";
 
-            if (SelectedStatus.ToLower() != "canceled")
-            {
-                DetailedAppointment.Appointment.Status = "Completed";
-                hasChanged = true;
-            }
+            bool areServicesValid = await ServicesFormViewModel.CheckServices(DetailedAppointment.Appointment);
 
-            if (hasChanged)
-            {
-                context.Appointment.Update(DetailedAppointment.Appointment);
-                await context.SaveChangesAsync();
-            }
+            Trace.WriteLine("VALIDATION Services " + areServicesValid.ToString());
+            if (!areServicesValid)
+                return;
 
-            await ServicesFormViewModel.OnAppointmentSaved(DetailedAppointment.Appointment);
-            await PrescriptionFormViewModel.OnAppointmentSaved();
+            bool isPrescriptionValid = await PrescriptionFormViewModel.CheckPrescription();
+
+            Trace.WriteLine("VALIDATION Prescription " + isPrescriptionValid.ToString());
+
+
+            if (!isPrescriptionValid)
+                return;
+
+            // validation of services and prescription passed successfully, update records
+            context.Appointment.Update(DetailedAppointment.Appointment);
+            await context.SaveChangesAsync();
 
             _refreshAppointments?.Invoke(DetailedAppointment.Appointment.Id);
             _exitAppointment?.Invoke();

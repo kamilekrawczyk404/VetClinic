@@ -43,6 +43,17 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
+        private bool _isAppointmentCompleted;
+        public bool IsAppointmentCompleted
+        {
+            get => _isAppointmentCompleted;
+            set
+            {
+                _isAppointmentCompleted = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand AddServiceCommand { get; }
         public RelayCommand RemoveServiceCommand { get; }
 
@@ -59,9 +70,11 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             _ = GetAllServices();
         }
 
-        public async Task OnAppointmentSaved(Appointment appointment)
+        public async Task<bool> CheckServices(Appointment appointment)
         {
-            Trace.WriteLine("Save services");
+            if (IsAppointmentCompleted)
+                return true;
+
             using var context = _contextFactory.CreateDbContext();
 
             var existingServices = context.AppointmentServices
@@ -79,16 +92,26 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     };
                     context.AppointmentServices.Add(appointmentService);
                 }
+            } 
+            else
+            {
+                return false;
             }
 
             await context.SaveChangesAsync();
 
+            return true;
+
         }
         private void RemoveService(object obj)
         {
+            if (IsAppointmentCompleted)
+                return;
+
             if (obj is Service service)
             {
-                if (service.Name == "Appointment Base Cost")
+                // Prevent from removing the first service
+                if (service.Id == 1)
                     return;
 
                 Services.Remove(service);
@@ -97,6 +120,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private void AddService(object obj)
         {
+            if (IsAppointmentCompleted)
+                return;
+
             if (obj is Service service)
             {
                 if (Services.Any(s => s.Name == service.Name))
@@ -114,6 +140,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task GetAllServices()
         {
+            if (IsAppointmentCompleted)
+                return;
+
             using var context = _contextFactory.CreateDbContext();
 
             var services = await context.Service.ToArrayAsync();

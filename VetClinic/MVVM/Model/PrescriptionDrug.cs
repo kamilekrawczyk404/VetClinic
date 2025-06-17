@@ -12,7 +12,7 @@ namespace VetClinic.MVVM.Model
         public string Name { get; set; }
         public string DosageForm { get; set; }
         public string Manufacturer { get; set; }
-        public string DosageInstructions { get; set; } = "";
+        public string Dosage { get; set; } = "";
         public int Quantity { get; set; } = 1;
     }
 }

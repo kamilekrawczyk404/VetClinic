@@ -24,7 +24,7 @@ namespace VetClinic.Utils
                         return (Brush)Application.Current.FindResource("BackgroundStatusInProgress");
                     case "completed":
                         return (Brush)Application.Current.FindResource("BackgroundStatusCompleted");
-                    case "canceled":
+                    case "cancelled":
                         return (Brush)Application.Current.FindResource("BackgroundStatusCanceled");
                     default:
                         return (Brush)Application.Current.FindResource("BackgroundStatusScheduled");

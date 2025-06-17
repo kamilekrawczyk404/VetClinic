@@ -76,8 +76,7 @@ namespace VetClinic.Controls.Input
         {
             if (PART_ErrorMessageTextBlock != null)
             {
-                //PART_ErrorMessageTextBlock.Visibility = ErrorMessage?.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
-                PART_ErrorMessageTextBlock.Visibility = Visibility.Collapsed;
+                PART_ErrorMessageTextBlock.Visibility = ErrorMessage.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
 
             System.Windows.Media.Brush color = (System.Windows.Media.Brush)Application.Current.FindResource(ErrorMessage.Length > 0 ? "Red" : "LightGray");

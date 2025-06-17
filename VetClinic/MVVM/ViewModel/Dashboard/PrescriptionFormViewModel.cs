@@ -86,72 +86,123 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
         }
 
-        private bool _isEditing;
-        public bool IsEditing
+        private bool _hasPrescription;
+        public bool HasPrescription
         {
-            get => _isEditing;
+            get => _hasPrescription;
             set
             {
-                _isEditing = value;
+                _hasPrescription = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        private bool _isAppointmentCompleted;
+        public bool IsAppointmentCompleted
+        {
+            get => _isAppointmentCompleted;
+            set
+            {
+                _isAppointmentCompleted = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isPrescriptionDisplayed;
+        public bool IsPrescriptionDisplayed
+        {
+            get => _isPrescriptionDisplayed;
+            set
+            {
+                _isPrescriptionDisplayed = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // For storing client and doctor names
+        private DetailedPrescription _detailedPrescription;
+        public DetailedPrescription DetailedPrescription {
+            get => _detailedPrescription;
+            set
+            {
+                _detailedPrescription = value;
                 OnPropertyChanged();
             }
         }
 
         public RelayCommand AddDrugToPrescriptionCommand { get; }
+        public RelayCommand AddPrescriptionCommand { get; }
         public RelayCommand RemoveDrugFromPrescriptionCommand { get; }
 
-        public PrescriptionFormViewModel(Prescription prescription, IDbContextFactory<VeterinaryClinicContext> contextFactory)
+        public PrescriptionFormViewModel(Prescription prescription, DetailedPrescription detailedPrescription, IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
             _contextFactory = contextFactory;
 
             ExpiryDateErrorMessage = string.Empty;
-            IsEditing = false;
             PrescriptionDrugs = new();
 
+            DetailedPrescription = detailedPrescription;
             Prescription = prescription;
 
             AddDrugToPrescriptionCommand = new RelayCommand(AddDrugToPrescription);
             RemoveDrugFromPrescriptionCommand = new RelayCommand(RemoveDrugFromPrescription);
+            AddPrescriptionCommand = new RelayCommand(AddPrescription);
 
             _ = GetDrugs();
         }
 
+        private void AddPrescription(object obj)
+        {
+            HasPrescription = true;
+        }
+
         private void OnPrescriptionChanged()
-        {            
-            IsEditing = Prescription?.Id != null;
+        {
+            ExpiryDate = Prescription?.ExpiryDate ?? DateTime.Now;
 
-            if (IsEditing)
+            // Appointment doesn't have prescription
+            if (Prescription == null)
+                return;
+
+            // If doctors wants to look on completed prescirption, add to the array drugs, that are already tied with this prescription
+            if (Prescription?.PrescriptionDrugs.Count() > 0)
             {
-                ExpiryDate = Prescription?.ExpiryDate ?? DateTime.Now;
-
-                // Add to the array drugs, that are already tied with this prescription
-                if (Prescription?.PrescriptionDrugs.Count() > 0)
+                foreach (var prescriptionDrug in Prescription.PrescriptionDrugs)
                 {
-                    foreach (var prescriptionDrug in Prescription.PrescriptionDrugs)
+                    PrescriptionDrugs.Add(new PrescriptionDrug()
                     {
-                        PrescriptionDrugs.Add(new PrescriptionDrug()
-                        {
-                            Quantity = prescriptionDrug.Quantity,
-                            DosageInstructions = prescriptionDrug?.DosageInstructions ?? "",
-                            Id = prescriptionDrug.DrugId,
-                            Name = prescriptionDrug.Drug.Name,
-                            DosageForm = prescriptionDrug.Drug?.DosageForm ?? "",
-                            Manufacturer = prescriptionDrug.Drug.Manufacturer,
-                        });
-                    }
+                        Quantity = prescriptionDrug.Quantity,
+                        Dosage = prescriptionDrug?.Dosage ?? "",
+                        Id = prescriptionDrug.DrugId,
+                        Name = prescriptionDrug.Drug.Name,
+                        DosageForm = prescriptionDrug.Drug?.DosageForm ?? "",
+                        Manufacturer = prescriptionDrug.Drug.Manufacturer,
+                    });
                 }
             }
         }
 
         private void RemoveDrugFromPrescription(object obj)
         {
+            if (IsAppointmentCompleted)
+                return;
+
             if (obj is PrescriptionDrug drug)
             {
                 PrescriptionDrugs.Remove(drug);
             }
+
+            if (PrescriptionDrugs.Count() == 0)
+            {
+                HasPrescription = false;
+            }
         }
-        public async Task OnAppointmentSaved()
+        public async Task<bool> CheckPrescription()
         {
+            if (IsAppointmentCompleted || !HasPrescription)
+                return true;
+
             ExpiryDateErrorMessage = string.Empty;
 
             // first validate the fields
@@ -165,66 +216,42 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             }
 
             if (ExpiryDateErrorMessage.Length != 0)
-                return;
+                return false;
 
             if (PrescriptionDrugs.Count() == 0)
             {
                 MessageBox.Show("You have not added any drugs yet!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             foreach (var drug in PrescriptionDrugs)
             {
-                if (drug.Quantity == 0)
+                if (drug.Quantity <= 0)
                 {
                     MessageBox.Show($"Quantity of drug ({drug.Name}) has improper quantity", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    return false;
                 }
 
                 var matchinDrug = Drugs.Where(d => d.Id == drug.Id).FirstOrDefault();
-                if (matchinDrug == null || drug.Quantity > matchinDrug.Quantity)
-                {
-                    MessageBox.Show($"Quantity of drug ({drug.Name}) has improper quantity - selected too many products.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                if (string.IsNullOrEmpty(drug.DosageInstructions))
+                if (string.IsNullOrEmpty(drug.Dosage))
                 {
                     MessageBox.Show($"Dosage instructions of drug ({drug.Name}) cannot be empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    return false;
                 }
             }
 
             // Saving changes in the database
             using var context = _contextFactory.CreateDbContext();
 
-            Prescription prescriptionEntity;
-
-            if (IsEditing)
+            Prescription prescriptionEntity = new Prescription
             {
-                prescriptionEntity = await context.Prescription
-                    .Include(p => p.PrescriptionDrugs)
-                        .ThenInclude(pd => pd.Drug)
-                    .FirstOrDefaultAsync(p => p.Id == Prescription.Id);
+                AppointmentId = DetailedPrescription.Appointment.Id,
+                CreatedAt = DateTime.Now,
+            };
 
-                if (prescriptionEntity == null)
-                {
-                    MessageBox.Show("Cannot update prescription (not found)", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-            }
-            else
-            {
-                prescriptionEntity = new Prescription
-                {
-                    AppointmentId = Prescription.AppointmentId,
-                    CreatedAt = DateTime.Now,
-                };
-                context.Prescription.Add(prescriptionEntity);
-            }
+            context.Prescription.Add(prescriptionEntity);
 
             prescriptionEntity.ExpiryDate = ExpiryDate;
-
-            context.PrescriptionDrugs.RemoveRange(prescriptionEntity.PrescriptionDrugs);
 
             foreach (var drug in PrescriptionDrugs)
             {
@@ -233,13 +260,13 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                     Prescription = prescriptionEntity,
                     DrugId = drug.Id,
                     Quantity = drug.Quantity,
-                    DosageInstructions = drug.DosageInstructions,
+                    Dosage = drug.Dosage,
                 });
             }
 
             await context.SaveChangesAsync();
 
-            // Get the updated prescription from the database (including drug)
+            // Get the created prescription from the database (including drug)
             Prescription updatedPrescription = await context.Prescription
                 .Include(p => p.Appointment)
                     .ThenInclude(a => a.Doctor)
@@ -248,11 +275,16 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                         .ThenInclude(p => p.User)
                 .Include(p => p.PrescriptionDrugs)
                     .ThenInclude(pd => pd.Drug)
-                .FirstOrDefaultAsync(p => p.Id == Prescription.Id);
+                .FirstOrDefaultAsync(p => p.AppointmentId == DetailedPrescription.Appointment.Id);
+
+            return true;
         }
 
         private void AddDrugToPrescription(object obj)
         {
+            if (IsAppointmentCompleted)
+                return;
+
             if (obj is Drug drug)
             {
                 if (PrescriptionDrugs.Any(pd => pd.Id == drug.Id))
@@ -265,7 +297,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                         Manufacturer = drug.Manufacturer,
                         Name = drug.Name,
                         DosageForm = drug.DosageForm,
-                        DosageInstructions = "",
+                        Dosage = "",
                         Quantity = 1,
                     });
 
@@ -275,6 +307,9 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
         private async Task GetDrugs()
         {
+            if (IsAppointmentCompleted)
+                return;
+
             using var context = _contextFactory.CreateDbContext();
 
             try

@@ -30,7 +30,7 @@ namespace VetClinic.Controls
                 nameof(IsEnabled),
                 typeof(bool),
                 typeof(AddButton),
-                new PropertyMetadata(true));
+                new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public bool IsEnabled
         {

@@ -20,10 +20,10 @@ namespace VetClinic.Models
         public int AppointmentId { get; set; }
 
         [Column("expiry_date")]
-        public DateTime ExpiryDate { get; set; }
+        public DateTime? ExpiryDate { get; set; }
 
         [Column("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
 
         public Appointment Appointment { get; set; }
         public virtual ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }

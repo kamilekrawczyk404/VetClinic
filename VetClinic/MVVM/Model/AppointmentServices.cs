@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace VetClinic.Models
 {
     [Table("appointmentservices")]
-    [Keyless]
     public class AppointmentServices
     {
         [Column("appointment_id")]

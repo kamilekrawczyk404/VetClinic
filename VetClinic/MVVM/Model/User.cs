@@ -24,14 +24,14 @@ namespace VetClinic.Models
         [Column("password")]
         public string PasswordHash { get; set; }
 
-        [Column("gender")]
-        public string Gender { get; set; } = "Male";
+        [Column("is_active")]
+        public bool IsActive { get; set; }
 
         [Column("role")]
         public string Role { get; set; }
 
-        [Column("telephone_number")]
-        public int TelephoneNumber { get; set; }
+        [Column("phone_number")]
+        public string TelephoneNumber { get; set; }
 
         [Column("date_of_birth")]
         public DateTime DateOfBirth { get; set; } = DateTime.Now;

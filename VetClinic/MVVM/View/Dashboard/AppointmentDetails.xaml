@@ -87,17 +87,6 @@
                                     </StackPanel>
                                 </Border>
 
-                                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10,0" Margin="2.5,0,0,0">
-                                    <Grid HorizontalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="Appointment status" FontWeight="SemiBold" Foreground="{DynamicResource Gray}" VerticalAlignment="Center"/>
-                                        <controls:AppointmentStatusComboBox Grid.Column="1"  HorizontalAlignment="Right" SelectedStatus="{Binding SelectedStatus, Mode=TwoWay}" IsEditable="True" Statuses="{Binding DetailedAppointment.Statuses}"/>
-                                    </Grid>
-                                </Border>
-
                                 <input:TextArea Grid.Row="2" Margin="0,0,2.5,0" Title="Diagnosis" Placeholder="Enter diagnosis..." Text="{Binding Diagnosis}" ErrorMessage="{Binding DiagnosisErrorMessage}" />
 
                                 <input:TextArea Grid.Row="2" Grid.Column="1" Margin="2.5,0,0,0" Title="Notes"  Placeholder="Enter notes..." Text="{Binding Notes}" />

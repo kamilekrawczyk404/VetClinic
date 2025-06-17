@@ -25,7 +25,7 @@ namespace VetClinic.Utils
                         return (Brush)Application.Current.FindResource("BorderStatusInProgress");
                     case "completed":
                         return (Brush)Application.Current.FindResource("BorderStatusCompleted");
-                    case "canceled":
+                    case "cancelled":
                         return (Brush)Application.Current.FindResource("BorderStatusCanceled");
                     default:
                         return (Brush)Application.Current.FindResource("BorderStatusScheduled");

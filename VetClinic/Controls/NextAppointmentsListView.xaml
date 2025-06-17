@@ -89,7 +89,7 @@
                                     Background="{Binding Appointment.Status, Converter={StaticResource AppointmentStatusToBackgroundConverter}}">
                                     <TextBlock Text="{Binding Appointment.Status, Mode=TwoWay}" Foreground="{DynamicResource Gray}"/>
                                 </Border>
-                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment" Command="{Binding Path=CancelAppointmentCommand, ElementName=Root}" CommandParameter="{Binding Appointment}"/>
+                                <Button Style="{StaticResource ListViewButton}" Content="Cancel appointment" Command="{Binding Path=CancelAppointmentCommand, ElementName=Root}" CommandParameter="{Binding Appointment}" Visibility="{Binding Appointment.Status, Converter={StaticResource CancelledAppointmentStatusToCollapsedVisibilityConverter}}"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

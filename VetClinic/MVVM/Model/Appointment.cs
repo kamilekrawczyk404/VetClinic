@@ -29,10 +29,10 @@ namespace VetClinic.Models
         public string ReasonForVisit { get; set; }
 
         [Column("notes")]
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         [Column("diagnosis")]
-        public string Diagnosis { get; set; }
+        public string? Diagnosis { get; set; }
 
         [Column("appointment_date")]
         public DateTime AppointmentDate { get; set; }

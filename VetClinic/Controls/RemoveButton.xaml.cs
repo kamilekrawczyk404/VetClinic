@@ -25,6 +25,19 @@ namespace VetClinic.Controls
             InitializeComponent();
         }
 
+        public static readonly DependencyProperty IsEnabledProperty =
+            DependencyProperty.Register(
+                nameof(IsEnabled),
+                typeof(bool),
+                typeof(RemoveButton),
+                new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
+        public bool IsEnabled
+        {
+            get => (bool)GetValue(IsEnabledProperty);
+            set => SetValue(IsEnabledProperty, value);
+        }
+
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.Register(
                 nameof(Command),

@@ -23,8 +23,8 @@ namespace VetClinic.Models
         [Column("quantity")]
         public int Quantity { get; set; }
 
-        [Column("dosage_instructions")]
-        public string DosageInstructions { get; set; }
+        [Column("dosage")]
+        public string Dosage { get; set; }
 
         public virtual Drug Drug { get; set; }
         public virtual Prescription Prescription { get; set; }

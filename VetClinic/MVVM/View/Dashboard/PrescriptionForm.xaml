@@ -9,89 +9,109 @@
              xmlns:controls="clr-namespace:VetClinic.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border Style="{StaticResource BorderWrapper}">
+    <Border Style="{StaticResource BorderWrapper}" Visibility="{Binding IsPrescriptionDisplayed, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Prescription" Style="{StaticResource MediumHeader}"/>
+            <!-- if appointment is completed, disable edititng -->
+            
+            <!-- Title and button -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Prescription" Style="{StaticResource MediumHeader}" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Command="{Binding AddPrescriptionCommand}" HorizontalAlignment="Right" Style="{StaticResource SubmitButton}" Content="Add prescription" Visibility="{Binding HasPrescription, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+            </Grid>
 
-            <Grid Grid.Row="1" Margin="0,5,0,0">
+
+            <!-- Prescription information -->
+            <Grid Grid.Row="1" Margin="0,5,0,0" Visibility="{Binding HasPrescription, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <input:InputControl Title="Client name"  Text="{Binding Prescription.Appointment.Pet.User, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
-                <input:InputControl Title="Doctor name" Margin="5,0"  Grid.Column="1" Text="{Binding Prescription.Appointment.Doctor, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
-                <input:CustomDatePicker Grid.Column="2" ErrorMessage="{Binding ExpiryDateErrorMessage}" Title="Expiry date" SelectedDate="{Binding ExpiryDate}"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!-- Doctor, client information, expiry date -->
+
+                <input:InputControl Title="Client name"  Text="{Binding DetailedPrescription.Client, Mode=TwoWay, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                <input:InputControl Grid.Column="1"  Title="Doctor name" Margin="5,0" Text="{Binding DetailedPrescription.Doctor, Mode=TwoWay, Converter={StaticResource FullNameConverter}}" IsEnabled="False"/>
+                <input:CustomDatePicker Grid.Column="2" ErrorMessage="{Binding ExpiryDateErrorMessage, Mode=TwoWay}" Title="Expiry date" SelectedDate="{Binding ExpiryDate, Mode=TwoWay}" IsEnabled="{Binding IsAppointmentCompleted, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                <!-- Selected drugs -->
+                <Border Grid.Row="1" Grid.ColumnSpan="3" Margin="0,10" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Selected Drugs" Style="{StaticResource SmallHeader}" />
+                        <DataGrid
+                            ItemsSource="{Binding PrescriptionDrugs, Mode=TwoWay}"
+                            SelectionMode="Single"
+                            AutoGenerateColumns="False"
+                            MaxHeight="200"
+                            Style="{StaticResource CustomDataGridStyle}" 
+                            RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                            CellStyle="{StaticResource CustomDataGridCellStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
+                                <DataGridTextColumn Header="Dosage" Binding="{Binding Dosage}" Width="*"/>
+                                <DataGridTemplateColumn Header="Actions" MinWidth="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:RemoveButton
+                                                IsEnabled="{Binding DataContext.IsAppointmentCompleted, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource InverseBooleanConverter}}"
+                                                Command="{Binding DataContext.RemoveDrugFromPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+
+                <!-- All drugs list -->
+                <Border Grid.Row="2" Grid.ColumnSpan="3" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10" Visibility="{Binding IsAppointmentCompleted, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="List of drugs" Style="{StaticResource SmallHeader}"/>
+                        <DataGrid 
+                            x:Name="DrugDataGrid"
+                            ItemsSource="{Binding Drugs, Mode=TwoWay}"
+                            AutoGenerateColumns="False"
+                            MaxHeight="200"
+                            Style="{StaticResource CustomDataGridStyle}" 
+                            RowStyle="{StaticResource CustomDataGridRowStyle}" 
+                            CellStyle="{StaticResource CustomDataGridCellStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}" IsReadOnly="True"/>
+                                <DataGridTemplateColumn Header="Actions" MinWidth="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:AddButton
+                                                Command="{Binding DataContext.AddDrugToPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
             </Grid>
-
-            <Border Grid.Row="2" Margin="0,10" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10">
-                <StackPanel>
-                    <TextBlock Text="Selected Drugs" Style="{StaticResource SmallHeader}" />
-                    <DataGrid
-                        ItemsSource="{Binding PrescriptionDrugs, Mode=TwoWay}"
-                        SelectionMode="Single"
-                        AutoGenerateColumns="False"
-                        MaxHeight="200"
-                        Style="{StaticResource CustomDataGridStyle}" 
-                        RowStyle="{StaticResource CustomDataGridRowStyle}" 
-                        CellStyle="{StaticResource CustomDataGridCellStyle}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}"/>
-                            <DataGridTextColumn Header="Dosage Instructions" Binding="{Binding DosageInstructions}" Width="*"/>
-                            <DataGridTemplateColumn Header="Actions" Width="50">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <controls:RemoveButton
-                                            Command="{Binding DataContext.RemoveDrugFromPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-            </Border>
-
-            <Border Grid.Row="3" Style="{StaticResource BorderDefault}" CornerRadius="4" Padding="10">
-                <StackPanel>
-                    <TextBlock Text="List of drugs" Style="{StaticResource SmallHeader}"/>
-                    <DataGrid 
-                        x:Name="DrugDataGrid"
-                        ItemsSource="{Binding Drugs, Mode=TwoWay}"
-                        AutoGenerateColumns="False"
-                        MaxHeight="200"
-                        Style="{StaticResource CustomDataGridStyle}" 
-                        RowStyle="{StaticResource CustomDataGridRowStyle}" 
-                        CellStyle="{StaticResource CustomDataGridCellStyle}">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Dosage Form" Binding="{Binding DosageForm}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Manufacturer" Binding="{Binding Manufacturer}" IsReadOnly="True"/>
-                            <DataGridTextColumn Header="Stock Quantity" Binding="{Binding Quantity}" Width="*" IsReadOnly="True"/>
-                            <DataGridTemplateColumn Header="Actions" Width="50">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <controls:AddButton 
-                                            Command="{Binding DataContext.AddDrugToPrescriptionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                            CommandParameter="{Binding}"/>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </StackPanel>
-            </Border>
         </Grid>
     </Border>
 </UserControl>
