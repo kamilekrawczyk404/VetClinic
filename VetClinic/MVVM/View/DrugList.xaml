@@ -10,10 +10,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Border Style="{StaticResource BorderDefault}" Padding="10">
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="360"/>
@@ -21,9 +17,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Drug list" Style="{StaticResource Header}" VerticalAlignment="Center"/>
 
-            <Button Content="Add new drug" Style="{StaticResource SubmitButton}" Grid.Column="1" HorizontalAlignment="Right"/>
-
-            <Border Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource BorderWrapper}" Margin="0,10">
+            <Border Grid.Row="1" Style="{StaticResource BorderWrapper}" Margin="0,10">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="200"/>
@@ -50,22 +44,23 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <TextBlock Text="Editing drug" Style="{StaticResource MediumHeader}" />
-                                    <TextBlock Margin="5,0,0,0" Text="{Binding Id, StringFormat=#{0}}" Style="{StaticResource MediumHeader}"/>
-                                </StackPanel>
+                                <TextBlock Text="{Binding FormModeMessage}" Style="{StaticResource MediumHeader}" />
 
-                                <Button Grid.Column="1" Style="{StaticResource SubmitButton}" Content="Save drug" HorizontalAlignment="Right"/>
+                                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" >
+                                    <Button Style="{StaticResource SubmitButton}" Content="Back" Command="{Binding BackCommand}" Margin="0,0,5,0" Visibility="{Binding IsAddingDrug, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                    <Button Style="{StaticResource SubmitButton}" Content="Save drug"  Command="{Binding SaveDrugCommand}" Visibility="{Binding IsAddingDrug, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                    <Button Style="{StaticResource SubmitButton}" Content="Create drug"  Command="{Binding SaveDrugCommand}" Visibility="{Binding IsAddingDrug, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                </StackPanel>
                             </Grid>
 
-                            <input:InputControl Title="Id" ErrorMessage="" Text="{Binding Id}" Grid.Row="1" Margin="0,0,5,0" IsEnabled="False"/>
-                            <input:InputControl Title="Name" ErrorMessage="" Text="{Binding Name}" Grid.Row="2" Margin="0,0,5,0"/>
-                            <input:InputControl Title="Dosage Form" ErrorMessage="" Text="{Binding DosageForm}" Grid.Row="3" Margin="0,0,5,0"/>
-                            <input:InputControl Title="Strength" ErrorMessage="" Text="{Binding Strength}" Grid.Row="4" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Id" Text="{Binding Id}" Grid.Row="1" Margin="0,0,5,0" IsEnabled="False"/>
+                            <input:InputControl Title="Name" ErrorMessage="{Binding NameErrorMessage}" Text="{Binding Name}" Grid.Row="2" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Dosage Form" Text="{Binding DosageForm}" Grid.Row="3" Margin="0,0,5,0"/>
+                            <input:InputControl Title="Strength" Text="{Binding Strength}" Grid.Row="4" Margin="0,0,5,0"/>
                             
-                            <input:InputControl Title="Unit of measure" ErrorMessage="" Text="{Binding UnitOfMeasure}" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
-                            <input:InputControl Title="Manufacturer" ErrorMessage="" Text="{Binding Manufacturer}" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0"/>
-                            <input:TextArea Title="Description" ErrorMessage="" Text="{Binding Description}" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:InputControl Title="Unit of measure" Text="{Binding UnitOfMeasure}" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:InputControl Title="Manufacturer" Text="{Binding Manufacturer}" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0"/>
+                            <input:TextArea Title="Description" Text="{Binding Description}" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1" Margin="5,0,0,0"/>
                         </Grid>
                         
                     </Border>
@@ -73,7 +68,6 @@
             </Border>
             <DataGrid
                 Grid.Row="2"
-                Grid.ColumnSpan="2"
                 Style="{StaticResource CustomDataGridStyle}"
                 RowStyle="{StaticResource CustomDataGridRowStyle}"
                 CellStyle="{StaticResource CustomDataGridCellStyle}"
