@@ -375,12 +375,12 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         {
             if (arg is Appointment appointment)
             {
-                if (appointment.Status.ToLower() == "canceled")
+                if (appointment.Status.ToLower() == "cancelled")
                     return;
 
                 using var context = _contextFactory.CreateDbContext();
 
-                appointment.Status = "Canceled";
+                appointment.Status = "Cancelled";
                 context.Appointment.Update(appointment);
 
                 await context.SaveChangesAsync();
