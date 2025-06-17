@@ -171,6 +171,11 @@ namespace VetClinic.MVVM.ViewModel
 
         private void CheckButtonsVisibility()
         {
+            AreDrugsVisible = false;
+            ArePetsVisible = false;
+            AreClientsVisible = false;
+            AreDoctorsVisible = false;
+
             AreOtherVisible = true;
 
             if (_userSessionService.IsAdmin)

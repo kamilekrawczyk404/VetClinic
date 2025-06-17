@@ -77,7 +77,7 @@
                 Text="Drugs" 
                 Icon="/Images/medicine.png" 
                 ActiveIcon="/Images/medicine-active.png" 
-                Visibility="{Binding AreOtherVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Visibility="{Binding AreDrugsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Command="{Binding NavigateToDrugsListCommand}"
                 IsSelected="{Binding SelectedViewName, Converter={StaticResource SelectedViewModelToBooleanConventer}, ConverterParameter=Drugs}"/>
         </StackPanel>

@@ -299,13 +299,13 @@ namespace VetClinic.MVVM.ViewModel
                     var newOpinion = new Opinion
                     {
                         DoctorId = SelectedDoctor.Id,
-                        ClientId = _userSessionService.LoggedInUser.Id, // Zmiana z ClientId na UserId
+                        ClientId = _userSessionService.LoggedInUser.Id, 
                         Comment = NewOpinionComment.Trim(),
                         Rating = NewOpinionRating,
                         CreatedAt = DateTime.Now
                     };
 
-                    context.Opinion.Add(newOpinion); // Zmiana z Opinion na Opinions (nazwa tabeli)
+                    context.Opinion.Add(newOpinion); 
                 }
                 else if (IsEditingOpinion && UserOpinion != null)
                 {
@@ -316,7 +316,7 @@ namespace VetClinic.MVVM.ViewModel
                     {
                         existingOpinion.Comment = NewOpinionComment.Trim();
                         existingOpinion.Rating = NewOpinionRating;
-                        existingOpinion.CreatedAt = DateTime.Now; // Update timestamp
+                        existingOpinion.CreatedAt = DateTime.Now; 
                     }
                 }
 

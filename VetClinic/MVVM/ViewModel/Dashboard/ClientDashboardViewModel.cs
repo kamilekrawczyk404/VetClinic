@@ -146,6 +146,8 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
         public RelayCommand SelectPetCommand { get; }
         public RelayCommand SelectAppointmentCommand { get; }
         public RelayCommand ViewOpinionCommand { get; }
+        public AsyncRelayCommand CancelAppointmentCommand { get; }
+
 
         public ClientDashboardViewModel(IDbContextFactory<VeterinaryClinicContext> contextFactory, INavigationService navigation, IUserSessionService userSessionService)
         {
@@ -155,8 +157,23 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             SelectPetCommand = new RelayCommand(SelectPet);
             SelectAppointmentCommand = new RelayCommand(SelectAppointment);
             ViewOpinionCommand = new RelayCommand(ViewOpinion);
+            CancelAppointmentCommand = new AsyncRelayCommand(CancelAppointment);
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
+
+            _ = LoadDataAsync();
+
+        }
+        private async Task LoadDataAsync()
+        {
+            try
+            {
+                await OnUserChanged();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading dashboard data: {ex.Message}");
+            }
         }
 
         private void SelectPet(object obj)
@@ -354,7 +371,24 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
                 });
             }
         }
+        private async Task CancelAppointment(object arg)
+        {
+            if (arg is Appointment appointment)
+            {
+                if (appointment.Status.ToLower() == "cancelled")
+                    return;
+
+                using var context = _contextFactory.CreateDbContext();
+
+                appointment.Status = "Cancelled";
+                context.Appointment.Update(appointment);
+
+                await context.SaveChangesAsync();
+                await this.GetUpcomingAppointments();
+            }
+        }
     }
+
 
     public class DetailedPet
     {

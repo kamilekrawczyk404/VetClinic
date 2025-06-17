@@ -21,7 +21,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" 
-                       Text="Moje recepty" 
+                       Text="Your prescriptions" 
                        Style="{StaticResource Header}"
                        FontSize="24"
                        VerticalAlignment="Center"/>
@@ -47,7 +47,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="💊" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                 <StackPanel>
-                                    <TextBlock Text="Aktywne recepty" 
+                                    <TextBlock Text="Active prescriptions" 
                                                FontSize="14"
                                                Foreground="{StaticResource White}"/>
                                     <TextBlock Text="{Binding DataContext.ActivePrescriptions.Count, 
@@ -81,7 +81,7 @@
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📋" FontSize="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                 <StackPanel>
-                                    <TextBlock Text="Wygasłe recepty" 
+                                    <TextBlock Text="Expired prescriptions" 
                                                FontSize="14"
                                                Foreground="{StaticResource White}"/>
                                     <TextBlock Text="{Binding DataContext.ExpiredPrescriptions.Count, 
@@ -137,24 +137,24 @@
                                                 <TextBlock Style="{StaticResource Header}"
                                                            FontSize="16"
                                                            Margin="0,0,0,8">
-                                                    <Run Text="Recepta nr"/>
+                                                    <Run Text="Prescription nr"/>
                                                     <Run Text="{Binding Id}" FontWeight="Bold"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4">
-                                                    <Run Text="Wystawiona:"/>
+                                                    <Run Text="Issued:"/>
                                                     <Run Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy'}"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4">
-                                                    <Run Text="Ważna do:"/>
+                                                    <Run Text="valid until:"/>
                                                     <Run Text="{Binding ExpiryDate, StringFormat='dd.MM.yyyy'}" FontWeight="Medium"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4">
-                                                    <Run Text="Lekarz:"/>
+                                                    <Run Text="Doctor:"/>
                                                     <Run Text="{Binding Appointment.Doctor.Name}"/>
                                                     <Run Text="{Binding Appointment.Doctor.Surname}"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,8">
-                                                    <Run Text="Zwierzę:"/>
+                                                    <Run Text="Pet:"/>
                                                     <Run Text="{Binding Appointment.Pet.Name}"/>
                                                     <Run Text="("/>
                                                     <Run Text="{Binding Appointment.Pet.Species}"/>
@@ -168,7 +168,7 @@
                                                     Padding="15"
                                                     VerticalAlignment="Top">
                                                 <StackPanel>
-                                                    <TextBlock Text="Przepisane leki:" 
+                                                    <TextBlock Text="Prescribed drugs:" 
                                                                FontSize="14" 
                                                                Foreground="{StaticResource White}"
                                                                Margin="0,0,0,10"/>
@@ -179,7 +179,7 @@
                                                                     <TextBlock FontSize="14" Foreground="{StaticResource White}">
                                                                         <Run Text="•"/>
                                                                         <Run Text="{Binding Drug.Name}"/>
-                                                                        <Run Text="- ilość:"/>
+                                                                        <Run Text="- quantity:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
                                                                     <TextBlock Text="{Binding Dosage}" 
@@ -205,11 +205,11 @@
                                     Margin="0,50,0,0"
                                     Visibility="{Binding ActivePrescriptions.Count, Converter={StaticResource CountToVisibilityConverter}}">
                             <TextBlock Text="💊" FontSize="48" HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,10"/>
-                            <TextBlock Text="Brak aktywnych recept"
+                            <TextBlock Text="No active prescriptions"
                                        Style="{StaticResource Header}"
                                        FontSize="16"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Nie masz obecnie ważnych recept"
+                            <TextBlock Text="You currently have no valid prescriptions"
                                        FontSize="12"
                                        HorizontalAlignment="Center"                
                                        Margin="0,5,0,0"/>
@@ -248,24 +248,24 @@
                                                 <TextBlock Style="{StaticResource Header}"
                                                            FontSize="16"
                                                            Margin="0,0,0,8">
-                                                    <Run Text="Recepta nr"/>
+                                                    <Run Text="Prescription nr"/>
                                                     <Run Text="{Binding Id}" FontWeight="Bold"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4" >
-                                                    <Run Text="Wystawiona:"/>
+                                                    <Run Text="Issued:"/>
                                                     <Run Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy'}"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4" >
-                                                    <Run Text="Wygasła:"/>
+                                                    <Run Text="Expired:"/>
                                                     <Run Text="{Binding ExpiryDate, StringFormat='dd.MM.yyyy'}" FontWeight="Medium"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,4" >
-                                                    <Run Text="Lekarz:"/>
+                                                    <Run Text="Doctor:"/>
                                                     <Run Text="{Binding Appointment.Doctor.Name}"/>
                                                     <Run Text="{Binding Appointment.Doctor.Surname}"/>
                                                 </TextBlock>
                                                 <TextBlock FontSize="13" Margin="0,0,0,8" >
-                                                    <Run Text="Zwierzę:"/>
+                                                    <Run Text="Pet:"/>
                                                     <Run Text="{Binding Appointment.Pet.Name}"/>
                                                     <Run Text="("/>
                                                     <Run Text="{Binding Appointment.Pet.Species}"/>
@@ -279,7 +279,7 @@
                                                     Padding="15"
                                                     VerticalAlignment="Top">
                                                 <StackPanel>
-                                                    <TextBlock Text="Przepisane leki:" 
+                                                    <TextBlock Text="Prescribed drugs::" 
                                                                FontSize="14" 
                                                                FontWeight="Medium"
                                                                Foreground="{StaticResource White}"
@@ -291,7 +291,7 @@
                                                                     <TextBlock FontSize="14" Foreground="{StaticResource White}">
                                                                         <Run Text="•"/>
                                                                         <Run Text="{Binding Drug.Name}" FontWeight="Medium"/>
-                                                                        <Run Text="- ilość:"/>
+                                                                        <Run Text="- quantity:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
                                                                     <TextBlock Text="{Binding Dosage}" 
@@ -317,11 +317,11 @@
                                     Margin="0,50,0,0"
                                     Visibility="{Binding ExpiredPrescriptions.Count, Converter={StaticResource CountToVisibilityConverter}}">
                             <TextBlock Text="📋" FontSize="48" HorizontalAlignment="Center" Opacity="0.3" Margin="0,0,0,10"/>
-                            <TextBlock Text="Brak wygasłych recept"
+                            <TextBlock Text="No expired prescriptions"
                                        Style="{StaticResource Header}"
-                                       FontSize="16"
+                                       FontSize="14"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Nie masz jeszcze żadnych wygasłych recept"
+                            <TextBlock Text="You don't have any expired prescriptions yet"
                                        FontSize="12"
                                        HorizontalAlignment="Center"
                                        Opacity="0.5"

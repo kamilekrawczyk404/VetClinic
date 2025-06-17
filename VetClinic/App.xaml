@@ -81,6 +81,9 @@
             <DataTemplate DataType="{x:Type viewModel:PrescriptionListViewModel}">
                 <view:PrescriptionsList/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type viewModel:BookAppointmentViewModel}">
+                <view:BookAppointmentView/>
+            </DataTemplate>
             <DataTemplate DataType="{x:Type viewModel:DrugListViewModel}">
                 <view:DrugList/>
             </DataTemplate>

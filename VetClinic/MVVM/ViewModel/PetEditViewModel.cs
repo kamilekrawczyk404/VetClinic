@@ -63,8 +63,8 @@ namespace VetClinic.MVVM.ViewModel
             if (_pet != null)
             {
                 IsAddingPet = false;
-                Title = $"Edytuj zwierzę: {_pet.Name}";
-                SaveButtonText = "Zapisz zmiany";
+                Title = $"Edit pet: {_pet.Name}";
+                SaveButtonText = "💾 Save changes";
 
                 EditingPet = new Pet
                 {
@@ -90,8 +90,8 @@ namespace VetClinic.MVVM.ViewModel
             if (_originalPet != null)
             {
                 IsAddingPet = false;
-                Title = $"Edytuj zwierzę: {_originalPet.Name}";
-                SaveButtonText = "Zapisz zmiany";
+                Title = $"Edit pet: {_originalPet.Name}";
+                SaveButtonText = "💾 Save changes";
 
                 EditingPet = new Pet
                 {
@@ -110,15 +110,15 @@ namespace VetClinic.MVVM.ViewModel
             else
             {
                 IsAddingPet = true;
-                Title = "Dodaj nowe zwierzę";
-                SaveButtonText = "Dodaj zwierzę";
+                Title = "➕Add new pet";
+                SaveButtonText = "➕Add pet";
 
                 EditingPet = new Pet
                 {
                     DateOfBirth = DateTime.Now.AddYears(-1),
                     CreatedAt = DateTime.Now,
                     Gender = "Male",
-                    Species = "Pies",
+                    Species = "Dog",
                     Weight = 1.0
                 };
 
@@ -255,28 +255,28 @@ namespace VetClinic.MVVM.ViewModel
             }
 
             if (string.IsNullOrWhiteSpace(EditingPet.Name))
-                errors.Add("Imię zwierzęcia jest wymagane");
+                errors.Add("Pet name is required");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Species))
-                errors.Add("Gatunek jest wymagany");
+                errors.Add("Pet name is required");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Breed))
-                errors.Add("Rasa jest wymagana");
+                errors.Add("Pet name is required");
 
             if (EditingPet.Weight <= 0)
-                errors.Add("Waga musi być większa od 0");
+                errors.Add("Pet name is required");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Gender))
-                errors.Add("Płeć jest wymagana");
+                errors.Add("Pet name is required");
 
             if (EditingPet.DateOfBirth == default(DateTime))
-                errors.Add("Data urodzenia jest wymagana");
+                errors.Add("Pet name is required");
 
             if (EditingPet.DateOfBirth > DateTime.Now)
-                errors.Add("Data urodzenia nie może być w przyszłości");
+                errors.Add("Pet name is required");
 
             if (IsAddingPet && IsAdmin && EditingPet.User == null)
-                errors.Add("Właściciel jest wymagany");
+                errors.Add("Pet name is required");
 
             ValidationErrors = new ObservableCollection<string>(errors);
         }
@@ -319,7 +319,7 @@ namespace VetClinic.MVVM.ViewModel
                     context.Pet.Add(newPet);
                     await context.SaveChangesAsync();
 
-                    MessageBox.Show("Zwierzę zostało dodane pomyślnie!", "Sukces",
+                    MessageBox.Show("Pet was added successfully!", "Success",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
@@ -354,15 +354,15 @@ namespace VetClinic.MVVM.ViewModel
                 {
                     Trace.TraceError($"Inner exception: {ex.InnerException.Message}");
                 }
-                MessageBox.Show($"Wystąpił błąd podczas zapisywania: {ex.Message}",
-                    "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"An error occurred while saving: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void Cancel(object parameter)
         {
-            var result = MessageBox.Show("Czy na pewno chcesz anulować? Niezapisane zmiany zostaną utracone.",
-                "Potwierdzenie", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            var result = MessageBox.Show("Are you sure you want to cancel? Unsaved changes will be lost.",
+                "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {

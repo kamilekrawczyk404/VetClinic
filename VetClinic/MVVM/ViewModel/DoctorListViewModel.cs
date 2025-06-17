@@ -31,6 +31,8 @@ namespace VetClinic.MVVM.ViewModel
             EditDoctorCommand = new RelayCommand(EditDoctor, _ => IsAdmin);
             DeleteDoctorCommand = new RelayCommand(DeleteDoctor, _ => IsAdmin);
             ViewOpinionsCommand = new RelayCommand(ViewOpinions);
+            BookAppointmentCommand = new RelayCommand(BookAppointment, _ => IsClient);
+
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
             _ = LoadDoctorsAsync();
@@ -55,6 +57,8 @@ namespace VetClinic.MVVM.ViewModel
         public RelayCommand DeleteDoctorCommand { get; }
         public RelayCommand AddOpinionCommand { get; }
         public RelayCommand ViewOpinionsCommand { get; }
+        public RelayCommand BookAppointmentCommand { get; }
+
 
         private async Task OnUserChanged()
         {
@@ -66,8 +70,7 @@ namespace VetClinic.MVVM.ViewModel
             using var context = _contextFactory.CreateDbContext();
             try
             {
-                // W nowej strukturze tabela doctors jest niezależna - nie ma relacji z users
-                var doctors = await context.Doctor // Pozostawiamy Doctor zgodnie z życzeniem
+                var doctors = await context.Doctor 
                     .OrderBy(d => d.Surname)
                     .ThenBy(d => d.Name)
                     .ToListAsync();
@@ -87,22 +90,19 @@ namespace VetClinic.MVVM.ViewModel
         private void AddDoctor(object obj)
         {
             if (!IsAdmin) return;
-            // Implementacja dodawania lekarza
-            // _navigationService.NavigateTo<AddDoctorViewModel>();
+
         }
 
         private void EditDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
-            // Implementacja edycji lekarza
-            // _navigationService.NavigateTo<EditDoctorViewModel>(doctor);
+
         }
 
         private void DeleteDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
-            // Implementacja usuwania lekarza
-            // Można dodać dialog potwierdzenia i następnie usunięcie z bazy
+
         }
 
         private void ViewOpinions(object obj)
@@ -113,7 +113,14 @@ namespace VetClinic.MVVM.ViewModel
             }
             _navigationService.NavigateTo<ViewOpinionsViewModel>(doctor);
         }
-
+        private void BookAppointment(object obj)
+        {
+            if (!(obj is Doctor doctor))
+            {
+                return;
+            }
+            _navigationService.NavigateTo<BookAppointmentViewModel>(doctor);
+        }
         public async Task RefreshDoctorsAsync()
         {
             await LoadDoctorsAsync();

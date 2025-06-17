@@ -31,6 +31,8 @@ namespace VetClinic.MVVM.ViewModel
             PastAppointments = new ObservableCollection<Appointment>();
 
             CancelAppointmentCommand = new RelayCommand(CancelAppointment, CanCancelAppointment);
+            BookAppointmentCommand = new RelayCommand(BookAppointment);
+
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
             _ = LoadAppointmentsAsync();
@@ -77,6 +79,7 @@ namespace VetClinic.MVVM.ViewModel
 
         public RelayCommand CancelAppointmentCommand { get; }
         public RelayCommand RefreshCommand { get; }
+        public RelayCommand BookAppointmentCommand { get; }
 
         private async Task OnUserChanged()
         {
@@ -129,7 +132,6 @@ namespace VetClinic.MVVM.ViewModel
                         .ToListAsync();
                 }
 
-                // Podziel na nadchodzące i przeszłe
                 var upcoming = allAppointments
                     .Where(a => a.AppointmentDate >= now && a.Status != "Cancelled")
                     .OrderBy(a => a.AppointmentDate)
@@ -161,7 +163,6 @@ namespace VetClinic.MVVM.ViewModel
             if (!(obj is Appointment appointment))
                 return false;
 
-            // Można anulować tylko nadchodzące wizyty (nie anulowane, nie zakończone)
             return appointment.Status != "Cancelled" &&
                    appointment.Status != "Completed" &&
                    appointment.AppointmentDate > DateTime.Now;
@@ -172,10 +173,9 @@ namespace VetClinic.MVVM.ViewModel
             if (!(obj is Appointment appointment))
                 return;
 
-            // Potwierdzenie anulowania
             var result = MessageBox.Show(
-                $"Czy na pewno chcesz anulować wizytę z dnia {appointment.AppointmentDate:dd.MM.yyyy HH:mm}?",
-                "Potwierdzenie anulowania",
+                $"Are you sure you want to cancel the appointment scheduled for {appointment.AppointmentDate:dd.MM.yyyy HH:mm}?",
+                "Cancel Appointment Confirmation",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
 
@@ -194,18 +194,35 @@ namespace VetClinic.MVVM.ViewModel
                     appointmentToUpdate.Status = "Cancelled";
                     await context.SaveChangesAsync();
 
-                    // Odśwież listy
-                    await LoadAppointmentsAsync();
+                    var upcomingToRemove = UpcomingAppointments.FirstOrDefault(a => a.Id == appointment.Id);
+                    if (upcomingToRemove != null)
+                    {
+                        UpcomingAppointments.Remove(upcomingToRemove);
 
-                    MessageBox.Show("Wizyta została anulowana.", "Anulowanie wizyty", MessageBoxButton.OK, MessageBoxImage.Information);
+                        upcomingToRemove.Status = "Cancelled";
+
+                        PastAppointments.Insert(0, upcomingToRemove);
+                    }
+
+                    MessageBox.Show("The appointment has been cancelled.", "Appointment Cancelled", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 Trace.TraceError($"Error cancelling appointment: {ex.Message}");
-                MessageBox.Show("Wystąpił błąd podczas anulowania wizyty.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("An error occurred while cancelling the appointment.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                await LoadAppointmentsAsync();
             }
         }
+
+        private void BookAppointment(object parameter)
+        {
+            _navigationService.NavigateTo<BookAppointmentViewModel>();
+        }
+
+
+
     }
 
 }
