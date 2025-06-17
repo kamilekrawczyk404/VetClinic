@@ -40,6 +40,11 @@ namespace VetClinic.Services
             {
                 petEditViewModel.Pet = pet;
             }
+            else if (viewModel is BookAppointmentViewModel bookAppointmentViewModel && parameters.Length > 0 && parameters[0] is Models.Doctor doctorParam)
+            {
+                bookAppointmentViewModel.SetPreselectedDoctor(doctorParam);
+            }
+
             CurrentView = viewModel;
         }
 

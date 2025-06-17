@@ -223,13 +223,13 @@ namespace VetClinic.MVVM.ViewModel
                     var newOpinion = new Opinion
                     {
                         DoctorId = SelectedDoctor.Id,
-                        ClientId = _userSessionService.LoggedInUser.Id, // Zmiana z ClientId na UserId
+                        ClientId = _userSessionService.LoggedInUser.Id, 
                         Comment = NewOpinionComment.Trim(),
                         Rating = NewOpinionRating,
                         CreatedAt = DateTime.Now
                     };
 
-                    context.Opinion.Add(newOpinion); // Zmiana z Opinion na Opinions (nazwa tabeli)
+                    context.Opinion.Add(newOpinion); 
                 }
                 else if (IsEditingOpinion && UserOpinion != null)
                 {
@@ -240,7 +240,7 @@ namespace VetClinic.MVVM.ViewModel
                     {
                         existingOpinion.Comment = NewOpinionComment.Trim();
                         existingOpinion.Rating = NewOpinionRating;
-                        existingOpinion.CreatedAt = DateTime.Now; // Update timestamp
+                        existingOpinion.CreatedAt = DateTime.Now; 
                     }
                 }
 
@@ -297,17 +297,17 @@ namespace VetClinic.MVVM.ViewModel
             var timeSpan = DateTime.Now - createdAt;
 
             if (timeSpan.TotalMinutes < 1)
-                return "przed chwilą";
+                return "just now";
             if (timeSpan.TotalMinutes < 60)
-                return $"{(int)timeSpan.TotalMinutes} min temu";
+                return $"{(int)timeSpan.TotalMinutes} minutes ago";
             if (timeSpan.TotalHours < 24)
-                return $"{(int)timeSpan.TotalHours} godz. temu";
+                return $"{(int)timeSpan.TotalHours} hours ago";
             if (timeSpan.TotalDays < 30)
-                return $"{(int)timeSpan.TotalDays} dni temu";
+                return $"{(int)timeSpan.TotalDays} days ago ";
             if (timeSpan.TotalDays < 365)
-                return $"{(int)(timeSpan.TotalDays / 30)} mies. temu";
+                return $"{(int)(timeSpan.TotalDays / 30)} months ago";
 
-            return $"{(int)(timeSpan.TotalDays / 365)} lat temu";
+            return $"{(int)(timeSpan.TotalDays / 365)} years ago";
         }
     }
 

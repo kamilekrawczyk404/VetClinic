@@ -42,7 +42,7 @@ namespace VetClinic.Controls
             set => SetValue(ItemsSourceProperty, value);
         }
 
-        public static readonly DependencyProperty OnAppoinmentClickedProperty =
+        public static readonly DependencyProperty OnAppointmentClickedProperty =
             DependencyProperty.Register(
                 nameof(OnAppointmentClicked),
                 typeof(ICommand),
@@ -50,8 +50,8 @@ namespace VetClinic.Controls
 
         public ICommand OnAppointmentClicked
         {
-            get => (ICommand)GetValue(OnAppoinmentClickedProperty);
-            set => SetValue(OnAppoinmentClickedProperty, value);
+            get => (ICommand)GetValue(OnAppointmentClickedProperty);
+            set => SetValue(OnAppointmentClickedProperty, value);
         }
 
         public static readonly DependencyProperty CancelAppointmentCommandProperty =

@@ -12,6 +12,7 @@ using VetClinic.Utils;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel.Dashboard;
+using VetClinic.MVVM.View;
 
 namespace VetClinic.MVVM.ViewModel
 {
@@ -49,19 +50,18 @@ namespace VetClinic.MVVM.ViewModel
             _userSessionService = userSessionService;
             _navigationViewModel = new NavigationViewModel(_userSessionService, _navigation);
 
-             _navigation.NavigateTo<ClientDashboardViewModel>();
             // _navigation.NavigateTo<DoctorListViewModel>();
             // _navigation.NavigateTo<AppointmentListViewModel>();
             // _navigation.NavigateTo<PrescriptionListViewModel>();
 
             //_navigation.NavigateTo<LoginViewModel>();
             // get the user
-            //User logged = context.User.FirstOrDefault(u => u.Email == ".com");
-           //_userSessionService.SetUser(logged);
-
-            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "john.doe@vetclinic.com");
-            _userSessionService.SetDoctor(logged);
-            _navigation.NavigateTo<DoctorDashboardViewModel>();
+           User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
+           _userSessionService.SetUser(logged);
+           _navigation.NavigateTo<ClientDashboardViewModel>();
+           //  Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "marek.weterynarz@vetclinic.com");
+          //  _userSessionService.SetDoctor(logged);
+           // _navigation.NavigateTo<DoctorDashboardViewModel>();
 
             //  _navigationViewModel = navigationViewModel;
 
