@@ -109,6 +109,7 @@ namespace VetClinic.MVVM.ViewModel
                     allAppointments = await context.Appointment
                         .Include(a => a.Doctor)
                         .Include(a => a.Pet)
+                            .ThenInclude(p => p.User)
                         .Where(a => a.Pet.UserId == CurrentUserId)
                         .OrderBy(a => a.AppointmentDate)
                         .ToListAsync();
@@ -119,6 +120,7 @@ namespace VetClinic.MVVM.ViewModel
                     allAppointments = await context.Appointment
                         .Include(a => a.Doctor)
                         .Include(a => a.Pet)
+                            .ThenInclude(p => p.User)
                         .Where(a => a.Doctor.Id == CurrentDoctorId)
                         .OrderBy(a => a.AppointmentDate)
                         .ToListAsync();
@@ -128,6 +130,7 @@ namespace VetClinic.MVVM.ViewModel
                     allAppointments = await context.Appointment
                         .Include(a => a.Doctor)
                         .Include(a => a.Pet)
+                            .ThenInclude(p => p.User)
                         .OrderBy(a => a.AppointmentDate)
                         .ToListAsync();
                 }

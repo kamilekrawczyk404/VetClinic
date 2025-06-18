@@ -159,6 +159,7 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
             ViewOpinionCommand = new RelayCommand(ViewOpinion);
             CancelAppointmentCommand = new AsyncRelayCommand(CancelAppointment);
 
+
             _userSessionService.UserChanged += async () => await OnUserChanged();
 
             _ = LoadDataAsync();

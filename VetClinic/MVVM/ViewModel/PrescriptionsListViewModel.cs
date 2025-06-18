@@ -98,6 +98,7 @@ namespace VetClinic.MVVM.ViewModel
                     allPrescriptions = await context.Prescription
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Doctor)
                     .Include(p => p.PrescriptionDrugs)
@@ -110,6 +111,7 @@ namespace VetClinic.MVVM.ViewModel
                     allPrescriptions = await context.Prescription
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Doctor)
                     .Include(p => p.PrescriptionDrugs)
@@ -122,6 +124,7 @@ namespace VetClinic.MVVM.ViewModel
                     allPrescriptions = await context.Prescription
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Doctor)
                     .Include(p => p.PrescriptionDrugs)

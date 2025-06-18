@@ -67,7 +67,7 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        public string DoctorDisplayName => SelectedDoctor != null ? $"Dr {SelectedDoctor.Name} {SelectedDoctor.Surname}" : string.Empty;
+        public string DoctorDisplayName => SelectedDoctor != null ? $" {SelectedDoctor.Name} {SelectedDoctor.Surname}" : string.Empty;
 
         public ObservableCollection<DetailedOpinion> Opinions
         {
