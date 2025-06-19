@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using System.Windows.Media;
 using System.Windows;
+using VetClinic.Models;
 
 namespace VetClinic.MVVM.ViewModel.Dashboard
 {
@@ -181,19 +182,23 @@ namespace VetClinic.MVVM.ViewModel.Dashboard
 
             var doctor = _userSessionService?.LoggedInDoctor;
 
-            if (doctor == null)
-                return;
-
-            // ...existing code...
-            var appointments = await context.Appointment
-                .Where(a => a.DoctorId == doctor.Id && a.AppointmentDate >= startingDate)
+            // Zapytanie dla administratora (wszystkie usługi) lub lekarza (tylko jego usługi)
+            IQueryable<Appointment> appointmentsQuery = context.Appointment
+                .Where(a => a.AppointmentDate >= startingDate)
                 .Include(a => a.AppointmentServices)
-                .ThenInclude(asv => asv.Service)
-                .ToListAsync();
+                .ThenInclude(asv => asv.Service);
 
+            // Jeśli to lekarz, filtruj po jego ID
+            if (doctor != null)
+            {
+                appointmentsQuery = appointmentsQuery.Where(a => a.DoctorId == doctor.Id);
+            }
+
+            var appointments = await appointmentsQuery.ToListAsync();
 
             _allServicesCount = appointments
                 .SelectMany(a => a.AppointmentServices)
+                .Where(asv => asv.Service != null) // Dodaj sprawdzenie null
                 .GroupBy(asv => asv.Service.Name)
                 .Select(g => new ServiceCount { ServiceName = g.Key, Count = g.Count() })
                 .OrderByDescending(x => x.Count)
