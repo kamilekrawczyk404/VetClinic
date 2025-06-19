@@ -55,13 +55,21 @@ namespace VetClinic.MVVM.ViewModel
             // _navigation.NavigateTo<PrescriptionListViewModel>();
 
             //_navigation.NavigateTo<LoginViewModel>();
+
             // get the user
-            User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
+            //User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
+            //_userSessionService.SetUser(logged);
+            //_navigation.NavigateTo<ClientDashboardViewModel>();
+
+            // get the doctor
+            //Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "john.doe@vetclinic.com");
+            //_userSessionService.SetDoctor(logged);
+            //_navigation.NavigateTo<DoctorDashboardViewModel>();
+
+            // get the admin
+            User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
             _userSessionService.SetUser(logged);
-            _navigation.NavigateTo<ClientDashboardViewModel>();
-            /*            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "john.doe@vetclinic.com");
-                        _userSessionService.SetDoctor(logged);
-                        _navigation.NavigateTo<DoctorDashboardViewModel>();*/
+            _navigation.NavigateTo<AdminDashboardViewModel>();
 
             //  _navigationViewModel = navigationViewModel;
 

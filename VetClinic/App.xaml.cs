@@ -70,6 +70,8 @@ public partial class App : Application
         services.AddTransient<DoctorDashboardViewModel>();
         services.AddTransient<DoctorListViewModel>();
 
+        services.AddTransient<AdminDashboardViewModel>();
+
         services.AddTransient<ClientDashboardViewModel>();
         services.AddTransient<ViewOpinionsViewModel>();
         services.AddTransient<PetListViewModel>();
