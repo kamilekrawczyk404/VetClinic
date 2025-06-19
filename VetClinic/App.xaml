@@ -68,6 +68,10 @@
                 <view:DoctorList />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModel:DoctorEditViewModel}">
+                <view:DoctorEditView />
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type viewModel:ViewOpinionsViewModel}">
                 <view:ViewOpinions />
             </DataTemplate>
