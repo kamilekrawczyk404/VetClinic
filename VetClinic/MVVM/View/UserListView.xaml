@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="VetClinic.MVVM.View.DoctorList"
+    x:Class="VetClinic.MVVM.View.UserListView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -25,12 +25,12 @@
                 VerticalAlignment="Center"
                 FontSize="24"
                 Style="{StaticResource Header}"
-                Text="Doctor list" />
+                Text="User list" />
 
             <Button
                 Grid.Column="1"
-                Command="{Binding AddDoctorCommand}"
-                Content="Add new doctor"
+                Command="{Binding AddUserCommand}"
+                Content="Add new user"
                 Cursor="Hand"
                 Style="{StaticResource SubmitButton}"
                 Visibility="{Binding IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -42,7 +42,7 @@
             Margin="20,0,20,20"
             HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Doctors}">
+            <ItemsControl ItemsSource="{Binding Users}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Border
@@ -56,13 +56,25 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <Image
+                                <Grid
                                     Grid.Column="0"
-                                    Width="80"
-                                    Height="80"
                                     Margin="0,0,20,0"
-                                    VerticalAlignment="Center"
-                                    Source="/Images/doctor-active.png" />
+                                    VerticalAlignment="Center">
+                                    <Image
+                                        Width="80"
+                                        Height="80"
+                                        Source="/Images/patient-active.png" />
+                                    <!--  Status indicator  -->
+                                    <Ellipse
+                                        Width="16"
+                                        Height="16"
+                                        Margin="0,0,-5,-5"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Fill="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                        Stroke="White"
+                                        StrokeThickness="2" />
+                                </Grid>
 
                                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock
@@ -73,16 +85,41 @@
                                         <Run Text="{Binding Surname}" />
                                     </TextBlock>
 
-                                    <TextBlock
-                                        Margin="0,0,0,8"
-                                        FontSize="14"
-                                        Text="{Binding Specialization}" />
+                                    <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{Binding Role}"
+                                            Text="{Binding Role}" />
+                                        <TextBlock
+                                            Margin="5,0"
+                                            FontSize="14"
+                                            Text=" • " />
+                                        <TextBlock
+                                            FontSize="14"
+                                            Opacity="0.8"
+                                            Text="{Binding Email}" />
+                                    </StackPanel>
 
-                                    <TextBlock
-                                        MaxHeight="40"
-                                        FontSize="12"
-                                        Text="{Binding Description}"
-                                        TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock
+                                            FontSize="12"
+                                            Opacity="0.7"
+                                            Text="📞 " />
+                                        <TextBlock
+                                            FontSize="12"
+                                            Opacity="0.7"
+                                            Text="{Binding TelephoneNumber, FallbackValue='No phone'}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            FontSize="12"
+                                            Opacity="0.7"
+                                            Text=" • 📅 " />
+                                        <TextBlock
+                                            FontSize="12"
+                                            Opacity="0.7"
+                                            Text="{Binding DateOfBirth, StringFormat='{}{0:dd/MM/yyyy}'}" />
+                                    </StackPanel>
                                 </StackPanel>
 
                                 <!--  Action Buttons  -->
@@ -91,28 +128,18 @@
                                     VerticalAlignment="Center"
                                     Orientation="Vertical">
 
-                                    <Button
-                                        Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    <!--<Button
                                         Margin="2,2,2,2"
-                                        Command="{Binding DataContext.BookAppointmentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                        Command="{Binding DataContext.ViewUserDetailsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"
-                                        Content="📅 Book appointment"
+                                        Content="👤 View details"
                                         Cursor="Hand"
-                                        Style="{StaticResource SubmitButton}" />
-
-                                    <Button
-                                        Margin="2,2,2,2"
-                                        Command="{Binding DataContext.ViewOpinionsCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}"
-                                        Content="💭 Show opinions"
-                                        Cursor="Hand"
-                                        Style="{StaticResource SubmitButton}" />
-
+                                        Style="{StaticResource SubmitButton}" />-->
 
                                     <StackPanel Visibility="{Binding DataContext.IsAdmin, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                         <Button
                                             Margin="2,2,2,2"
-                                            Command="{Binding DataContext.EditDoctorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Command="{Binding DataContext.EditUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
                                             Content="✏️ Edit"
                                             Cursor="Hand"
@@ -121,9 +148,9 @@
                                         <Button
                                             Margin="2,2,2,2"
                                             Background="{StaticResource Red}"
-                                            Command="{Binding DataContext.DeleteDoctorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            Command="{Binding DataContext.DeleteUserCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Content="🗑️ Delete"
+                                            Content="🗑️ Inactivate"
                                             Cursor="Hand"
                                             Style="{StaticResource SubmitButton}" />
                                     </StackPanel>
@@ -140,13 +167,13 @@
             Grid.Row="1"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Visibility="{Binding Doctors.Count, Converter={StaticResource CountToVisibilityConverter}}">
+            Visibility="{Binding Users.Count, Converter={StaticResource CountToVisibilityConverter}}">
             <TextBlock
                 HorizontalAlignment="Center"
                 FontSize="16"
                 Opacity="0.6"
                 Style="{StaticResource Header}"
-                Text="No doctors in the system" />
+                Text="No users in the system" />
         </StackPanel>
     </Grid>
 </UserControl>

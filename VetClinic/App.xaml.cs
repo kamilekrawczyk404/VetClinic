@@ -70,6 +70,9 @@ public partial class App : Application
         services.AddTransient<DoctorDashboardViewModel>();
         services.AddTransient<DoctorListViewModel>();
 
+        services.AddTransient<AdminDashboardViewModel>();
+        services.AddTransient<DoctorEditViewModel>();
+
         services.AddTransient<ClientDashboardViewModel>();
         services.AddTransient<ViewOpinionsViewModel>();
         services.AddTransient<PetListViewModel>();
@@ -78,12 +81,8 @@ public partial class App : Application
         services.AddTransient<PrescriptionListViewModel>();
         services.AddTransient<BookAppointmentViewModel>();
 
-
-
-
-
-
-
+        services.AddTransient<UserEditViewModel>();
+        services.AddTransient<UserListViewModel>();
 
         services.AddTransient<DrugListViewModel>();
         services.AddTransient<AppointmentViewModel>();

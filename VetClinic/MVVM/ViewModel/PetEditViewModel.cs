@@ -258,25 +258,25 @@ namespace VetClinic.MVVM.ViewModel
                 errors.Add("Pet name is required");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Species))
-                errors.Add("Pet name is required");
+                errors.Add("Species is required");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Breed))
-                errors.Add("Pet name is required");
+                errors.Add("Breed is required");
 
             if (EditingPet.Weight <= 0)
-                errors.Add("Pet name is required");
+                errors.Add("Weight must be greater than 0");
 
             if (string.IsNullOrWhiteSpace(EditingPet.Gender))
-                errors.Add("Pet name is required");
+                errors.Add("Gender is required");
 
             if (EditingPet.DateOfBirth == default(DateTime))
-                errors.Add("Pet name is required");
+                errors.Add("Date of birth is required");
 
             if (EditingPet.DateOfBirth > DateTime.Now)
-                errors.Add("Pet name is required");
+                errors.Add("Date of birth cannot be in the future");
 
             if (IsAddingPet && IsAdmin && EditingPet.User == null)
-                errors.Add("Pet name is required");
+                errors.Add("Owner must be selected");
 
             ValidationErrors = new ObservableCollection<string>(errors);
         }
