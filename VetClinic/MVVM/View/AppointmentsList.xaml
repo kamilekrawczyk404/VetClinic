@@ -28,7 +28,7 @@
             <Button Grid.Column="1"
                 Content="📅 Book new appointment"
                 Command="{Binding BookAppointmentCommand}"
-                Visibility="{Binding isClient, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Visibility="{Binding IsClient, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Style="{StaticResource SubmitButton}"
                 Cursor="Hand"/>
 
@@ -147,11 +147,36 @@
                                                     <Run Text="Date:"/>
                                                     <Run Text="{Binding AppointmentDate, StringFormat='dd.MM.yyyy HH:mm'}" FontWeight="Bold"/>
                                                 </TextBlock>
-                                                <TextBlock FontSize="12" Margin="0,0,0,3">
+                                                <!-- Doctor info for Client -->
+                                                <TextBlock FontSize="12" Margin="0,0,0,3"
+                                                           Visibility="{Binding DataContext.IsClient, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                     <Run Text="Doctor:"/>
                                                     <Run Text="{Binding Doctor.Name}"/>
                                                     <Run Text="{Binding Doctor.Surname}"/>
                                                 </TextBlock>
+
+                                                <!-- Client info for Doctor -->
+                                                <TextBlock FontSize="12" Margin="0,0,0,3"
+                                                           Visibility="{Binding DataContext.IsDoctor, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <Run Text="Client:"/>
+                                                    <Run Text="{Binding Pet.User.Name}"/>
+                                                    <Run Text="{Binding Pet.User.Surname}"/>
+                                                </TextBlock>
+
+                                                <!-- Both Doctor and Client info for Admin -->
+                                                <StackPanel Visibility="{Binding DataContext.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <TextBlock FontSize="12" Margin="0,0,0,3">
+                                                        <Run Text="Doctor:"/>
+                                                        <Run Text="{Binding Doctor.Name}"/>
+                                                        <Run Text="{Binding Doctor.Surname}"/>
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="12" Margin="0,0,0,3">
+                                                        <Run Text="Client:"/>
+                                                        <Run Text="{Binding Pet.User.Name}"/>
+                                                        <Run Text="{Binding Pet.User.Surname}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+                                                
                                                 <TextBlock FontSize="12" Margin="0,0,0,3">
                                                     <Run Text="Pet:"/>
                                                     <Run Text="{Binding Pet.Name}"/>
@@ -238,11 +263,35 @@
                                                     <Run Text="Data:"/>
                                                     <Run Text="{Binding AppointmentDate, StringFormat='dd.MM.yyyy HH:mm'}" FontWeight="Bold"/>
                                                 </TextBlock>
-                                                <TextBlock FontSize="12" Margin="0,0,0,3">
-                                                    <Run Text="Doctor:"/>
-                                                    <Run Text="{Binding Doctor.Name}"/>
-                                                    <Run Text="{Binding Doctor.Surname}"/>
+                                                <!-- Doctor info for Client -->
+                                                <TextBlock FontSize="12" Margin="0,0,0,3"
+                                                           Visibility="{Binding DataContext.IsClient, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                      <Run Text="Doctor:"/>
+                                                      <Run Text="{Binding Doctor.Name}"/>
+                                                      <Run Text="{Binding Doctor.Surname}"/>        
                                                 </TextBlock>
+
+                                                <!-- Client info for Doctor -->
+                                                <TextBlock FontSize="12" Margin="0,0,0,3"
+                                                           Visibility="{Binding DataContext.IsDoctor, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <Run Text="Client:"/>
+                                                    <Run Text="{Binding Pet.User.Name}"/>
+                                                    <Run Text="{Binding Pet.User.Surname}"/>
+                                                </TextBlock>
+
+                                                <!-- Both Doctor and Client info for Admin -->
+                                                <StackPanel Visibility="{Binding DataContext.IsAdmin, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                    <TextBlock FontSize="12" Margin="0,0,0,3">
+                                                      <Run Text="Doctor:"/>
+                                                      <Run Text="{Binding Doctor.Name}"/>
+                                                      <Run Text="{Binding Doctor.Surname}"/>    
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="12" Margin="0,0,0,3">
+                                                      <Run Text="Client:"/>
+                                                      <Run Text="{Binding Pet.User.Name}"/>
+                                                      <Run Text="{Binding Pet.User.Surname}"/>  
+                                                    </TextBlock>
+                                                </StackPanel>
                                                 <TextBlock FontSize="12" Margin="0,0,0,3">
                                                     <Run Text="Pet:"/>
                                                     <Run Text="{Binding Pet.Name}"/>

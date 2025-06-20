@@ -89,5 +89,18 @@ namespace VetClinic.Controls
             get { return (bool)GetValue(ShowTrendLineProperty); }
             set { SetValue(ShowTrendLineProperty, value); }
         }
+
+        public static readonly DependencyProperty CommandProperty =
+            DependencyProperty.Register(
+                nameof(Command),
+                typeof(ICommand),
+                typeof(DashboardItem),
+                new PropertyMetadata(null));
+
+        public ICommand Command
+        {
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
+        }
     }
 }

@@ -46,7 +46,7 @@
                     </Setter>
                 </Style>
             </Button.Style>
-            <Image Source="/Images/DataGrid/add.png" Height="14" Width="14"/>
+            <Image Source="/Images/Buttons/add.png" Height="14" Width="14"/>
         </Button>
     </Border>
 </UserControl>

@@ -17,19 +17,19 @@ namespace VetClinic.Models
         public string Name { get; set; }
 
         [Column("dosage_form")]
-        public string DosageForm { get; set; }
+        public string? DosageForm { get; set; }
 
         [Column("strength")]
-        public string Strength { get; set; }
+        public string? Strength { get; set; }
 
         [Column("unit_of_measure")]
-        public string UnitOfMeasure { get; set; }
+        public string? UnitOfMeasure { get; set; }
 
         [Column("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [Column("manufacturer")]
-        public string Manufacturer { get; set; }
+        public string? Manufacturer { get; set; }
 
         public ICollection<PrescriptionDrugs> PrescriptionDrugs { get; set; }
     }

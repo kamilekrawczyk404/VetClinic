@@ -37,7 +37,7 @@
 
                 <controls:DashboardItem Title="Appointments" Value="{Binding AppointmentsCount}" Ratio="{Binding AppointmentsRatio}" ImageSource="/Images/DashboardItem/appointment-item.png"/>
                 <controls:DashboardItem Margin="10,0,0,0" Grid.Column="1" Title="Prescriptions" Value="{Binding PrescriptionsCount}" Ratio="{Binding PrescriptionsRatio}" ImageSource="/Images/DashboardItem/prescription-item.png"/>
-                <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
+                <controls:DashboardItem Margin="10,0,0,0" Grid.Column="2" Title="Opinions" Command="{Binding NavigateToOpinionsViewCommand}" Value="{Binding OpinionsCount}" Ratio="{Binding OpinionsRatio}" ImageSource="/Images/DashboardItem/opinion-item.png"/>
             </Grid>
 
             <Grid Grid.Row="1">
@@ -65,8 +65,27 @@
             Grid.RowSpan="3" 
             ItemsSource="{Binding SelectedDayAppointments, Mode=TwoWay}"  
             Statuses="{Binding Statuses, Mode=TwoWay}"
-            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             CancelAppointmentCommand="{Binding CancelAppointmentCommand}"
-            OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"/>
+            OnAppointmentClicked="{Binding SetCurrentAppointmentCommand}"
+            Visibility="{Binding IsSomeDaySelected, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+        <Border 
+            Margin="10,0,0,0" 
+            Grid.Row="1" 
+            Grid.Column="1" 
+            Grid.RowSpan="3"
+            Style="{StaticResource BorderDefault}"
+            Visibility="{Binding IsSomeDaySelected, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+            <StackPanel VerticalAlignment="Center">
+                <Image Source="/Images/appointment-active.png" Height="100" Width="100"/>
+                <TextBlock 
+                    Margin="10"
+                    Style="{StaticResource MediumHeader}"
+                    Text="See appointments by selecting a day from the list at the dashboard's bottom."
+                    TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        
     </Grid>
 </UserControl>

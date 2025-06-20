@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
+using VetClinic.MVVM.ViewModel.Dashboard;
 using VetClinic.Services;
 using VetClinic.Utils;
 
@@ -35,11 +37,19 @@ namespace VetClinic.MVVM.ViewModel
             Opinions = new ObservableCollection<DetailedOpinion>();
 
             BackToDoctorsCommand = new RelayCommand(BackToDoctors);
+            BackToDoctorDashboardCommand = new RelayCommand(BackToDoctorDashboard);
+            BackToAdminDashboardCommand = new RelayCommand(BackToAdminDashboard);
             AddOpinionCommand = new RelayCommand(AddOpinion, _ => CanAddOpinion);
             EditOpinionCommand = new RelayCommand(EditOpinion, _ => CanEditOpinion);
             SaveOpinionCommand = new RelayCommand(SaveOpinion, _ => CanSaveOpinion);
             CancelOpinionCommand = new RelayCommand(CancelOpinion);
             DeleteOpinionCommand = new RelayCommand(DeleteOpinion, _ => CanDeleteOpinion);
+
+            IsDoctor = _userSessionService.IsDoctor;
+            IsAdmin = _userSessionService.IsAdmin;
+            IsClient = _userSessionService.IsClient;
+
+            _ = LoadOpinionsAsync();
         }
 
         public Doctor SelectedDoctor
@@ -57,7 +67,7 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        public string DoctorDisplayName => SelectedDoctor != null ? $"Dr {SelectedDoctor.Name} {SelectedDoctor.Surname}" : string.Empty;
+        public string DoctorDisplayName => SelectedDoctor != null ? $" {SelectedDoctor.Name} {SelectedDoctor.Surname}" : string.Empty;
 
         public ObservableCollection<DetailedOpinion> Opinions
         {
@@ -127,7 +137,38 @@ namespace VetClinic.MVVM.ViewModel
         }
 
         // Sprawdzenie czy zalogowany użytkownik to klient (role != admin, itp.)
-        public bool IsClient => _userSessionService.IsClient;
+        private bool _isClient;
+        public bool IsClient
+        {
+            get => _isClient;
+            set
+            {
+                _isClient = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isDoctor;
+        public bool IsDoctor
+        {
+            get => _isDoctor;
+            set
+            {
+                _isDoctor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isAdmin;
+        public bool IsAdmin
+        {
+            get => _isAdmin;
+            set
+            {
+                _isAdmin = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool CanAddOpinion => IsClient && !HasUserOpinion && IsNotAddingOrEditingOpinion;
         public bool CanEditOpinion => IsClient && HasUserOpinion && IsNotAddingOrEditingOpinion;
@@ -135,6 +176,8 @@ namespace VetClinic.MVVM.ViewModel
         public bool CanSaveOpinion => !string.IsNullOrWhiteSpace(NewOpinionComment) && NewOpinionRating > 0;
 
         public RelayCommand BackToDoctorsCommand { get; }
+        public RelayCommand BackToDoctorDashboardCommand { get; }
+        public RelayCommand BackToAdminDashboardCommand { get; }
         public RelayCommand AddOpinionCommand { get; }
         public RelayCommand EditOpinionCommand { get; }
         public RelayCommand SaveOpinionCommand { get; }
@@ -143,27 +186,50 @@ namespace VetClinic.MVVM.ViewModel
 
         public async Task LoadOpinionsAsync()
         {
-            if (SelectedDoctor == null)
-            {
+            if (IsClient && SelectedDoctor == null)
                 return;
-            }
 
             using var context = _contextFactory.CreateDbContext();
 
             try
             {
-                // Ładowanie opinii dla wybranego lekarza z dołączeniem danych użytkownika (klienta)
-                var opinions = await context.Opinion
-                    .Include(o => o.User) // Zamiast o.Client teraz o.User
-                    .Where(o => o.DoctorId == SelectedDoctor.Id)
-                    .OrderByDescending(o => o.CreatedAt)
-                    .ToListAsync();
+                List<Opinion> opinions = new();
+
+                // Pobieranie danych jako klient
+                if (IsClient)
+                {
+                    // Ładowanie opinii dla wybranego lekarza z dołączeniem danych użytkownika (klienta)
+                    opinions = await context.Opinion
+                        .Include(o => o.User)
+                        .Include(o => o.Doctor)
+                        .Where(o => o.DoctorId == SelectedDoctor.Id)
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToListAsync();
+                } 
+                else if (IsDoctor)
+                {
+                    Trace.WriteLine("Loading opinions!!");
+                    opinions = await context.Opinion
+                        .Include(o => o.User)
+                        .Include(o => o.Doctor)
+                        .Where(o => o.DoctorId == _userSessionService.LoggedInDoctor.Id)
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToListAsync();
+                } 
+                else if (IsAdmin)
+                {
+                    opinions = await context.Opinion
+                        .Include(o => o.User)
+                        .Include(o => o.Doctor)
+                        .OrderByDescending(o => o.CreatedAt)
+                        .ToListAsync();
+                }
 
                 var detailedOpinions = opinions.Select(o => new DetailedOpinion
                 {
                     Opinion = o,
                     ClientName = $"{o.User.Name} {o.User.Surname}", // Zmiana z o.Client na o.User
-                    DoctorName = $"{SelectedDoctor.Name} {SelectedDoctor.Surname}",
+                    DoctorName = $"{o.Doctor.Name} {o.Doctor.Surname}",
                     CommentPreview = o.Comment.Length > 100 ? o.Comment.Substring(0, 100) + "..." : o.Comment,
                     TimeAgoText = GetTimeAgoText(o.CreatedAt)
                 }).ToList();
@@ -173,7 +239,7 @@ namespace VetClinic.MVVM.ViewModel
                 // Znajdowanie opinii zalogowanego użytkownika
                 if (IsClient && _userSessionService.LoggedInUser != null)
                 {
-                    UserOpinion = detailedOpinions.FirstOrDefault(o => o.Opinion.ClientId == _userSessionService.LoggedInUser.Id); 
+                    UserOpinion = detailedOpinions.FirstOrDefault(o => o.Opinion.ClientId == _userSessionService.LoggedInUser.Id);
                 }
 
                 OnPropertyChanged(nameof(CanAddOpinion));
@@ -190,6 +256,16 @@ namespace VetClinic.MVVM.ViewModel
         private void BackToDoctors(object obj)
         {
             _navigationService.NavigateTo<DoctorListViewModel>();
+        }
+
+        private void BackToDoctorDashboard(object obj)
+        {
+            _navigationService.NavigateTo<DoctorDashboardViewModel>();
+        }
+
+        private void BackToAdminDashboard(object obj)
+        {
+            //_navigationService.NavigateTo<AdminDashboardViewModel>();
         }
 
         private void AddOpinion(object obj)
@@ -297,13 +373,13 @@ namespace VetClinic.MVVM.ViewModel
             var timeSpan = DateTime.Now - createdAt;
 
             if (timeSpan.TotalMinutes < 1)
-                return "just now";
+                return "just added";
             if (timeSpan.TotalMinutes < 60)
-                return $"{(int)timeSpan.TotalMinutes} minutes ago";
+                return $"{(int)timeSpan.TotalMinutes} min ago";
             if (timeSpan.TotalHours < 24)
                 return $"{(int)timeSpan.TotalHours} hours ago";
             if (timeSpan.TotalDays < 30)
-                return $"{(int)timeSpan.TotalDays} days ago ";
+                return $"{(int)timeSpan.TotalDays} days ago";
             if (timeSpan.TotalDays < 365)
                 return $"{(int)(timeSpan.TotalDays / 30)} months ago";
 

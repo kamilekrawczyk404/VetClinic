@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Navigation;
+using System.Windows;
 using VetClinic.Database;
 using VetClinic.Models;
 using VetClinic.MVVM.ViewModel;
@@ -29,10 +29,9 @@ namespace VetClinic.MVVM.ViewModel
 
             AddDoctorCommand = new RelayCommand(AddDoctor, _ => IsAdmin);
             EditDoctorCommand = new RelayCommand(EditDoctor, _ => IsAdmin);
-            DeleteDoctorCommand = new RelayCommand(DeleteDoctor, _ => IsAdmin);
+            DeleteDoctorCommand = new RelayCommand(async doctor => await DeleteDoctor(doctor), _ => IsAdmin);
             ViewOpinionsCommand = new RelayCommand(ViewOpinions);
             BookAppointmentCommand = new RelayCommand(BookAppointment, _ => IsClient);
-
 
             _userSessionService.UserChanged += async () => await OnUserChanged();
             _ = LoadDoctorsAsync();
@@ -55,14 +54,14 @@ namespace VetClinic.MVVM.ViewModel
         public RelayCommand AddDoctorCommand { get; }
         public RelayCommand EditDoctorCommand { get; }
         public RelayCommand DeleteDoctorCommand { get; }
-        public RelayCommand AddOpinionCommand { get; }
         public RelayCommand ViewOpinionsCommand { get; }
         public RelayCommand BookAppointmentCommand { get; }
-
 
         private async Task OnUserChanged()
         {
             await LoadDoctorsAsync();
+            OnPropertyChanged(nameof(IsAdmin));
+            OnPropertyChanged(nameof(IsClient));
         }
 
         private async Task LoadDoctorsAsync()
@@ -70,7 +69,9 @@ namespace VetClinic.MVVM.ViewModel
             using var context = _contextFactory.CreateDbContext();
             try
             {
-                var doctors = await context.Doctor 
+                Trace.WriteLine("Loading doctors from database...");
+
+                var doctors = await context.Doctor
                     .OrderBy(d => d.Surname)
                     .ThenBy(d => d.Name)
                     .ToListAsync();
@@ -78,6 +79,12 @@ namespace VetClinic.MVVM.ViewModel
                 Doctors = new ObservableCollection<Doctor>(doctors);
 
                 Trace.WriteLine($"Loaded {doctors.Count} doctors from database");
+
+                // Dodatkowe logowanie dla debugowania
+                foreach (var doctor in doctors)
+                {
+                    Trace.WriteLine($"Doctor: {doctor.Name} {doctor.Surname} (ID: {doctor.Id})");
+                }
             }
             catch (Exception ex)
             {
@@ -87,22 +94,68 @@ namespace VetClinic.MVVM.ViewModel
             }
         }
 
-        private void AddDoctor(object obj)
+        private async void AddDoctor(object obj)
         {
             if (!IsAdmin) return;
 
+            _navigationService.NavigateTo<DoctorEditViewModel>();
+
+            // Odświeżenie listy po powrocie z edycji
+            await Task.Delay(100); // Krótkie opóźnienie aby nawigacja się zakończyła
+            await RefreshDoctorsAsync();
         }
 
-        private void EditDoctor(object obj)
+        private async void EditDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
+            if (!IsAdmin) return;
 
+            _navigationService.NavigateTo<DoctorEditViewModel>(doctor);
+
+            // Odświeżenie listy po powrocie z edycji
+            await Task.Delay(100); // Krótkie opóźnienie aby nawigacja się zakończyła
+            await RefreshDoctorsAsync();
         }
 
-        private void DeleteDoctor(object obj)
+        private async Task DeleteDoctor(object obj)
         {
             if (!(obj is Doctor doctor)) return;
+            if (!IsAdmin) return;
 
+            using var context = _contextFactory.CreateDbContext();
+            try
+            {
+                var doctorToRemove = await context.Doctor.FindAsync(doctor.Id);
+                if (doctorToRemove != null)
+                {
+                    // Sprawdzenie czy doktor ma nadchodzące lub przeszłe wizyty
+                    var hasAppointments = await context.Appointment.AnyAsync(a => a.DoctorId == doctorToRemove.Id);
+                    if (hasAppointments)
+                    {
+                        MessageBox.Show("You cannot delete doctor that has upcoming or past appointments.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        return;
+                    }
+
+                    var result = MessageBox.Show(
+                        $"Are you sure you want to delete doctor {doctor.Name} {doctor.Surname}?",
+                        "Delete doctor",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (result != MessageBoxResult.Yes)
+                        return;
+
+                    context.Doctor.Remove(doctorToRemove);
+                    await context.SaveChangesAsync();
+
+                    Doctors.Remove(doctor);
+                }
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceError($"Error deleting doctor: {ex.Message}");
+                MessageBox.Show("An error occurred while deleting the doctor.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ViewOpinions(object obj)
@@ -113,6 +166,7 @@ namespace VetClinic.MVVM.ViewModel
             }
             _navigationService.NavigateTo<ViewOpinionsViewModel>(doctor);
         }
+
         private void BookAppointment(object obj)
         {
             if (!(obj is Doctor doctor))
@@ -121,6 +175,7 @@ namespace VetClinic.MVVM.ViewModel
             }
             _navigationService.NavigateTo<BookAppointmentViewModel>(doctor);
         }
+
         public async Task RefreshDoctorsAsync()
         {
             await LoadDoctorsAsync();

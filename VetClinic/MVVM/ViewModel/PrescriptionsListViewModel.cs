@@ -65,7 +65,10 @@ namespace VetClinic.MVVM.ViewModel
         }
 
         public bool IsClient => _userSessionService.IsClient;
+        public bool IsDoctor => _userSessionService.IsDoctor;
+        public bool IsAdmin => _userSessionService.IsAdmin;
         public int? CurrentUserId => _userSessionService.LoggedInUser?.Id;
+        public int? CurrentDoctorId => _userSessionService.LoggedInDoctor?.Id;
 
         private async Task OnUserChanged()
         {
@@ -74,7 +77,7 @@ namespace VetClinic.MVVM.ViewModel
 
         private async Task LoadPrescriptionsAsync()
         {
-            if (!IsClient || CurrentUserId == null)
+            if (CurrentUserId == null && CurrentDoctorId == null)
             {
                 ActivePrescriptions = new ObservableCollection<Prescription>();
                 ExpiredPrescriptions = new ObservableCollection<Prescription>();
@@ -88,9 +91,14 @@ namespace VetClinic.MVVM.ViewModel
             {
                 var now = DateTime.Now;
 
-                var allPrescriptions = await context.Prescription
+                List<Prescription> allPrescriptions = new();
+
+                if (IsClient)
+                {
+                    allPrescriptions = await context.Prescription
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
                     .Include(p => p.Appointment)
                         .ThenInclude(a => a.Doctor)
                     .Include(p => p.PrescriptionDrugs)
@@ -98,11 +106,37 @@ namespace VetClinic.MVVM.ViewModel
                     .Where(p => p.Appointment.Pet.UserId == CurrentUserId)
                     .OrderByDescending(p => p.CreatedAt)
                     .ToListAsync();
+                } else if (IsDoctor)
+                {
+                    allPrescriptions = await context.Prescription
+                    .Include(p => p.Appointment)
+                        .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
+                    .Include(p => p.Appointment)
+                        .ThenInclude(a => a.Doctor)
+                    .Include(p => p.PrescriptionDrugs)
+                        .ThenInclude(pd => pd.Drug)
+                    .Where(p => p.Appointment.Doctor.Id == CurrentDoctorId)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+                } else if (IsAdmin)
+                {
+                    allPrescriptions = await context.Prescription
+                    .Include(p => p.Appointment)
+                        .ThenInclude(a => a.Pet)
+                            .ThenInclude(pet => pet.User)
+                    .Include(p => p.Appointment)
+                        .ThenInclude(a => a.Doctor)
+                    .Include(p => p.PrescriptionDrugs)
+                        .ThenInclude(pd => pd.Drug)
+                    .OrderByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+                }
 
                 var active = allPrescriptions
-                    .Where(p => p.ExpiryDate >= now)
-                    .OrderByDescending(p => p.CreatedAt)
-                    .ToList();
+                .Where(p => p.ExpiryDate >= now)
+                .OrderByDescending(p => p.CreatedAt)
+                .ToList();
 
                 var expired = allPrescriptions
                     .Where(p => p.ExpiryDate < now)
@@ -111,8 +145,6 @@ namespace VetClinic.MVVM.ViewModel
 
                 ActivePrescriptions = new ObservableCollection<Prescription>(active);
                 ExpiredPrescriptions = new ObservableCollection<Prescription>(expired);
-
-                Trace.WriteLine($"Loaded {active.Count} active and {expired.Count} expired prescriptions for client {CurrentUserId}");
             }
             catch (Exception ex)
             {

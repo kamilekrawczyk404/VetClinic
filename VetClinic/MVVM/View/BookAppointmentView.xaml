@@ -303,9 +303,9 @@
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SubmitButton}"
                         Background="{StaticResource Red}"
-                        Margin="0,0,10,0"
+                        Margin="648,0,10,0"
                         Padding="10"
-                        Cursor="Hand"/>
+                        Cursor="Hand" Grid.ColumnSpan="2" Height="41" VerticalAlignment="Bottom"/>
 
                 <Button Grid.Column="2"
                         Content="📅 Book Appointment"

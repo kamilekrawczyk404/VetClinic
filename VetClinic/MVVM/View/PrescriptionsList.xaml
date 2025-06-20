@@ -148,11 +148,39 @@
                                                     <Run Text="valid until:"/>
                                                     <Run Text="{Binding ExpiryDate, StringFormat='dd.MM.yyyy'}" FontWeight="Medium"/>
                                                 </TextBlock>
-                                                <TextBlock FontSize="13" Margin="0,0,0,4">
+                                                <TextBlock FontSize="13" Margin="0,0,0,4"
+                                                           Visibility="{Binding DataContext.IsClient, 
+                                                                       RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                       Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <Run Text="Doctor:"/>
                                                     <Run Text="{Binding Appointment.Doctor.Name}"/>
                                                     <Run Text="{Binding Appointment.Doctor.Surname}"/>
                                                 </TextBlock>
+
+                                                <TextBlock FontSize="13" Margin="0,0,0,4"
+                                                           Visibility="{Binding DataContext.IsDoctor, 
+                                                                       RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                       Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <Run Text="Client:"/>
+                                                    <Run Text="{Binding Appointment.Pet.User.Name}"/>
+                                                    <Run Text="{Binding Appointment.Pet.User.Surname}"/>
+                                                </TextBlock>
+
+                                                <StackPanel Visibility="{Binding DataContext.IsAdmin, 
+                                                                         RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                         Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock FontSize="13" Margin="0,0,0,4">
+                                                        <Run Text="Doctor:"/>
+                                                        <Run Text="{Binding Appointment.Doctor.Name}"/>
+                                                        <Run Text="{Binding Appointment.Doctor.Surname}"/>
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="13" Margin="0,0,0,4">
+                                                        <Run Text="Client:"/>
+                                                        <Run Text="{Binding Appointment.Pet.User.Name}"/>
+                                                        <Run Text="{Binding Appointment.Pet.User.Surname}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
+
                                                 <TextBlock FontSize="13" Margin="0,0,0,8">
                                                     <Run Text="Pet:"/>
                                                     <Run Text="{Binding Appointment.Pet.Name}"/>
@@ -182,7 +210,7 @@
                                                                         <Run Text="- quantity:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
-                                                                    <TextBlock Text="{Binding DosageInstructions}" 
+                                                                    <TextBlock Text="{Binding Dosage}" 
                                                                                FontSize="14"
                                                                                Foreground="{StaticResource White}"
                                                                                Margin="15,2,0,0"
@@ -259,11 +287,41 @@
                                                     <Run Text="Expired:"/>
                                                     <Run Text="{Binding ExpiryDate, StringFormat='dd.MM.yyyy'}" FontWeight="Medium"/>
                                                 </TextBlock>
-                                                <TextBlock FontSize="13" Margin="0,0,0,4" >
+                                                <!-- Wyświetlanie doctora dla klienta -->
+                                                <TextBlock FontSize="13" Margin="0,0,0,4"
+                                                           Visibility="{Binding DataContext.IsClient, 
+                                                                       RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                       Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <Run Text="Doctor:"/>
                                                     <Run Text="{Binding Appointment.Doctor.Name}"/>
                                                     <Run Text="{Binding Appointment.Doctor.Surname}"/>
                                                 </TextBlock>
+
+                                                <!-- Wyświetlanie klienta dla doctora -->
+                                                <TextBlock FontSize="13" Margin="0,0,0,4"
+                                                           Visibility="{Binding DataContext.IsDoctor, 
+                                                                       RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                       Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <Run Text="Client:"/>
+                                                    <Run Text="{Binding Appointment.Pet.User.Name}"/>
+                                                    <Run Text="{Binding Appointment.Pet.User.Surname}"/>
+                                                </TextBlock>
+
+                                                <!-- Wyświetlanie doctora i klienta dla admina -->
+                                                <StackPanel Visibility="{Binding DataContext.IsAdmin, 
+                                                                         RelativeSource={RelativeSource AncestorType=UserControl}, 
+                                                                         Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                    <TextBlock FontSize="13" Margin="0,0,0,4">
+                                                        <Run Text="Doctor:"/>
+                                                        <Run Text="{Binding Appointment.Doctor.Name}"/>
+                                                        <Run Text="{Binding Appointment.Doctor.Surname}"/>
+                                                    </TextBlock>
+                                                    <TextBlock FontSize="13" Margin="0,0,0,4">
+                                                        <Run Text="Client:"/>
+                                                        <Run Text="{Binding Appointment.Pet.User.Name}"/>
+                                                        <Run Text="{Binding Appointment.Pet.User.Surname}"/>
+                                                    </TextBlock>
+                                                </StackPanel>
                                                 <TextBlock FontSize="13" Margin="0,0,0,8" >
                                                     <Run Text="Pet:"/>
                                                     <Run Text="{Binding Appointment.Pet.Name}"/>
@@ -294,7 +352,7 @@
                                                                         <Run Text="- quantity:"/>
                                                                         <Run Text="{Binding Quantity}"/>
                                                                     </TextBlock>
-                                                                    <TextBlock Text="{Binding DosageInstructions}" 
+                                                                    <TextBlock Text="{Binding Dosage}" 
                                                                                FontSize="14"
                                                                                Foreground="{StaticResource White}"
                                                                                Margin="15,2,0,0"
