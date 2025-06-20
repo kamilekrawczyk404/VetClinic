@@ -18,7 +18,7 @@ namespace VetClinic.MVVM.ViewModel
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
         private readonly IUserSessionService _userSessionService;
         private readonly INavigationService _navigationService;
-        private readonly Doctor _originalDoctor;
+        private Doctor _originalDoctor;
 
         public DoctorEditViewModel(
             IDbContextFactory<VeterinaryClinicContext> contextFactory,
@@ -34,6 +34,12 @@ namespace VetClinic.MVVM.ViewModel
             ValidationErrors = new ObservableCollection<string>();
 
             InitializeCommands();
+            InitializeDoctor();
+        }
+
+        public void SetDoctorToEdit(Doctor doctorToEdit)
+        {
+            _originalDoctor = doctorToEdit;
             InitializeDoctor();
         }
 
@@ -112,6 +118,7 @@ namespace VetClinic.MVVM.ViewModel
 
         // Properties
         private Doctor _editingDoctor;
+
         public Doctor EditingDoctor
         {
             get => _editingDoctor;

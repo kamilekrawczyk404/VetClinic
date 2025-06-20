@@ -48,8 +48,12 @@ namespace VetClinic.Services
             {
                 userEditViewModel.SetUserToEdit(userParam);
             }
+            else if (viewModel is DoctorEditViewModel doctorEditViewModel && parameters.Length > 0 && parameters[0] is Doctor doctorParam2)
+            {
+                doctorEditViewModel.SetDoctorToEdit(doctorParam2);
+            }
 
-            CurrentView = viewModel;
+                CurrentView = viewModel;
         }
 
         public NavigationService(Func<Type, ViewModel> viewModelFactory)

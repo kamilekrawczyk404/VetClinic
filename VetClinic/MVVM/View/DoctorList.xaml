@@ -92,13 +92,13 @@
                                     Orientation="Vertical">
 
                                     <Button
-                                        Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}"
                                         Margin="2,2,2,2"
                                         Command="{Binding DataContext.BookAppointmentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}"
                                         Content="📅 Book appointment"
                                         Cursor="Hand"
-                                        Style="{StaticResource SubmitButton}" />
+                                        Style="{StaticResource SubmitButton}"
+                                        Visibility="{Binding DataContext.IsClient, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                                     <Button
                                         Margin="2,2,2,2"
