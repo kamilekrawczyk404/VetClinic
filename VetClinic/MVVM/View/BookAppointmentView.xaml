@@ -299,7 +299,7 @@
                 </StackPanel>
 
                 <Button Grid.Column="1"
-                        Content="Cancel"
+                        Content="❌ Cancel"
                         Command="{Binding CancelCommand}"
                         Style="{StaticResource SubmitButton}"
                         Background="{StaticResource Red}"
@@ -308,7 +308,7 @@
                         Cursor="Hand"/>
 
                 <Button Grid.Column="2"
-                        Content="Book Appointment"
+                        Content="📅 Book Appointment"
                         Command="{Binding BookAppointmentCommand}"
                         Style="{StaticResource SubmitButton}"
                         Padding="10"

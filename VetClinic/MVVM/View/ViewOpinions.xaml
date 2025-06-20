@@ -116,6 +116,7 @@
                                 Style="{StaticResource SubmitButton}"
                                 Margin="0,0,10,0"/>
                         <Button Content="❌ Cancel" 
+                                Background="{StaticResource Red}"
                                 Command="{Binding CancelOpinionCommand}"
                                 Style="{StaticResource SubmitButton}"/>
                     </StackPanel>
