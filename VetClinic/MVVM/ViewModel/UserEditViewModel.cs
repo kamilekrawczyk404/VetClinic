@@ -18,7 +18,7 @@ namespace VetClinic.MVVM.ViewModel
         private readonly IDbContextFactory<VeterinaryClinicContext> _contextFactory;
         private readonly IUserSessionService _userSessionService;
         private readonly INavigationService _navigationService;
-        private readonly User _originalUser;
+        private  User _originalUser;
 
         public UserEditViewModel(
             IDbContextFactory<VeterinaryClinicContext> contextFactory,
@@ -37,7 +37,11 @@ namespace VetClinic.MVVM.ViewModel
             InitializeCommands();
             InitializeUser();
         }
-
+        public void SetUserToEdit(User userToEdit)
+        {
+            _originalUser = userToEdit;
+            InitializeUser();
+        }
         private void InitializeCommands()
         {
             SaveCommand = new RelayCommand(async _ => await SaveUserAsync(), _ => CanSave());
@@ -55,6 +59,7 @@ namespace VetClinic.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
 
         private void InitializeUser()
         {
