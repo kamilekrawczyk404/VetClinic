@@ -81,12 +81,8 @@ public partial class App : Application
         services.AddTransient<PrescriptionListViewModel>();
         services.AddTransient<BookAppointmentViewModel>();
 
-
-
-
-
-
-
+        services.AddTransient<UserEditViewModel>();
+        services.AddTransient<UserListViewModel>();
 
         services.AddTransient<DrugListViewModel>();
         services.AddTransient<AppointmentViewModel>();

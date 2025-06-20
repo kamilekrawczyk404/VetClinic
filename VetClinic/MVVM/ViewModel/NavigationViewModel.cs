@@ -108,7 +108,7 @@ namespace VetClinic.MVVM.ViewModel
             NavigateToPetsListCommand = new RelayCommand(NavigateToPetsList);
             NavigateToDrugsListCommand = new RelayCommand(NavigateToDrugsList);
             NavigateToPrescriptionsListCommand = new RelayCommand(NavigateToPrescriptionsList);
-            NavigateToClientsListCommand = new RelayCommand(NavigateToClientsList);
+            NavigateToClientsListCommand = new RelayCommand(NavigateToUserList);
             NavigateToDoctorsListCommand = new RelayCommand(NavigateToDoctorsList);
         }
 
@@ -120,7 +120,7 @@ namespace VetClinic.MVVM.ViewModel
             }
             else if (_userSessionService.IsAdmin)
             {
-                //_navigation.NavigateTo<AdminDashboardViewModel>();
+                _navigation.NavigateTo<AdminDashboardViewModel>();
             }
             else if (_userSessionService.IsClient)
             {
@@ -163,9 +163,9 @@ namespace VetClinic.MVVM.ViewModel
             SelectedViewName = "Doctors";
         }
 
-        private void NavigateToClientsList(object obj)
+        private void NavigateToUserList(object obj)
         {
-            //_navigation.NavigateTo<ClientsListViewModel>();
+            _navigation.NavigateTo<UserListViewModel>();
             SelectedViewName = "Clients";
         }
 
