@@ -38,7 +38,6 @@ namespace VetClinic.MVVM.ViewModel
 
             BackToDoctorsCommand = new RelayCommand(BackToDoctors);
             BackToDoctorDashboardCommand = new RelayCommand(BackToDoctorDashboard);
-            BackToAdminDashboardCommand = new RelayCommand(BackToAdminDashboard);
             AddOpinionCommand = new RelayCommand(AddOpinion, _ => CanAddOpinion);
             EditOpinionCommand = new RelayCommand(EditOpinion, _ => CanEditOpinion);
             SaveOpinionCommand = new RelayCommand(SaveOpinion, _ => CanSaveOpinion);
@@ -228,7 +227,7 @@ namespace VetClinic.MVVM.ViewModel
                 var detailedOpinions = opinions.Select(o => new DetailedOpinion
                 {
                     Opinion = o,
-                    ClientName = $"{o.User.Name} {o.User.Surname}", // Zmiana z o.Client na o.User
+                    ClientName = $"{o.User.Name} {o.User.Surname}", 
                     DoctorName = $"{o.Doctor.Name} {o.Doctor.Surname}",
                     CommentPreview = o.Comment.Length > 100 ? o.Comment.Substring(0, 100) + "..." : o.Comment,
                     TimeAgoText = GetTimeAgoText(o.CreatedAt)
@@ -236,7 +235,6 @@ namespace VetClinic.MVVM.ViewModel
 
                 Opinions = new ObservableCollection<DetailedOpinion>(detailedOpinions);
 
-                // Znajdowanie opinii zalogowanego użytkownika
                 if (IsClient && _userSessionService.LoggedInUser != null)
                 {
                     UserOpinion = detailedOpinions.FirstOrDefault(o => o.Opinion.ClientId == _userSessionService.LoggedInUser.Id);
@@ -263,11 +261,7 @@ namespace VetClinic.MVVM.ViewModel
             _navigationService.NavigateTo<DoctorDashboardViewModel>();
         }
 
-        private void BackToAdminDashboard(object obj)
-        {
-            //_navigationService.NavigateTo<AdminDashboardViewModel>();
-        }
-
+  
         private void AddOpinion(object obj)
         {
             if (!CanAddOpinion) return;
