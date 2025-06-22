@@ -1,5 +1,4 @@
-﻿using System.Data.Entity.Infrastructure;
-using VetClinic.Database;
+﻿using VetClinic.Database;
 using VetClinic.Models;
 using BCrypt.Net;
 using System.Diagnostics;
@@ -9,11 +8,11 @@ namespace VetClinic.Services
 {
     public class UserService
     {
-        private readonly VeterinaryClinicContext _context;
+        private IDbContextFactory<VeterinaryClinicContext> _contextFactory;
 
-        public UserService(VeterinaryClinicContext context)
+        public UserService(IDbContextFactory<VeterinaryClinicContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
         }
 
         public async Task<User> CreateClientAsync(string name, string surname, string email, string phoneNumber, string password, string gender, DateTime dateOfBirth)
@@ -34,12 +33,13 @@ namespace VetClinic.Services
 
             try
             {
-                await _context.User.AddAsync(newUser);
-                await _context.SaveChangesAsync();
+                using var context = _contextFactory.CreateDbContext();
+                await context.User.AddAsync(newUser);
+                await context.SaveChangesAsync();
 
                 return newUser;
             }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Console.WriteLine($"Database error creating user: {ex.Message}");
                 
@@ -63,7 +63,9 @@ namespace VetClinic.Services
         {
             try
             {
-                var doctor = await _context.Doctor
+                using var context = _contextFactory.CreateDbContext();
+
+                var doctor = await context.Doctor
                 .FirstOrDefaultAsync(u => u.Email == email);
 
                 //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
@@ -74,12 +76,12 @@ namespace VetClinic.Services
                 else
                 {
                     doctor.LastLogin = DateTime.Now;
-                    await _context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
                     return doctor;
                 }
             }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Console.WriteLine($"Database error during login: {ex.Message}");
                 throw;
@@ -95,7 +97,9 @@ namespace VetClinic.Services
         {
             try
             {
-                var user = await _context.User
+                using var context = _contextFactory.CreateDbContext();
+
+                var user = await context.User
                 .FirstOrDefaultAsync(u => u.Email == email);
 
                 //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
@@ -106,12 +110,12 @@ namespace VetClinic.Services
                 else
                 {
                     user.LastLogin = DateTime.Now;
-                    await _context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
                     return user;
                 }
             }
-            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            catch (DbUpdateException ex)
             {
                 Console.WriteLine($"Database error during login: {ex.Message}");
                 throw;
@@ -125,11 +129,13 @@ namespace VetClinic.Services
 
         public async Task<bool> IsUserEmailUniqueAsync(string email)
         {
+            using var _context = _contextFactory.CreateDbContext();
             return !await _context.User.AnyAsync(u => u.Email == email);
         }
 
         public async Task<bool> IsDoctorEmailUniqueAsync(string email)
         {
+            using var _context = _contextFactory.CreateDbContext();
             return !await _context.Doctor.AnyAsync(u => u.Email == email);
         }
     }

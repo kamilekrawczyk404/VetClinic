@@ -50,11 +50,7 @@ namespace VetClinic.MVVM.ViewModel
             _userSessionService = userSessionService;
             _navigationViewModel = new NavigationViewModel(_userSessionService, _navigation);
 
-            // _navigation.NavigateTo<DoctorListViewModel>();
-            // _navigation.NavigateTo<AppointmentListViewModel>();
-            // _navigation.NavigateTo<PrescriptionListViewModel>();
-
-            //_navigation.NavigateTo<LoginViewModel>();
+            _navigation.NavigateTo<LoginViewModel>();
 
             // get the user
             //User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
@@ -67,11 +63,11 @@ namespace VetClinic.MVVM.ViewModel
                         _navigation.NavigateTo<DoctorDashboardViewModel>();*/
 
             // get the admin
-            User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
-            _userSessionService.SetUser(logged);
-            _navigation.NavigateTo<AdminDashboardViewModel>();
+            //User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
+            //_userSessionService.SetUser(logged);
+            //_navigation.NavigateTo<AdminDashboardViewModel>();
 
-            //  _navigationViewModel = navigationViewModel;
+            //_navigationViewModel = navigationViewModel;
 
             NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
         }

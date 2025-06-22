@@ -180,8 +180,10 @@ namespace VetClinic.MVVM.ViewModel.Auth
 
         private async Task<bool> CanSubmit(object obj)
         {
+            ConfirmPasswordErrorMessage = NameErrorMessage = SurnameErrorMessage = TelephoneErrorMessage = PasswordErrorMessage = EmailErrorMessage = string.Empty;
             ValidateName();
             ValidateSurname();
+            ValidateEmail();
             ValidateTelephone();
             ValidatePassword();
             ValidateConfirmPassword();
@@ -205,11 +207,7 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                NameErrorMessage = "This field is required.";
-            }
-            else
-            {
-                NameErrorMessage = string.Empty;
+                NameErrorMessage = "| This field is required.";
             }
         }
 
@@ -217,11 +215,7 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(Surname))
             {
-                SurnameErrorMessage = "This field is required.";
-            }
-            else
-            {
-                SurnameErrorMessage = string.Empty;
+                SurnameErrorMessage = "| This field is required.";
             }
         }
 
@@ -229,32 +223,31 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(Email))
             {
-                EmailErrorMessage = "Email cannot be empty.";
+                EmailErrorMessage = "| This field is required.";
             }
             // checking email using regex expression
             else if (!Regex.IsMatch(Email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
-                EmailErrorMessage = "This field is required.";
+                EmailErrorMessage = "| Provide email in good format.";
             }
             else if (Email.Length < 5)
             {
-                EmailErrorMessage = "Email is too short. Min length is 5 symbols.";
+                EmailErrorMessage = "| Email is too short. Min length is 5 symbols.";
             }
             else if (Email.Length > 50)
             {
-                EmailErrorMessage = "Email is too long. Max length is 50 symbols.";
+                EmailErrorMessage = "| Email is too long. Max length is 50 symbols.";
             }
 
-            bool isEmailUnique = await _userService.IsUserEmailUniqueAsync(Email);
-
-            if (!isEmailUnique)
+            if (Email != null && Email.Length != 0)
             {
-                EmailErrorMessage = "This email is already used.";
-            }
+                bool isEmailUnique = await _userService.IsUserEmailUniqueAsync(Email);
 
-            else
-            {
-                EmailErrorMessage = string.Empty;
+                if (!isEmailUnique)
+                {
+                    EmailErrorMessage = "| This email is already used.";
+                }
+
             }
         }
 
@@ -262,15 +255,11 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(Telephone))
             {
-                TelephoneErrorMessage = "This field is required.";
+                TelephoneErrorMessage = "| This field is required.";
             }
             else if (!Regex.IsMatch(Telephone, @"^\d{9}$"))
             {
-                TelephoneErrorMessage = "Telephone is not valid. Format: XXXXXXXXX";
-            }
-            else
-            {
-                TelephoneErrorMessage = string.Empty;
+                TelephoneErrorMessage = "| Telephone is not valid. Format: XXXXXXXXX";
             }
         }
 
@@ -278,19 +267,15 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(Password))
             {
-                PasswordErrorMessage = "This field is required.";
+                PasswordErrorMessage = "| This field is required.";
             }
             else if (Password.Length < 8)
             {
-                PasswordErrorMessage = "Password is too short. Min length is 8 symbols.";
+                PasswordErrorMessage = "| Password is too short. Min length is 8 symbols.";
             }
             else if (Password.Length > 50)
             {
-                PasswordErrorMessage = "Password is too long. Max length is 50 symbols";
-            }
-            else
-            {
-                PasswordErrorMessage = string.Empty;
+                PasswordErrorMessage = "| Password is too long. Max length is 50 symbols";
             }
         }
 
@@ -298,15 +283,11 @@ namespace VetClinic.MVVM.ViewModel.Auth
         {
             if (string.IsNullOrWhiteSpace(ConfirmPassword))
             {
-                ConfirmPasswordErrorMessage = "This field is required.";
+                ConfirmPasswordErrorMessage = "| This field is required.";
             }
             else if (ConfirmPassword != Password)
             {
-                ConfirmPasswordErrorMessage = "Passwords do not match.";
-            }
-            else
-            {
-                ConfirmPasswordErrorMessage = string.Empty;
+                ConfirmPasswordErrorMessage = "| Passwords do not match.";
             }
         }
     }

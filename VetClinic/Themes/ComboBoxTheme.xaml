@@ -56,7 +56,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                                 SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                            CornerRadius="8">
+                            CornerRadius="4">
                             <DockPanel>
                                 <ContentPresenter x:Name="ContentSite"
                                               Content="{TemplateBinding SelectionBoxItem}"
@@ -112,7 +112,7 @@
                             <Border Background="White"
                                 BorderBrush="#B0BEC5"
                                 BorderThickness="1"
-                                CornerRadius="8"
+                                CornerRadius="4"
                                 Margin="0,4,0,0"
                                 SnapsToDevicePixels="True"
                                 MinWidth="{TemplateBinding ActualWidth}">

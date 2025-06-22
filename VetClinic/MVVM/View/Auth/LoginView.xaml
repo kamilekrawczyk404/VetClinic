@@ -24,7 +24,7 @@
                 <TextBlock Margin="0,0,0,10" Style="{StaticResource HeaderWhite}" Text="Sign in to VetClinic" HorizontalAlignment="Center"/>
 
                 <input:InputControl Title="Email" Placeholder="Enter email" Text="{Binding Email}" ErrorMessage="{Binding EmailErrorMessage}"/>
-                <input:InputControl Title="Password" Placeholder="Enter password" Text="{Binding Password}" ErrorMessage="{Binding PasswordErrorMessage}"/>
+                <input:PasswordInput Title="Password" Placeholder="Enter password" Password="{Binding Password}" ErrorMessage="{Binding PasswordErrorMessage}"/>
                 
                 <Button Margin="0,12,0,0" Style="{StaticResource SubmitButton}" Content="Login" Command="{Binding SubmitCommand}"/>
 
