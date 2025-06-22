@@ -53,9 +53,9 @@ namespace VetClinic.MVVM.ViewModel
             _navigation.NavigateTo<LoginViewModel>();
 
             // get the user
-            //User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
-            //_userSessionService.SetUser(logged);
-            //_navigation.NavigateTo<ClientDashboardViewModel>();
+/*            User logged = context.User.FirstOrDefault(u => u.Email == "alice.j@example.com");
+            _userSessionService.SetUser(logged);
+            _navigation.NavigateTo<ClientDashboardViewModel>();*/
 
             // get the doctor
             /*            Doctor logged = context.Doctor.FirstOrDefault(u => u.Email == "john.doe@vetclinic.com");
@@ -63,13 +63,13 @@ namespace VetClinic.MVVM.ViewModel
                         _navigation.NavigateTo<DoctorDashboardViewModel>();*/
 
             // get the admin
-            //User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
-            //_userSessionService.SetUser(logged);
-            //_navigation.NavigateTo<AdminDashboardViewModel>();
+            User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
+            _userSessionService.SetUser(logged);
+            _navigation.NavigateTo<AdminDashboardViewModel>();
 
             //_navigationViewModel = navigationViewModel;
 
-            NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
+            //NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
         }
 
         private void MaximizeMinimizeWindow(object o)

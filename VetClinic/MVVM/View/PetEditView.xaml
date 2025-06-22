@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:input="clr-namespace:VetClinic.Controls.Input"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="800">
 
@@ -50,8 +51,16 @@
                         <ColumnDefinition Width="300"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0">
-                        <Grid Margin="0,0,0,20" HorizontalAlignment="Center">
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="0,0,0,20" HorizontalAlignment="Center">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
@@ -68,111 +77,66 @@
                                        TextWrapping="Wrap"/>
                         </Grid>
 
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Species *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <TextBox Text="{Binding EditingPet.Species, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="14"
-                                     Height="35"
-                                     Padding="8,6"/>
-                        </StackPanel>
+                        <input:InputControl Grid.Row="2"
+                            Title="Species *"
+                            Placeholder="Enter species"
+                            Text="{Binding EditingPet.Species, UpdateSourceTrigger=PropertyChanged}"
+                            ErrorMessage="{Binding SpeciesError}"/>
 
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Gender *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <ComboBox SelectedValue="{Binding EditingPet.Gender}"
-                                      SelectedValuePath="Content"
-                                      FontSize="14"
-                                      Height="35"
-                                      Padding="8,6">
-                                <ComboBoxItem Content="Male"/>
-                                <ComboBoxItem Content="Female"/>
-                                <ComboBoxItem Content="Neutered"/>
-                                <ComboBoxItem Content="Spayed"/>
-                            </ComboBox>
-                        </StackPanel>
-                    </StackPanel>
+                        <input:ComboBoxControl Grid.Row="4"
+                            Title="Gender *"
+                            Placeholder="Select gender"
+                            SelectedValue="{Binding EditingPet.Gender}"
+                            SelectedValuePath="Content">
+                            <input:ComboBoxControl.ItemsSource>
+                                <x:Array Type="{x:Type ComboBoxItem}">
+                                    <ComboBoxItem Content="Male"/>
+                                    <ComboBoxItem Content="Female"/>
+                                </x:Array>
+                            </input:ComboBoxControl.ItemsSource>
+                        </input:ComboBoxControl>
+                    </Grid>
 
                     <StackPanel Grid.Column="2" Margin="0,35,0,35">
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Pet's name *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <TextBox Text="{Binding EditingPet.Name, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="14"
-                                     Height="35"
-                                     Padding="8,6"/>
-                        </StackPanel>
+                        <input:InputControl
+                            Title="Pet's name *"
+                            Placeholder="Enter pet's name"
+                            Text="{Binding EditingPet.Name, UpdateSourceTrigger=PropertyChanged}"
+                            ErrorMessage="{Binding NameError}"
+                            Margin="0,0,0,15"/>
 
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Breed *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <TextBox Text="{Binding EditingPet.Breed, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="14"
-                                     Height="35"
-                                     Padding="8,6"/>
-                        </StackPanel>
+                        <input:InputControl
+                            Title="Breed *"
+                            Placeholder="Enter breed"
+                            Text="{Binding EditingPet.Breed, UpdateSourceTrigger=PropertyChanged}"
+                            ErrorMessage="{Binding BreedError}"
+                            Margin="0,0,0,15"/>
 
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Weight (kg) *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <TextBox Text="{Binding EditingPet.Weight, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="14"
-                                     Height="35"
-                                     Padding="8,6"/>
-                        </StackPanel>
+                        <input:InputControl
+                            Title="Weight (kg) *"
+                            Placeholder="Enter weight"
+                            Text="{Binding EditingPet.Weight, UpdateSourceTrigger=PropertyChanged}"
+                            ErrorMessage="{Binding WeightError}"
+                            Margin="0,0,0,15"/>
 
-                        <StackPanel Margin="0,0,0,15">
-                            <TextBlock Text="Date of birth *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <DatePicker SelectedDate="{Binding EditingPet.DateOfBirth}"
-                                        FontSize="14"
-                                        Height="35"
-                                        Padding="8,6"/>
-                        </StackPanel>
+                        <input:CustomDatePicker
+                            Title="Date of birth *"
+                            SelectedDate="{Binding EditingPet.DateOfBirth}"
+                            Margin="0,0,0,15"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="4" Margin="0,35,0,35">
-                        <StackPanel Margin="0,0,0,15"
-                                    Visibility="{Binding ShowOwnerSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <TextBlock Text="Owner *" 
-                                       FontWeight="SemiBold"
-                                       FontSize="12"
-                                       Margin="0,0,0,3"/>
-                            <ComboBox ItemsSource="{Binding AvailableOwners}"
-                                  SelectedItem="{Binding EditingPet.User}"
-                                  FontSize="14"
-                                  Height="35"
-                                  Padding="8,6"
-                                  MinWidth="250">
-                                  <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Width="220">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="100"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" 
-                                                       Text="{Binding Name}" 
-                                                       FontWeight="Normal"/>
-                                            <TextBlock Grid.Column="1" 
-                                                       Text="{Binding Surname}" />
-                                        </Grid>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
+                        <input:ComboBoxControl
+                            Title="Owner *"
+                            Placeholder="Select owner"
+                            SelectedItem="{Binding EditingPet.User}"
+                            DisplayMemberPath="Name"
+                            Margin="0,0,0,15"
+                            Visibility="{Binding ShowOwnerSelection, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <input:ComboBoxControl.ItemsSource>
+                                <Binding Path="AvailableOwners"/>
+                            </input:ComboBoxControl.ItemsSource>
+                        </input:ComboBoxControl>
 
                         <StackPanel Margin="0,0,0,15"
                                     Visibility="{Binding ShowCurrentOwner, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -197,33 +161,8 @@
                             </Border>
                         </StackPanel>
 
-                        <Border Background="{StaticResource LightRed}"
-                                CornerRadius="5"
-                                Padding="12"
-                                Margin="0,20,0,0"
-                                MaxHeight="200"
-                                Visibility="{Binding HasValidationErrors, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                                <StackPanel>
-                                    <TextBlock Text="Errors:"
-                                               FontWeight="SemiBold"
-                                               Foreground="{StaticResource White}"
-                                               FontSize="12"
-                                               Margin="0,0,0,8"/>
-                                    <ItemsControl ItemsSource="{Binding ValidationErrors}">
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding}"
-                                                           Foreground="{StaticResource White}"
-                                                           FontSize="11"
-                                                           TextWrapping="Wrap"
-                                                           Margin="0,1"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </ScrollViewer>
-                        </Border>
+                        <!-- Usunięto globalny panel błędów - błędy wyświetlają się teraz bezpośrednio w kontrolkach -->
+
                     </StackPanel>
                 </Grid>
             </Border>
