@@ -68,8 +68,7 @@ namespace VetClinic.Services
                 var doctor = await context.Doctor
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-                //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                if (doctor == null)
+                if (doctor == null || !BCrypt.Net.BCrypt.Verify(password, doctor.PasswordHash))
                 {
                     return null; // Invalid email or password
                 }
@@ -102,8 +101,7 @@ namespace VetClinic.Services
                 var user = await context.User
                 .FirstOrDefaultAsync(u => u.Email == email);
 
-                //if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                if (user == null)
+                if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
                 {
                     return null; // Invalid email or password
                 }

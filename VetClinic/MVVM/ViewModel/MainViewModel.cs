@@ -63,13 +63,11 @@ namespace VetClinic.MVVM.ViewModel
                         _navigation.NavigateTo<DoctorDashboardViewModel>();*/
 
             // get the admin
-            User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
-            _userSessionService.SetUser(logged);
-            _navigation.NavigateTo<AdminDashboardViewModel>();
+            //User logged = context.User.FirstOrDefault(u => u.Email == "admin@example.com");
+            //_userSessionService.SetUser(logged);
+            //_navigation.NavigateTo<AdminDashboardViewModel>();
 
-            //_navigationViewModel = navigationViewModel;
-
-            //NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
+            NavigateToAuthPageCommand = new RelayCommand(o => { Navigation.NavigateTo<LoginViewModel>(); });
         }
 
         private void MaximizeMinimizeWindow(object o)

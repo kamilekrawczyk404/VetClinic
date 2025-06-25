@@ -59,7 +59,7 @@ CREATE TABLE `users` (
 
 -- Insert data into the new users table with appropriate date_of_birth values
 INSERT INTO `users` (`id`, `name`, `surname`, `email`, `password`, `role`, `date_of_birth`, `phone_number`, `address`, `created_at`, `is_active`, `last_login`) VALUES
-(1, 'Alice', 'Johnson', 'alice.j@example.com', 'hashed_password_1', 'client', '1990-05-15', '111-222-3333', '123 Oak Ave', '2025-01-10 10:00:00', 1, '2025-06-16 10:00:00'),
+(1, 'Alice', 'Johnson', 'alice.j@example.com', '$2b$10$p88a1EOhGjuFU.8.XjoLxOyDGBS2MQZQUlgmT184LnAUKtTbbvXlq', 'client', '1990-05-15', '111-222-3333', '123 Oak Ave', '2025-01-10 10:00:00', 1, '2025-06-16 10:00:00'),
 (2, 'Bob', 'Williams', 'bob.w@example.com', 'hashed_password_2', 'client', '1988-11-20', '456 Pine St', NULL, '2025-01-15 11:00:00', 1, '2025-06-16 10:05:00'),
 (3, 'Charlie', 'Brown', 'charlie.b@example.com', 'hashed_password_3', 'client', '1992-03-01', '333-444-5555', '789 Maple Dr', '2025-01-20 12:00:00', 1, '2025-06-16 10:10:00'),
 (4, 'Diana', 'Miller', 'diana.m@example.com', 'hashed_password_4', 'client', '1985-07-22', '444-555-6666', '101 Elm Rd', '2025-01-25 13:00:00', 1, '2025-06-16 10:15:00'),
@@ -79,7 +79,7 @@ INSERT INTO `users` (`id`, `name`, `surname`, `email`, `password`, `role`, `date
 (18, 'Rachel', 'Gomez', 'rachel.g@example.com', 'hashed_password_18', 'client', '1997-11-14', '888-888-8888', '666 Juniper Pl', '2025-04-01 09:00:00', 1, '2025-06-16 11:25:00'),
 (19, 'Sam', 'Diaz', 'sam.d@example.com', 'hashed_password_19', 'client', '1981-04-20', '999-999-9999', '777 Aspen Ct', '2025-04-05 10:00:00', 1, '2025-06-16 11:30:00'),
 (20, 'Tina', 'Reyes', 'tina.r@example.com', 'hashed_password_20', 'client', '1993-08-09', '000-000-0000', '888 Willow Dr', '2025-04-10 11:00:00', 1, '2025-06-16 11:35:00'),
-(21, 'Admin', 'User', 'admin@example.com', 'admin_password', 'admin', '1975-01-01', '555-123-4567', 'Admin Office', '2025-01-01 08:00:00', 1, '2025-06-16 12:00:00');
+(21, 'Admin', 'User', 'admin@example.com', '$2b$10$0GhR7tUdlzx5U/a.Zy/YO.B.dZPB.cvIILxxDf1xdcBYZH66kxoe.', 'admin', '1975-01-01', '555-123-4567', 'Admin Office', '2025-01-01 08:00:00', 1, '2025-06-16 12:00:00');
 
 -- --------------------------------------------------------
 
@@ -107,7 +107,7 @@ CREATE TABLE `doctors` (
 --
 
 INSERT INTO `doctors` (`id`, `name`, `surname`, `specialization`, `phone_number`, `email`, `date_of_birth`, `created_at`, `description`, `password`, `is_active`, `last_login`) VALUES
-(1, 'John', 'Doe', 'General Practice', '123-456-7890', 'john.doe@vetclinic.com', '1980-05-15', '2025-01-01 09:00:00', 'Experienced general practitioner with a focus on preventative care.', 'hashed_doctor_password_1', 1, '2025-06-16 09:00:00'),
+(1, 'John', 'Doe', 'General Practice', '123-456-7890', 'john.doe@vetclinic.com', '1980-05-15', '2025-01-01 09:00:00', 'Experienced general practitioner with a focus on preventative care.', '$2b$10$SNpLlLmwE.8dN30loV5lzeWI1SIZ0bg642YuHW7X3Eoa7dTdbA.7O', 1, '2025-06-16 09:00:00'),
 (2, 'Jane', 'Smith', 'Dermatology', '098-765-4321', 'jane.smith@vetclinic.com', '1975-11-20', '2025-01-01 09:15:00', 'Specializes in skin conditions and allergies for all pets.', 'hashed_doctor_password_2', 1, '2025-06-16 09:30:00'),
 (3, 'Robert', 'Johnson', 'Surgery', '111-222-3333', 'robert.johnson@vetclinic.com', '1982-03-10', '2025-01-01 09:30:00', 'Skilled surgeon for routine and complex procedures.', 'hashed_doctor_password_3', 1, '2025-06-16 10:00:00'),
 (4, 'Emily', 'Davis', 'Cardiology', '444-555-6666', 'emily.davis@vetclinic.com', '1978-07-25', '2025-01-01 09:45:00', 'Focuses on heart health and cardiovascular diseases.', 'hashed_doctor_password_4', 1, '2025-06-16 10:15:00'),
