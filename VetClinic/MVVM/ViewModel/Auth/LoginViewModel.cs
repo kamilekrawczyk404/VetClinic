@@ -115,7 +115,14 @@ namespace VetClinic.MVVM.ViewModel.Auth
             if (user != null)
             {
                 _userSessionService.SetUser(user);
-                _navigation.NavigateTo<ClientDashboardViewModel>();
+                if (_userSessionService.IsClient)
+                {
+                    _navigation.NavigateTo<ClientDashboardViewModel>();
+                }
+                else
+                {
+                    _navigation.NavigateTo<AdminDashboardViewModel>();
+                }
             }
             else if (doctor != null)
             {
